@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আল-মাদরাসাতুল আরাবিয়া এমদাদুল উলূম লইপুরা, কুমিল্লা</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-bg: #0D1B2A; /* Darkest Blue */
+            --secondary-bg: #1B263B; /* Dark Blue */
+            --card-bg: #25344A; /* Medium Dark Blue-Grey for cards */
+            --text-color: #E0E1DD; /* Light Cream / Off-white */
+            --text-secondary: #A9B4C2; /* Muted Blue-Grey for secondary text */
+            --accent-color: #778DA9;  /* Steel Blue / Muted Blue-Grey */
+            --accent-hover: #9CB3D0; /* Lighter Steel Blue */
+            --highlight-color: #FFC107; /* Amber/Gold for highlights */
+            --highlight-hover: #FFA000; /* Darker Amber/Gold */
+            --border-color: #415A77; /* Mid Blue-Grey for borders */
+            --glow-color: rgba(255, 193, 7, 0.2); /* Glow for highlight */
+            --shadow-color: rgba(0, 0, 0, 0.35);
+
+            --font-primary: 'Hind Siliguri', 'Segoe UI', 'Roboto', sans-serif;
+            --font-arabic-ui: 'Noto Naskh Arabic', serif;
+            --font-arabic-decorative: 'Scheherazade New', serif;
+            --border-radius: 10px; /* Slightly more rounded */
+            --transition-speed: 0.35s ease;
+            --nav-height: 80px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231B263B' fill-opacity='0.07'%3E%3Cpath d='M40 0L50 10L40 20L30 10L40 0ZM0 40L10 50L0 60L-10 50L0 40ZM80 40L70 50L80 60L90 50L80 40Z'/%3E%3Cpath d='M0 0h80v80H0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
+        /* --- Notice Bar --- */
+        .notice-bar { background-color: var(--secondary-bg); color: var(--highlight-color); padding: 0.7rem 1rem; text-align: center; font-size: 0.95rem; font-family: var(--font-primary); overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px var(--shadow-color); position: fixed; top: 0; left: 0; width: 100%; z-index: 1001; min-height: 45px; display: flex; align-items: center; justify-content: center; }
+        .notice-bar-text { display: inline-block; padding-left: 100%; animation: marquee 45s linear infinite; color: var(--highlight-color); white-space: nowrap; font-weight: 500; }
+        .notice-bar-text .material-icons-outlined { font-size: 1.1em; vertical-align: -3px; margin: 0 8px; color: var(--highlight-color); }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* --- Navigation --- */
+        nav { background-color: rgba(13, 27, 42, 0.88); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); height: var(--nav-height); padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--highlight-color); box-shadow: 0 4px 20px var(--shadow-color); position: fixed; top: 45px; left: 0; width: 100%; z-index: 1000; transition: background-color 0.3s ease; }
+        nav .logo { display: flex; align-items: center; text-decoration: none; }
+        nav .logo .material-icons-outlined { color: var(--highlight-color); margin-right: 12px; font-size: 2.9rem; flex-shrink: 0; text-shadow: 0 0 8px rgba(255,193,7,0.6); }
+        nav .logo .school-name-wrapper { display: flex; flex-direction: column; }
+        nav .logo .school-name-main { font-family: var(--font-arabic-decorative); font-size: 1.8rem; line-height: 1.25; font-weight: 700; color: var(--text-color); text-shadow: 1px 1px 3px var(--shadow-color); }
+        nav .logo .school-name-sub { font-family: var(--font-primary); font-size: 0.88rem; line-height: 1.15; color: var(--text-secondary); letter-spacing: 0.5px;}
+        nav .nav-links-desktop { list-style: none; display: flex; align-items: center; margin-left: auto; }
+        nav .nav-links-desktop li { margin-left: 22px; }
+        nav .nav-links-desktop li a { color: var(--text-secondary); text-decoration: none; font-weight: 500; padding: 12px 18px; border-radius: var(--border-radius); transition: all var(--transition-speed); border: 1px solid transparent; display: flex; align-items: center; font-size: 1.08rem; }
+        nav .nav-links-desktop li a .material-icons-outlined { margin-right: 8px; font-size: 1.35rem; vertical-align: -4px; }
+        nav .nav-links-desktop li a:hover, nav .nav-links-desktop li a.active { color: var(--highlight-color); background-color: rgba(119, 141, 169, 0.2); border-color: var(--highlight-color); text-shadow: 0 0 10px var(--glow-color); transform: translateY(-1px); }
+        .menu-toggle { display: none; background: none; border: none; color: var(--highlight-color); font-size: 2.6rem; cursor: pointer; padding: 5px; z-index: 1005; margin-left: 15px; }
+        .menu-toggle .material-icons { display: block; }
+        .nav-links-mobile { list-style: none; display: flex; flex-direction: column; align-items: center; position: fixed; top: calc(var(--nav-height) + 45px); left: 0; width: 100%; height: calc(100vh - var(--nav-height) - 45px); background-color: var(--secondary-bg); padding-top: 2rem; transform: translateY(-110%); transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); z-index: 999; box-shadow: 0 5px 20px var(--shadow-color); overflow-y: auto; border-top: 1px solid var(--border-color); }
+        .nav-links-mobile.open { transform: translateY(0); }
+        .nav-links-mobile li { margin: 1.4rem 0; width: 90%; }
+        .nav-links-mobile li a { color: var(--text-color); text-decoration: none; font-size: 1.45rem; font-weight: 500; padding: 1.2rem; border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; width: 100%; transition: all var(--transition-speed); }
+        .nav-links-mobile li a .material-icons-outlined { margin-right: 15px; font-size: 1.75rem; }
+        .nav-links-mobile li a:hover, .nav-links-mobile li a.active { background-color: var(--accent-color); color: var(--primary-bg); transform: translateX(5px); }
+
+        /* --- Page Container & Content --- */
+        .page-container { flex-grow: 1; padding: 3rem; padding-top: calc(var(--nav-height) + 45px + 3rem); display: flex; justify-content: center; align-items: flex-start; }
+        .page-content { display: none; width: 100%; max-width: 1300px; background-color: rgba(27, 38, 59, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 3rem 3.5rem; border-radius: var(--border-radius); border: 1px solid var(--border-color); box-shadow: 0 10px 35px var(--shadow-color); animation: fadeInPage 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .page-content.active { display: block; }
+        @keyframes fadeInPage { 0% { opacity: 0; transform: translateY(40px) scale(0.97); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* Headings, Text, Forms, Buttons */
+        h1, h2, h3 { color: var(--text-color); font-family: var(--font-primary); font-weight: 600; letter-spacing: 0.5px; text-shadow: 1px 1px 4px rgba(0,0,0,0.45); }
+        h1 { font-size: 2.8rem; margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--highlight-color); font-family: var(--font-arabic-decorative); }
+        h2 { font-size: 2.3rem; margin-bottom: 2.2rem; display: flex; align-items: center; color: var(--accent-hover); border-bottom: 2px solid var(--accent-color); padding-bottom: 1rem; }
+        h3 { font-size: 1.7rem; margin-bottom: 1.6rem; color: var(--accent-hover); border-bottom: 1px solid var(--border-color); padding-bottom: 0.7rem; }
+        h1 .material-icons-outlined, h2 .material-icons-outlined, h3 .material-icons-outlined { margin-right: 15px; font-size: 1.2em; vertical-align: -4px; }
+        p { margin-bottom: 1.4rem; color: var(--text-secondary); font-size: 1.1rem; line-height: 1.95; }
+        hr { border: none; border-top: 1px solid var(--border-color); margin: 2.8rem 0; }
+        .form-group { margin-bottom: 1.8rem; position: relative; }
+        .form-group label { display: flex; align-items: center; margin-bottom: 0.7rem; color: var(--accent-hover); font-weight: 500; font-size: 1rem; }
+        .form-group label .material-icons-outlined { font-size: 1.1em !important; vertical-align: -3px !important; margin-right:8px !important; color: var(--highlight-color); }
+        .form-group input[type="text"], .form-group input[type="number"], .form-group select { width: 100%; padding: 0.95rem 1.25rem; background-color: var(--primary-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); font-size: 1.05rem; color: var(--text-color); font-family: var(--font-primary); transition: all var(--transition-speed); appearance: none; -webkit-appearance: none; }
+        .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 3rem; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--highlight-color); box-shadow: 0 0 0 3.5px var(--glow-color); background-color: var(--secondary-bg); }
+        .form-group select option { background-color: var(--secondary-bg); color: var(--text-color); padding: 0.5rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--accent-color), var(--accent-hover)); color: var(--primary-bg); padding: 1rem 2.3rem; border: none; border-radius: var(--border-radius); cursor: pointer; font-size: 1.1rem; font-weight: 600; text-align: center; text-transform: none; letter-spacing: 0.5px; transition: all var(--transition-speed); box-shadow: 0 5px 18px rgba(119, 141, 169, 0.45); text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
+        .btn .material-icons-outlined { margin-right: 12px; font-size: 1.35em; }
+        .btn:hover { background: linear-gradient(145deg, var(--accent-hover), var(--accent-color)); box-shadow: 0 7px 22px rgba(119, 141, 169, 0.55); transform: translateY(-3px) scale(1.03); }
+        .btn:active { transform: translateY(0px) scale(1); box-shadow: 0 3px 12px rgba(119, 141, 169, 0.35); }
+        .btn.btn-gold { background: linear-gradient(145deg, var(--highlight-color), var(--highlight-hover)); color: var(--primary-bg); box-shadow: 0 5px 18px rgba(255,193,7,0.45); }
+        .btn.btn-gold:hover { background: linear-gradient(145deg, var(--highlight-hover), var(--highlight-color)); box-shadow: 0 7px 22px rgba(255,193,7,0.55); }
+
+
+        /* Home Page Specifics */
+        #home-page .slider-container { margin: 0 auto 3.5rem auto; box-shadow: 0 12px 40px var(--shadow-color); border: 2px solid var(--highlight-color); }
+        .home-section { margin-bottom: 3.8rem; padding: 2.8rem; background-color: var(--card-bg); border-radius: var(--border-radius); box-shadow: 0 8px 25px var(--shadow-color); border-left: 6px solid var(--accent-color); }
+        .home-section h3 { color: var(--highlight-color); text-align: left; justify-content: flex-start; font-family: var(--font-arabic-decorative); font-size: 1.9rem; }
+        .address-info p { font-size: 1.18rem; color: var(--text-color); }
+        .address-info .material-icons-outlined { color: var(--highlight-color); vertical-align: -5px; margin-right: 12px; }
+        .important-links-container ul { list-style: none; padding: 0; }
+        .important-links-container li { margin-bottom: 1.1rem; }
+        .important-links-container a { color: var(--text-color); text-decoration: none; font-size: 1.18rem; transition: all var(--transition-speed); display: flex; align-items: center; background-color: var(--secondary-bg); padding: 13px 20px; border-radius: var(--border-radius); border: 1px solid var(--border-color); width: 100%; }
+        .important-links-container a:hover { color: var(--highlight-color); border-color: var(--highlight-color); background-color: var(--primary-bg); transform: translateX(6px); box-shadow: 3px 3px 10px rgba(0,0,0,0.2); }
+        .important-links-container a .material-icons-outlined { margin-right: 13px; color: var(--highlight-color); }
+        .no-links-message { color: var(--text-secondary); font-style: italic; padding: 1rem 0; }
+
+        /* Home Page Statistics Section */
+        .statistics-section { text-align: center; }
+        .statistics-section .stat-item {
+            background-color: var(--secondary-bg);
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all var(--transition-speed);
+            max-width: 300px; /* Control width of stat item */
+            margin: 0 auto; /* Center it */
+        }
+        .statistics-section .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+        .statistics-section .stat-item .material-icons-outlined {
+            font-size: 2.8rem;
+            color: var(--highlight-color);
+            margin-bottom: 0.8rem;
+        }
+        .statistics-section .stat-item .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1.1;
+        }
+        .statistics-section .stat-item .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+
+        /* Slider - Pro Mini Design */
+        .slider-container { position: relative; max-width: 1100px; overflow: hidden; border-radius: var(--border-radius); }
+        .slider { display: flex; transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1); }
+        .slide { min-width: 100%; position: relative; opacity: 0.9; transition: opacity 0.9s ease; }
+        .slide.active-slide { opacity: 1; }
+        .slide img { width: 100%; display: block; aspect-ratio: 16 / 6.5; object-fit: cover; border-radius: var(--border-radius); filter: brightness(0.85); }
+        .slide-content { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(13, 27, 42, 0.9) 0%, rgba(13, 27, 42, 0.7) 40%, rgba(13, 27, 42, 0) 100%); padding: 1.8rem 1.5rem 1.5rem; color: #fff; border-bottom-left-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); }
+        .slide-caption { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.75); font-family: var(--font-primary); }
+        .slide-link { display: inline-block; margin-top: 0.7rem; padding: 0.5rem 1rem; background-color: var(--highlight-color); color: var(--primary-bg); text-decoration: none; border-radius: calc(var(--border-radius) - 2px) ; font-weight: 500; font-size: 0.9rem; transition: all var(--transition-speed); box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+        .slide-link:hover { background-color: var(--highlight-hover); transform: translateY(-2px) scale(1.05); box-shadow: 0 3px 10px rgba(0,0,0,0.35); }
+        .slider-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 1rem; z-index: 10; }
+        .slider-nav button { background-color: rgba(27, 38, 59, 0.6); color: var(--text-color); border: 1px solid var(--border-color); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 1.4rem; transition: all var(--transition-speed); box-shadow: 0 1px 6px var(--shadow-color); display: inline-flex; align-items: center; justify-content: center;}
+        .slider-nav button:hover { background-color: var(--highlight-color); color: var(--primary-bg); border-color: var(--highlight-color); transform: scale(1.1); }
+        .slider-dots { text-align: center; position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 10; }
+        .dot { height: 10px; width: 10px; margin: 0 5px; background-color: rgba(255,255,255,0.35); border-radius: 50%; display: inline-block; cursor: pointer; transition: all var(--transition-speed); border: 1px solid rgba(0,0,0,0.25); }
+        .dot.active { background-color: var(--highlight-color); transform: scale(1.3); box-shadow: 0 0 8px var(--glow-color); border-color: var(--highlight-color); }
+        
+        /* Footer */
+        footer { background: var(--secondary-bg); color: var(--text-secondary); text-align: center; padding: 2.8rem; margin-top: auto; border-top: 2px solid var(--highlight-color); font-size: 1rem; }
+        footer .jarvis-heart { color: var(--highlight-color); font-size: 1.35em; animation: pulse 1.6s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+        /* Utility & Alerts */
+        .hidden { display: none !important; }
+        .alert { padding: 1.4rem 1.9rem; margin-bottom: 2.2rem; border-radius: var(--border-radius); font-weight: 500; border-width: 1px; border-style: solid; text-align: left; animation: alertFadeIn 0.55s ease-out; display: flex; align-items: center; border-left-width: 6px; }
+        .alert .material-icons-outlined { margin-right: 16px; font-size: 2rem; }
+        @keyframes alertFadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .alert-danger { background-color: rgba(211, 47, 47, 0.12); color: #ef9a9a; border-color: #d32f2f; border-left-color: #c62828; }
+        .alert-info { background-color: rgba(2,136,209, 0.12); color: #90caf9; border-color: #0288d1; border-left-color: #01579b; }
+        .alert-success { background-color: rgba(56,142,60, 0.12); color: #a5d6a7; border-color: #388e3c; border-left-color: #1b5e20; }
+        .loading-indicator { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem; font-family: var(--font-primary); color: var(--accent-hover); font-size: 1.25rem; text-align: center; }
+        .loading-indicator .material-icons-outlined { font-size: 3rem; margin-bottom: 1.2rem; color: var(--highlight-color); animation: spin 1.35s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Students Page - Simplified Search Controls */
+        .student-search-controls { 
+            display: flex; /* Changed to flex for single row */
+            gap: 1.5rem; 
+            margin-bottom: 2.8rem; 
+            padding: 1.8rem; 
+            background-color: var(--card-bg); 
+            border-radius: var(--border-radius); 
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            align-items: flex-end; /* Align items to bottom for button */
+        }
+        .student-search-controls .form-group { 
+            margin-bottom: 0; 
+            flex-grow: 1; /* Allow name input to take available space */
+        }
+        .student-search-controls .btn { 
+            margin-top: 0; /* Reset margin */
+            /* width: auto; /* Default width */
+            /* max-width: 200px; Removed max-width, button will size to content or flex item */
+            padding: 0.95rem 2rem; /* Adjust padding for search button */
+            white-space: nowrap; /* Prevent button text from wrapping */
+        }
+
+
+        /* Student Cards - Islamic Design Inspired */
+        .students-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 2.2rem; padding-top: 1.8rem; }
+        .student-card { 
+            background-color: var(--card-bg); 
+            border-radius: var(--border-radius); 
+            padding: 0;
+            box-shadow: 0 7px 22px var(--shadow-color); 
+            border: 1px solid var(--border-color); 
+            display: flex; flex-direction: column; 
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed); 
+            animation: fadeInUp 0.65s ease-out forwards; 
+            opacity: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px; 
+            background: linear-gradient(90deg, var(--highlight-color), var(--accent-color) 50%, var(--highlight-color));
+            opacity: 0.85;
+        }
+        .student-card:hover { 
+            transform: translateY(-7px) scale(1.015); 
+            box-shadow: 0 12px 35px var(--shadow-color), 0 0 25px var(--glow-color); 
+        }
+        @keyframes fadeInUp { 
+            0% { opacity: 0; transform: translateY(25px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .student-card-content { padding: 2rem; }
+        .student-card-header { display: flex; align-items: center; margin-bottom: 1.4rem; padding-bottom: 1.4rem; border-bottom: 1px dashed var(--border-color); }
+        .student-card-image { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 4px solid var(--highlight-color); margin-right: 1.4rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.45); padding: 3px; background-color: var(--secondary-bg); }
+        .student-card-image-placeholder { width: 80px; height: 80px; border-radius: 50%; background-color: var(--secondary-bg); border: 4px solid var(--highlight-color); margin-right: 1.4rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.45); padding: 3px; }
+        .student-card-image-placeholder .material-icons-outlined { font-size: 42px; color: var(--highlight-color); }
+        .student-card-name-class { flex-grow: 1; }
+        .student-card-name { font-size: 1.6rem; font-weight: 700; color: var(--text-color); margin-bottom: 0.35rem; font-family: var(--font-arabic-decorative); }
+        .student-card-class { font-size: 1.05rem; color: var(--accent-hover); font-weight: 500; }
+        .student-card-details { list-style: none; padding: 0; margin-top: 1.2rem; }
+        .student-card-details li { font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 0.8rem; display: flex; align-items: center; }
+        .student-card-details li .material-icons-outlined { font-size: 1.25rem; margin-right: 10px; color: var(--highlight-color); vertical-align: -3px; }
+        .student-card-details li strong { color: var(--text-color); margin-right: 6px; }
+
+        .no-results { text-align: center; padding: 2.8rem; color: var(--text-secondary); font-style: italic; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.25rem; background-color: var(--card-bg); border-radius: var(--border-radius); margin-top: 1.8rem; width: 100%; border: 1px dashed var(--border-color); }
+        .no-results .material-icons-outlined { margin-bottom: 1.2rem; font-size: 2.8em; color: var(--accent-color); }
+        
+        /* Results Display Specifics */
+        .result-display-card { background-color: var(--card-bg); padding: 2.8rem; border-radius: var(--border-radius); box-shadow: 0 7px 22px var(--shadow-color); margin-top: 1.8rem; border: 1px solid var(--border-color); border-left: 6px solid var(--highlight-color); }
+        .result-display-card h4 { color: var(--highlight-color); font-size: 1.7rem; margin-bottom: 1.2rem; font-family: var(--font-arabic-decorative); }
+        .result-display-card p { font-size: 1.18rem; margin-bottom: 0.8rem; }
+        .result-display-card p strong { color: var(--text-color); font-weight: 600; }
+        .result-display-card a.result-link.btn {  margin-top: 1.8rem;  }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 13px; height: 13px; }
+        ::-webkit-scrollbar-track { background: var(--secondary-bg); border-radius: var(--border-radius); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: var(--border-radius); border: 3px solid var(--secondary-bg); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+             .student-search-controls { flex-direction: column; align-items: stretch; } /* Stack on smaller screens */
+             .student-search-controls .btn { width: 100%; margin-top: 1rem; }
+             .students-card-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+        }
+        @media (max-width: 992px) { 
+            nav { padding: 0 1.5rem; }
+            nav .logo .school-name-main { font-size: 1.6rem; }
+            nav .logo .school-name-sub { font-size: 0.85rem; }
+            nav .nav-links-desktop { display: none; } 
+            .menu-toggle { display: block; } 
+            .page-content { padding: 2.5rem 2rem; }
+            .filter-controls { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.8rem; } 
+            .filter-controls button { width: 100%; justify-self: stretch; max-width: none; } 
+        }
+        @media (max-width: 768px) { 
+            nav { padding: 0 1rem; top: 42px; }
+             .page-container { padding: 2rem; padding-top: calc(var(--nav-height) + 42px + 2rem); } 
+            h1 { font-size: 2.3rem; } h2 { font-size: 2rem; } h3 { font-size: 1.6rem; }
+            .slide-caption { font-size: 1.3rem; }
+            .btn { font-size: 1.05rem; padding: 0.9rem 2rem; }
+            .students-card-grid { grid-template-columns: 1fr; }
+            .student-card-name { font-size: 1.4rem;}
+            .statistics-section .stat-number { font-size: 2rem; }
+            .statistics-section .stat-label { font-size: 1rem; }
+            .student-search-controls { padding: 1.5rem; }
+        }
+        @media (max-width: 480px) { 
+            nav .logo .material-icons-outlined { font-size: 2.4rem; margin-right: 10px;}
+            nav .logo .school-name-main { font-size: 1.4rem; }
+            nav .logo .school-name-sub { font-size: 0.78rem; }
+            h1 { font-size: 2.1rem; } h2 { font-size: 1.8rem; }
+            .page-content { padding: 2rem 1.2rem; }
+            .student-card-header { flex-direction: column; align-items: center; text-align: center;}
+            .student-card-image, .student-card-image-placeholder { margin-right: 0; margin-bottom: 1.2rem; width: 85px; height: 85px; }
+            .student-card-image-placeholder .material-icons-outlined { font-size: 45px; }
+            .student-card-name { font-size: 1.5rem; }
+            .student-card-class { font-size: 1rem; }
+            .btn { font-size: 1rem; padding: 0.85rem 1.8rem; }
+            .slide-caption { font-size: 1.2rem; padding: 1.5rem 1.2rem 1.2rem; }
+            .slide-link { font-size: 0.85rem; padding: 0.4rem 0.8rem; }
+            .slider-nav button { width: 34px; height: 34px; font-size: 1.2rem; }
+            .dot { height: 9px; width: 9px; }
+            .student-search-controls { padding: 1.2rem; }
+            .form-group label { font-size: 0.95rem; } /* Smaller labels on very small screens */
+            .form-group input, .form-group select { font-size: 1rem; padding: 0.85rem 1.1rem;}
+        }
+    </style>
+</head>
+<body>
+    <div class="notice-bar">
+        <span class="notice-bar-text" id="firebase-notice-text">
+            <span class="material-icons-outlined">campaign</span>নোটিশ লোড হচ্ছে...
+        </span>
+    </div>
+
+    <nav>
+        <a href="#" class="logo nav-link-logo" data-page="home-page">
+            <span class="material-icons-outlined">mosque</span>
+            <div class="school-name-wrapper">
+                <span class="school-name-main">আল-মাদরাসাতুল আরাবিয়া</span>
+                <span class="school-name-sub">এমদাদুল উলূম লইপুরা, কুমিল্লা</span>
+            </div>
+        </a>
+        <ul class="nav-links-desktop">
+            <li><a href="#" class="nav-link active" data-page="home-page"><span class="material-icons-outlined">home</span>হোম</a></li>
+            <li><a href="#" class="nav-link" data-page="students-page"><span class="material-icons-outlined">groups</span>ছাত্রী তালিকা</a></li>
+            <li><a href="#" class="nav-link" data-page="results-page"><span class="material-icons-outlined">assessment</span>ফলাফল</a></li>
+            <li><a href="dev.html" class="nav-link" target="_blank"><span class="material-icons-outlined">code</span>ডেভেলপার</a></li>
+        </ul>
+        <button class="menu-toggle" aria-label="নেভিগেশন মেনু পরিবর্তন করুন" aria-expanded="false">
+            <span class="material-icons" id="menu-icon">menu</span>
+        </button>
+    </nav>
+    <ul class="nav-links-mobile">
+        <!-- Mobile links populated by JS -->
+    </ul>
+
+    <div class="page-container">
+        <!-- Home Page -->
+        <section id="home-page" class="page-content active">
+            <div class="slider-container">
+                 <div class="slider" id="home-slider-dynamic">
+                    <div class="loading-indicator"><span class="material-icons-outlined">hourglass_empty</span>স্লাইডার লোড হচ্ছে...</div>
+                 </div>
+                <div class="slider-nav">
+                    <button id="prevSlide" aria-label="পূর্ববর্তী স্লাইড"><span class="material-icons-outlined">arrow_back_ios_new</span></button>
+                    <button id="nextSlide" aria-label="পরবর্তী স্লাইড"><span class="material-icons-outlined">arrow_forward_ios</span></button>
+                </div>
+                <div class="slider-dots" id="home-slider-dots-dynamic"></div>
+            </div>
+
+            <div class="home-section statistics-section">
+                <h3><span class="material-icons-outlined">insights</span>মাদরাসার পরিসংখ্যান</h3>
+                <div class="stat-item">
+                    <span class="material-icons-outlined">groups_3</span>
+                    <div id="total-students-count" class="stat-number">0</div>
+                    <div class="stat-label">মোট ছাত্রী সংখ্যা</div>
+                </div>
+            </div>
+            
+            <div class="home-section important-links-container">
+                <h3><span class="material-icons-outlined">link</span>গুরুত্বপূর্ণ লিঙ্কসমূহ</h3>
+                <ul id="important-links-list">
+                    <p class="no-links-message">কোনো গুরুত্বপূর্ণ লিঙ্ক লোড হচ্ছে বা উপলব্ধ নেই।</p>
+                </ul>
+            </div>
+
+            <div class="home-section address-info">
+                <h3><span class="material-icons-outlined">location_city</span>আমাদের ঠিকানা ও যোগাযোগ</h3>
+                <p><span class="material-icons-outlined">place</span>আল-মাদরাসাতুল আরাবিয়া এমদাদুল উলূম</p>
+                <p style="padding-left: 3.2rem;">লইপুরা, বুড়িচং, কুমিল্লা, বাংলাদেশ।</p>
+                <p><span class="material-icons-outlined">call</span>মোবাইলঃ +৮৮০ ১xxxxxxxxx (অধ্যক্ষ)</p>
+                <p><span class="material-icons-outlined">email</span>ইমেইলঃ info@almadrasatulabia.edu.bd (উদাহরণ)</p>
+            </div>
+             <p id="home-page-message" class="alert hidden" style="margin-top: 2rem;"></p>
+        </section>
+
+        <!-- Students Page -->
+        <section id="students-page" class="page-content">
+            <h2><span class="material-icons-outlined">person_search</span>ছাত্রী অনুসন্ধান</h2>
+            <div id="students-page-message" class="alert hidden"></div>
+             <div class="student-search-controls"> <!-- Renamed class for clarity -->
+                 <div class="form-group">
+                    <label for="students-filter-name"><span class="material-icons-outlined">person_search</span>নাম দিয়ে খুঁজুন</label>
+                    <input type="text" id="students-filter-name" placeholder="ছাত্রীর নামের অংশ লিখুন...">
+                </div>
+                <button id="students-search-by-name-btn" class="btn btn-gold"> <!-- Changed ID and text -->
+                    <span class="material-icons-outlined">search</span>অনুসন্ধান
+                </button>
+            </div>
+            <div id="students-list-container" class="students-card-grid">
+                <div class="loading-indicator"><span class="material-icons-outlined">hourglass_empty</span>ছাত্রী তালিকা লোড হচ্ছে...</div>
+            </div>
+        </section>
+
+        <!-- Results Page -->
+        <section id="results-page" class="page-content">
+            <h2><span class="material-icons-outlined">emoji_events</span>পরীক্ষার ফলাফল অনুসন্ধান</h2>
+            <p>আপনার পরীক্ষার ফলাফল দেখতে নিচের ফর্মটি পূরণ করুন এবং প্রয়োজনীয় তথ্য নির্বাচন করুন।</p>
+            <div id="results-page-message" class="alert hidden"></div>
+            <div class="filter-controls"> <!-- Kept filter-controls class for consistency, but items differ -->
+                <div class="form-group">
+                    <label for="result-filter-class"><span class="material-icons-outlined">class</span>শ্রেণী নির্বাচন করুন</label>
+                    <select id="result-filter-class">
+                        <option value="">-- শ্রেণী --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="result-filter-section"><span class="material-icons-outlined">account_tree</span>শাখা নির্বাচন করুন</label>
+                    <select id="result-filter-section">
+                        <option value="">-- শাখা --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="result-filter-roll"><span class="material-icons-outlined">pin</span>রোল নম্বর লিখুন</label>
+                    <input type="number" id="result-filter-roll" placeholder="রোল নম্বর">
+                </div>
+                <div class="form-group">
+                    <label for="result-filter-year"><span class="material-icons-outlined">event</span>পরীক্ষার বর্ষ নির্বাচন করুন</label>
+                    <select id="result-filter-year">
+                        <option value="">-- বর্ষ --</option>
+                    </select>
+                </div>
+                <button id="result-search-btn" class="btn btn-gold">
+                    <span class="material-icons-outlined">find_in_page</span>ফলাফল দেখুন
+                </button>
+            </div>
+            <div id="result-display-area">
+                <p class="no-results"><span class="material-icons-outlined">manage_search</span>আপনার ফলাফল অনুসন্ধানের জন্য উপরের ফর্মটি পূরণ করুন।</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>© ২০২৪ আল-মাদরাসাতুল আরাবিয়া এমদাদুল উলূম লইপুরা, কুমিল্লা। সর্বস্বত্ব সংরক্ষিত। <span class="jarvis-heart">💖</span> দ্বারা প্রযুক্তি সমর্থিত।</p>
+    </footer>
+
+    <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc", 
+        authDomain: "queenschool-803d9.firebaseapp.com",
+        projectId: "queenschool-803d9",
+        storageBucket: "queenschool-803d9.firebasestorage.app",
+        messagingSenderId: "1078969444409",
+        appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const database = firebase.database();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const navLinksDesktop = document.querySelectorAll('.nav-links-desktop .nav-link');
+        const navLinksMobileContainer = document.querySelector('.nav-links-mobile');
+        const pageContents = document.querySelectorAll('.page-content');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const menuIcon = document.getElementById('menu-icon');
+        const logoLink = document.querySelector('.nav-link-logo');
+        
+        const homePageMessage = document.getElementById('home-page-message');
+        const firebaseNoticeTextElement = document.getElementById('firebase-notice-text');
+        const importantLinksList = document.getElementById('important-links-list');
+        const totalStudentsCountElement = document.getElementById('total-students-count');
+
+        const homeSliderDynamic = document.getElementById('home-slider-dynamic');
+        const homeSliderDotsDynamic = document.getElementById('home-slider-dots-dynamic');
+        const prevSlideBtn = document.getElementById('prevSlide');
+        const nextSlideBtn = document.getElementById('nextSlide');
+
+        // Students Page Elements - Simplified
+        const studentsFilterNameInput = document.getElementById('students-filter-name'); 
+        const studentsSearchByNameBtn = document.getElementById('students-search-by-name-btn'); // Changed ID
+        const studentsListContainer = document.getElementById('students-list-container');
+        const studentsPageMessage = document.getElementById('students-page-message');
+        
+        const resultFilterClassSelect = document.getElementById('result-filter-class');
+        const resultFilterSectionSelect = document.getElementById('result-filter-section');
+        const resultFilterRollInput = document.getElementById('result-filter-roll');
+        const resultFilterYearSelect = document.getElementById('result-filter-year');
+        const resultSearchBtn = document.getElementById('result-search-btn');
+        const resultDisplayArea = document.getElementById('result-display-area');
+        const resultsPageMessage = document.getElementById('results-page-message');
+
+        let allStudentsCache = []; 
+        let homeSliderDataCache = [];
+        let currentHomeSlideIndex = 0;
+        let homeSlideInterval;
+        let initialStudentLoadDone = false;
+
+        function populateMobileNav() { /* ... (same as before) ... */
+            navLinksMobileContainer.innerHTML = '';
+            const desktopLinks = document.querySelectorAll('.nav-links-desktop li a');
+            desktopLinks.forEach(link => {
+                const li = document.createElement('li');
+                const newLink = link.cloneNode(true);
+                newLink.classList.remove('active');
+                if (newLink.getAttribute('href') === 'dev.html') {
+                    newLink.setAttribute('target', '_blank');
+                    newLink.addEventListener('click', () => closeMobileMenu());
+                } else {
+                    newLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const pageId = newLink.dataset.page;
+                        if (pageId) { showPage(pageId); closeMobileMenu(); }
+                    });
+                }
+                li.appendChild(newLink);
+                navLinksMobileContainer.appendChild(li);
+            });
+        }
+        function toggleMobileMenu() {  /* ... (same as before) ... */
+            const isOpen = navLinksMobileContainer.classList.toggle('open');
+            menuToggle.setAttribute('aria-expanded', isOpen);
+            menuIcon.textContent = isOpen ? 'close' : 'menu';
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+        function closeMobileMenu() {  /* ... (same as before) ... */
+            navLinksMobileContainer.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuIcon.textContent = 'menu';
+            document.body.style.overflow = '';
+        }
+        if (menuToggle) menuToggle.addEventListener('click', toggleMobileMenu);
+        document.addEventListener('click', (event) => { /* ... (same as before) ... */
+            const isClickInsideNav = navLinksMobileContainer.contains(event.target);
+            const isClickOnToggle = menuToggle.contains(event.target);
+            if (navLinksMobileContainer.classList.contains('open') && !isClickInsideNav && !isClickOnToggle) {
+                closeMobileMenu();
+            }
+         });
+
+        async function showPage(pageId) {  /* ... (same logic, but Students Page initialization changes) ... */
+            pageContents.forEach(content => content.classList.remove('active'));
+            navLinksDesktop.forEach(link => link.classList.remove('active'));
+            const activeDesktopLink = document.querySelector(`.nav-links-desktop .nav-link[data-page="${pageId}"]`);
+            if (activeDesktopLink) activeDesktopLink.classList.add('active');
+
+            const mobileLinks = navLinksMobileContainer.querySelectorAll('.nav-link');
+            mobileLinks.forEach(link => link.classList.remove('active'));
+            const activeMobileLink = navLinksMobileContainer.querySelector(`.nav-link[data-page="${pageId}"]`);
+            if (activeMobileLink) activeMobileLink.classList.add('active');
+
+            const activePage = document.getElementById(pageId);
+            if (activePage) activePage.classList.add('active');
+            
+            window.scrollTo(0, 0);
+            hideMessage(studentsPageMessage); 
+            hideMessage(homePageMessage);
+            hideMessage(resultsPageMessage);
+
+            if (allStudentsCache.length === 0) {
+                await getAllStudentsFromFirebase(); 
+            }
+
+            if (pageId === 'students-page') {
+                if (!initialStudentLoadDone) { // Load all students on first visit to this page
+                    studentsListContainer.innerHTML = '<div class="loading-indicator"><span class="material-icons-outlined">hourglass_top</span>ছাত্রী তালিকা লোড হচ্ছে...</div>';
+                    await handleStudentNameSearch(true); // Pass true to show all if search is empty
+                    initialStudentLoadDone = true; 
+                } else {
+                    // If already loaded, typically we'd show the last search or all.
+                    // For simplicity, we'll re-trigger a search (which shows all if input is empty)
+                    // This ensures data is fresh if cache was updated elsewhere.
+                    await handleStudentNameSearch(true); 
+                }
+            } else if (pageId === 'results-page') {
+                await populateResultPageFilterDropdowns(); 
+            } else if (pageId === 'home-page') {
+                if (homeSliderDataCache.length === 0) {
+                    loadHomeSliderData();
+                } else {
+                    renderHomeSlider(); 
+                }
+                updateTotalStudentsCount(); 
+            }
+        }
+        if(logoLink) logoLink.addEventListener('click', (e) => { e.preventDefault(); showPage(logoLink.dataset.page);});
+        navLinksDesktop.forEach(link => { /* ... (same as before) ... */
+            if (link.getAttribute('href') !== 'dev.html') {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = e.target.closest('a').dataset.page;
+                    if (pageId) showPage(pageId);
+                });
+            }
+        });
+        
+        function showMessage(element, message, type = 'info', iconName = null) { /* ... (same as before) ... */
+            if (!element) return;
+            let iconHtml = '';
+            if (iconName) iconHtml = `<span class="material-icons-outlined">${iconName}</span> `;
+            else {
+                if (type === 'danger') iconHtml = `<span class="material-icons-outlined">error</span> `; 
+                else if (type === 'info') iconHtml = `<span class="material-icons-outlined">info</span> `; 
+                else if (type === 'success') iconHtml = `<span class="material-icons-outlined">check_circle</span> `; 
+            }
+            element.innerHTML = iconHtml + message;
+            element.className = `alert alert-${type}`; element.classList.remove('hidden');
+         }
+        function hideMessage(element) {  /* ... (same as before) ... */
+            if (element) { element.classList.add('hidden'); element.innerHTML = '';}
+        }
+
+        function animateCount(element, finalCount) { /* ... (same as before) ... */
+            let currentCount = 0;
+            const duration = 1500; 
+            const stepTime = Math.abs(Math.floor(duration / finalCount)) || 50;
+
+            const timer = setInterval(() => {
+                currentCount += 1;
+                element.textContent = currentCount.toLocaleString('bn-BD');
+                if (currentCount >= finalCount) { // Use >= to ensure it reaches the target
+                    element.textContent = finalCount.toLocaleString('bn-BD'); // Set exact final count
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        function updateTotalStudentsCount() { /* ... (same as before) ... */
+            if (totalStudentsCountElement && allStudentsCache.length > 0) {
+                if (totalStudentsCountElement.textContent === "0" || parseInt(totalStudentsCountElement.textContent.replace(/[^\d]/g, '')) !== allStudentsCache.length) {
+                     animateCount(totalStudentsCountElement, allStudentsCache.length);
+                } else {
+                    totalStudentsCountElement.textContent = allStudentsCache.length.toLocaleString('bn-BD');
+                }
+            } else if (totalStudentsCountElement) {
+                 totalStudentsCountElement.textContent = "0".toLocaleString('bn-BD');
+            }
+        }
+
+
+        async function getAllStudentsFromFirebase() {  /* ... (same as before) ... */
+            try {
+                const snapshot = await database.ref('students').once('value');
+                const students = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        students.push({ firebaseId: childSnapshot.key, ...childSnapshot.val() });
+                    });
+                }
+                allStudentsCache = students; 
+                updateTotalStudentsCount(); 
+                return students;
+            } catch (error) {
+                console.error("ছাত্রীদের তথ্য আনতে ত্রুটি:", error);
+                showMessage(studentsPageMessage, 'ছাত্রীদের তথ্য আনতে ত্রুটি হয়েছে: ' + error.message, 'danger', 'cloud_off');
+                if (studentsListContainer) studentsListContainer.innerHTML = '<p class="no-results"><span class="material-icons-outlined">cloud_off</span>ছাত্রী তথ্য আনতে ব্যর্থ।</p>';
+                return []; 
+            }
+        }
+        
+        function listenForFirebaseNotices() { /* ... (same as before) ... */
+            const noticeRef = database.ref('site_notice/current_message');
+            noticeRef.on('value', (snapshot) => {
+                const message = snapshot.val();
+                if (firebaseNoticeTextElement) {
+                    if (message && typeof message === 'string' && message.trim() !== '') {
+                        const sanitizedMessage = message.replace(/</g, "<").replace(/>/g, ">");
+                        firebaseNoticeTextElement.innerHTML = `<span class="material-icons-outlined">campaign</span> ${sanitizedMessage} <span class="material-icons-outlined" style="margin-left:50px;">campaign</span> ${sanitizedMessage}`;
+                        firebaseNoticeTextElement.style.animation = 'none';
+                        void firebaseNoticeTextElement.offsetWidth; 
+                        firebaseNoticeTextElement.style.animation = 'marquee 45s linear infinite';
+                    } else {
+                        firebaseNoticeTextElement.innerHTML = `<span class="material-icons-outlined">mosque</span> আল-মাদরাসাতুল আরাবিয়া এমদাদুল উলূম-এ আপনাকে স্বাগতম!`;
+                    }
+                }
+             }, (error) => { console.error("নোটিশ আনতে ত্রুটি:", error); if (firebaseNoticeTextElement) firebaseNoticeTextElement.textContent = "নোটিশ লোড করতে সমস্যা হয়েছে।"; });
+
+            const linksRef = database.ref('site_notice/important_links');
+            linksRef.on('value', (snapshot) => {
+                if (importantLinksList) {
+                    importantLinksList.innerHTML = ''; 
+                    const links = snapshot.val();
+                    if (links && typeof links === 'object' && Object.keys(links).length > 0) {
+                        Object.values(links).forEach(link => {
+                            if (link && link.name && link.url) {
+                                const li = document.createElement('li');
+                                const a = document.createElement('a');
+                                a.href = link.url;
+                                a.target = "_blank"; 
+                                a.rel = "noopener noreferrer";
+                                a.innerHTML = `<span class="material-icons-outlined">launch</span> ${link.name.replace(/</g, "<").replace(/>/g, ">")}`;
+                                li.appendChild(a);
+                                importantLinksList.appendChild(li);
+                            }
+                        });
+                         if (importantLinksList.children.length === 0) {
+                             importantLinksList.innerHTML = '<p class="no-links-message">কোনো গুরুত্বপূর্ণ লিঙ্ক বর্তমানে উপলব্ধ নেই।</p>';
+                         }
+                    } else {
+                        importantLinksList.innerHTML = '<p class="no-links-message">কোনো গুরুত্বপূর্ণ লিঙ্ক বর্তমানে উপলব্ধ নেই।</p>';
+                    }
+                }
+            }, (error) => { console.error("গুরুত্বপূর্ণ লিঙ্ক আনতে ত্রুটি:", error); if (importantLinksList) importantLinksList.innerHTML = '<p class="no-links-message">লিঙ্ক লোড করতে সমস্যা হয়েছে।</p>'; });
+        }
+
+        async function loadHomeSliderData() { /* ... (same as before) ... */
+            if (!homeSliderDynamic) return;
+            homeSliderDynamic.innerHTML = '<div class="loading-indicator"><span class="material-icons-outlined">hourglass_top</span>স্লাইডার লোড হচ্ছে...</div>';
+            try {
+                const snapshot = await database.ref('home_slider_images').once('value');
+                homeSliderDynamic.innerHTML = ''; 
+                if (snapshot.exists()) {
+                    homeSliderDataCache = Object.values(snapshot.val()).filter(slide => slide && slide.imageUrl); 
+                    if (homeSliderDataCache.length > 0) {
+                        renderHomeSlider();
+                        startHomeSlideInterval();
+                    } else {
+                         homeSliderDynamic.innerHTML = '<p class="no-results" style="padding: 3rem; text-align:center; color: var(--text-secondary);"><span class="material-icons-outlined" style="font-size: 2em; display:block; margin-bottom:0.5rem;">hide_image</span>কোনো স্লাইড চিত্র কনফিগার করা হয়নি।</p>';
+                    }
+                } else {
+                    homeSliderDynamic.innerHTML = '<p class="no-results" style="padding: 3rem; text-align:center; color: var(--text-secondary);"><span class="material-icons-outlined" style="font-size: 2em; display:block; margin-bottom:0.5rem;">hide_image</span>কোনো স্লাইড চিত্র পাওয়া যায়নি।</p>';
+                }
+            } catch (error) {
+                console.error("স্লাইডার ডেটা আনতে ত্রুটি:", error);
+                homeSliderDynamic.innerHTML = '<p class="no-results" style="padding: 3rem; text-align:center; color: var(--text-secondary);"><span class="material-icons-outlined" style="font-size: 2em; display:block; margin-bottom:0.5rem;">broken_image</span>স্লাইডার লোড করতে সমস্যা হয়েছে।</p>';
+            }
+        }
+        function renderHomeSlider() { /* ... (same as before) ... */
+            if (!homeSliderDynamic || !homeSliderDotsDynamic || homeSliderDataCache.length === 0) return;
+            homeSliderDynamic.innerHTML = '';
+            homeSliderDotsDynamic.innerHTML = '';
+
+            homeSliderDataCache.forEach((slideData, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.classList.add('slide');
+                if (index === currentHomeSlideIndex) slideDiv.classList.add('active-slide');
+
+                const img = document.createElement('img');
+                img.src = slideData.imageUrl;
+                img.alt = slideData.caption || `স্লাইড ${index + 1}`;
+                img.onerror = function() { this.style.display='none'; }
+                slideDiv.appendChild(img);
+
+                const contentDiv = document.createElement('div');
+                contentDiv.classList.add('slide-content');
+                
+                if (slideData.caption) {
+                    const captionH3 = document.createElement('h3');
+                    captionH3.classList.add('slide-caption');
+                    captionH3.textContent = slideData.caption;
+                    contentDiv.appendChild(captionH3);
+                }
+
+                if (slideData.linkUrl && slideData.linkText) {
+                    const linkA = document.createElement('a');
+                    linkA.href = slideData.linkUrl;
+                    linkA.classList.add('slide-link');
+                    if (!slideData.linkUrl.startsWith('#') && !slideData.linkUrl.startsWith(window.location.origin)) { 
+                        linkA.target = "_blank";
+                        linkA.rel = "noopener noreferrer";
+                    }
+                    linkA.textContent = slideData.linkText;
+                    contentDiv.appendChild(linkA);
+                }
+                slideDiv.appendChild(contentDiv);
+                homeSliderDynamic.appendChild(slideDiv);
+
+                const dot = document.createElement('button'); 
+                dot.classList.add('dot');
+                if (index === currentHomeSlideIndex) dot.classList.add('active');
+                dot.setAttribute('aria-label', `স্লাইড ${index + 1}-এ যান`);
+                dot.addEventListener('click', () => goToHomeSlide(index));
+                homeSliderDotsDynamic.appendChild(dot);
+            });
+            updateHomeSliderTransform();
+        }
+        function updateHomeSliderTransform() { /* ... (same as before) ... */
+            if (!homeSliderDynamic || homeSliderDataCache.length === 0) return;
+            homeSliderDynamic.style.transform = `translateX(-${currentHomeSlideIndex * 100}%)`;
+            
+            const slides = homeSliderDynamic.querySelectorAll('.slide');
+            slides.forEach((s, i) => s.classList.toggle('active-slide', i === currentHomeSlideIndex));
+
+            const dots = homeSliderDotsDynamic.querySelectorAll('.dot');
+            dots.forEach((d, i) => d.classList.toggle('active', i === currentHomeSlideIndex));
+        }
+        function nextHomeSlide() { /* ... (same as before) ... */
+            if (homeSliderDataCache.length === 0) return;
+            currentHomeSlideIndex = (currentHomeSlideIndex + 1) % homeSliderDataCache.length;
+            updateHomeSliderTransform();
+        }
+        function prevHomeSlide() { /* ... (same as before) ... */
+             if (homeSliderDataCache.length === 0) return;
+            currentHomeSlideIndex = (currentHomeSlideIndex - 1 + homeSliderDataCache.length) % homeSliderDataCache.length;
+            updateHomeSliderTransform();
+        }
+        function goToHomeSlide(index) { /* ... (same as before) ... */
+            if (index < 0 || index >= homeSliderDataCache.length) return;
+            currentHomeSlideIndex = index;
+            updateHomeSliderTransform();
+            resetHomeSlideInterval();
+        }
+        function startHomeSlideInterval() { /* ... (same as before) ... */
+            if (homeSliderDataCache.length <= 1) { 
+                if (homeSliderDotsDynamic) homeSliderDotsDynamic.style.display = 'none';
+                if (prevSlideBtn && nextSlideBtn) {
+                    prevSlideBtn.style.display = 'none';
+                    nextSlideBtn.style.display = 'none';
+                }
+                return;
+            }
+            if (homeSliderDotsDynamic) homeSliderDotsDynamic.style.display = 'block';
+            if (prevSlideBtn && nextSlideBtn) {
+                 prevSlideBtn.style.display = 'inline-flex';
+                 nextSlideBtn.style.display = 'inline-flex';
+            }
+            clearInterval(homeSlideInterval); 
+            homeSlideInterval = setInterval(nextHomeSlide, 7000); 
+        }
+        function resetHomeSlideInterval() { /* ... (same as before) ... */
+            startHomeSlideInterval();
+        }
+        if (nextSlideBtn) nextSlideBtn.addEventListener('click', () => { nextHomeSlide(); resetHomeSlideInterval(); });
+        if (prevSlideBtn) prevSlideBtn.addEventListener('click', () => { prevHomeSlide(); resetHomeSlideInterval(); });
+
+        // --- Students Page Logic - Simplified Search ---
+        function renderStudentCards(studentsToDisplay) { /* ... (same as before, but logic for roll display changes slightly as no class filter) ... */
+            studentsListContainer.innerHTML = ''; 
+            if (studentsToDisplay.length === 0) {
+                const searchTerm = studentsFilterNameInput.value.trim();
+                if (searchTerm) {
+                    studentsListContainer.innerHTML = `<p class="no-results"><span class="material-icons-outlined">person_search_off</span>"${sanitize(searchTerm)}" নামের কোনো ছাত্রী পাওয়া যায়নি।</p>`;
+                } else {
+                    studentsListContainer.innerHTML = '<p class="no-results"><span class="material-icons-outlined">person_off</span>কোনো ছাত্রী তথ্য বর্তমানে উপলব্ধ নেই।</p>';
+                }
+                return;
+            }
+
+            // Sort by name by default when only name search is available
+            studentsToDisplay.sort((a, b) => (a.name || "").localeCompare(b.name || "", 'bn'));
+
+            studentsToDisplay.forEach((student, index) => {
+                const card = document.createElement('div');
+                card.classList.add('student-card');
+                card.style.animationDelay = `${index * 0.06}s`; 
+
+                const regTime = student.registrationTimestamp || (student.firebaseId && student.firebaseId.startsWith('UID-') ? parseInt(student.firebaseId.substring(4)) : null);
+                let regYear = regTime ? new Date(regTime).getFullYear() : (student.classinyear || 'N/A');
+                
+                const sanitize = (str) => str ? String(str).replace(/</g, "<").replace(/>/g, ">") : 'N/A';
+
+                let profilePicHtml;
+                if (student.profileImageUrl) {
+                    profilePicHtml = `<img src="${sanitize(student.profileImageUrl)}" alt="${sanitize(student.name)}" class="student-card-image" onerror="this.outerHTML = '<div class=\\'student-card-image-placeholder\\'><span class=\\'material-icons-outlined\\'>face_3</span></div>';">`;
+                } else {
+                    profilePicHtml = `<div class="student-card-image-placeholder"><span class="material-icons-outlined">face_3</span></div>`;
+                }
+                
+                // Display Firebase roll if available, otherwise '-' as there's no specific class context for indexed roll
+                let displayRoll = student.roll ? String(student.roll).toLocaleString('bn-BD') : '-';
+
+                card.innerHTML = `
+                    <div class="student-card-content">
+                        <div class="student-card-header">
+                            ${profilePicHtml}
+                            <div class="student-card-name-class">
+                                <h4 class="student-card-name">${sanitize(student.name)}</h4>
+                                <p class="student-card-class">${sanitize(student.studentClass)}</p>
+                            </div>
+                        </div>
+                        <ul class="student-card-details">
+                            <li><span class="material-icons-outlined">confirmation_number</span><strong>রোলঃ</strong> ${displayRoll}</li>
+                            <li><span class="material-icons-outlined">groups_3</span><strong>শাখাঃ</strong> ${sanitize(student.section)}</li>
+                            <li><span class="material-icons-outlined">event_note</span><strong>রেজিঃ বর্ষঃ</strong> ${typeof regYear === 'number' ? regYear.toLocaleString('bn-BD') : regYear}</li>
+                        </ul>
+                    </div>
+                `;
+                studentsListContainer.appendChild(card);
+            });
+        }
+        
+        async function handleStudentNameSearch(showAllOnEmpty = false) {
+            studentsListContainer.innerHTML = '<div class="loading-indicator"><span class="material-icons-outlined">hourglass_half</span>অনুসন্ধান করা হচ্ছে...</div>';
+            hideMessage(studentsPageMessage);
+            try {
+                if (allStudentsCache.length === 0) { // Should be pre-loaded by showPage
+                    await getAllStudentsFromFirebase(); 
+                }
+                
+                const searchName = studentsFilterNameInput.value.trim().toLowerCase(); 
+
+                if (!searchName && !showAllOnEmpty) { // If search is empty and not forced to show all
+                    studentsListContainer.innerHTML = '<p class="no-results"><span class="material-icons-outlined">edit_note</span>অনুসন্ধানের জন্য ছাত্রীর নাম লিখুন।</p>';
+                    return;
+                }
+
+                const filteredStudents = allStudentsCache.filter(student => {
+                    if (!searchName) return true; // Show all if searchName is empty (and showAllOnEmpty is true)
+                    return (student.name && student.name.toLowerCase().includes(searchName)); 
+                });
+                renderStudentCards(filteredStudents);
+
+            } catch (error) { 
+                showMessage(studentsPageMessage, 'অনুসন্ধান করতে ত্রুটি: ' + error.message, 'danger', 'error');
+                studentsListContainer.innerHTML = '<p class="no-results"><span class="material-icons-outlined">error_outline</span>তথ্য আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p>';
+            }
+        }
+
+        if (studentsSearchByNameBtn) { 
+            studentsSearchByNameBtn.addEventListener('click', () => handleStudentNameSearch(false)); 
+        }
+        // Optional: Search as user types (can be intensive for large lists)
+        // studentsFilterNameInput.addEventListener('input', () => handleStudentNameSearch(false));
+
+
+        // --- Results Page Logic ---
+        async function populateResultPageFilterDropdowns() { /* ... (same as before) ... */
+            const classes = new Set();
+            const sections = new Set(); 
+
+            allStudentsCache.forEach(student => { 
+                if (student.studentClass) classes.add(student.studentClass);
+                if (student.section) sections.add(student.section); 
+            });
+            
+            const currentClass = resultFilterClassSelect.value; 
+            resultFilterClassSelect.innerHTML = '<option value="">-- শ্রেণী --</option>';
+            Array.from(classes).sort((a,b)=>a.localeCompare(b,'bn')).forEach(cls => {
+                const option = document.createElement('option'); option.value = cls; option.textContent = cls; resultFilterClassSelect.appendChild(option);
+            });
+            resultFilterClassSelect.value = currentClass;
+
+            const currentSection = resultFilterSectionSelect.value; 
+            resultFilterSectionSelect.innerHTML = '<option value="">-- শাখা --</option>'; 
+            Array.from(sections).sort((a,b)=>a.localeCompare(b,'bn')).forEach(sec => { 
+                 const option = document.createElement('option'); option.value = sec; option.textContent = sec; resultFilterSectionSelect.appendChild(option);
+            });
+            resultFilterSectionSelect.value = currentSection;
+
+            const currentResultYear = resultFilterYearSelect.value;
+            resultFilterYearSelect.innerHTML = '<option value="">-- বর্ষ --</option>';
+            const currentAcademicYear = new Date().getFullYear();
+            for (let i = 0; i < 7; i++) { 
+                const year = currentAcademicYear - i;
+                const option = document.createElement('option'); option.value = year; option.textContent = year.toLocaleString('bn-BD'); resultFilterYearSelect.appendChild(option);
+            }
+            resultFilterYearSelect.value = currentResultYear;
+        }
+        function sanitizeForFirebaseKey(text) { /* ... (same as before) ... */
+            if (!text) return "";
+            return text.toLowerCase()
+                       .replace(/\s+/g, '_')      
+                       .replace(/[^\u0980-\u09FF\w-]+/g, ''); 
+        }
+        async function searchForResult() { /* ... (same as before) ... */
+            hideMessage(resultsPageMessage);
+            resultDisplayArea.innerHTML = '<div class="loading-indicator"><span class="material-icons-outlined">hourglass_bottom</span>ফলাফল অনুসন্ধান করা হচ্ছে...</div>';
+
+            const selectedClass = resultFilterClassSelect.value;
+            const selectedSection = resultFilterSectionSelect.value; 
+            const rollNumber = resultFilterRollInput.value.trim();
+            const selectedYear = resultFilterYearSelect.value;
+
+            if (!selectedClass || !rollNumber || !selectedYear) {
+                showMessage(resultsPageMessage, "অনুগ্রহ করে শ্রেণী, রোল নম্বর এবং পরীক্ষার বর্ষ নির্বাচন করুন। শাখা ঐচ্ছিক।", "danger", 'warning');
+                resultDisplayArea.innerHTML = '<p class="no-results"><span class="material-icons-outlined">warning_amber</span>অনুসন্ধানের জন্য প্রয়োজনীয় তথ্য (শ্রেণী, রোল, বর্ষ) দিন।</p>'; 
+                return;
+            }
+
+            const classId = sanitizeForFirebaseKey(selectedClass);
+            const sectionId = selectedSection ? sanitizeForFirebaseKey(selectedSection) : 'all_students'; 
+            const rollId = rollNumber; 
+
+            const resultPath = `results/${selectedYear}/${classId}/${sectionId}/${rollId}`;
+            
+            try {
+                const snapshot = await database.ref(resultPath).once('value');
+                if (snapshot.exists()) {
+                    const resultData = snapshot.val();
+                    displayResult(resultData, { class: selectedClass, section: selectedSection || "N/A", roll: rollNumber, year: selectedYear});
+                } else {
+                    if (selectedSection && sectionId !== 'all_students') {
+                        const fallbackPath = `results/${selectedYear}/${classId}/all_students/${rollId}`;
+                        const fallbackSnapshot = await database.ref(fallbackPath).once('value');
+                        if (fallbackSnapshot.exists()) {
+                            const resultData = fallbackSnapshot.val();
+                            displayResult(resultData, { class: selectedClass, section: 'সাধারণ (শাখা বিহীন)', roll: rollNumber, year: selectedYear });
+                            return;
+                        }
+                    }
+                    resultDisplayArea.innerHTML = '<p class="no-results"><span class="material-icons-outlined">find_replace</span>দুঃখিত, এই তথ্যের জন্য কোনো ফলাফল খুঁজে পাওয়া যায়নি।</p>';
+                }
+            } catch (error) {
+                console.error("ফলাফল আনতে ত্রুটি:", error);
+                showMessage(resultsPageMessage, "ফলাফল আনতে প্রযুক্তিগত সমস্যা হয়েছে।", "danger", 'cloud_error');
+                resultDisplayArea.innerHTML = '<p class="no-results"><span class="material-icons-outlined">error_outline</span>একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।</p>';
+            }
+        }
+        function displayResult(resultData, searchCriteria) { /* ... (same as before) ... */
+            resultDisplayArea.innerHTML = ''; 
+            const card = document.createElement('div');
+            card.classList.add('result-display-card');
+            const sanitize = (str) => str ? String(str).replace(/</g, "<").replace(/>/g, ">") : 'N/A';
+
+            let content = `<h4>${sanitize(resultData.resultTitle) || 'পরীক্ষার ফলাফল'}</h4>`;
+            content += `<p><strong>ছাত্রীর নামঃ</strong> ${sanitize(resultData.studentName)}</p>`;
+            content += `<p><strong>শ্রেণীঃ</strong> ${sanitize(searchCriteria.class)}</p>`;
+            if (searchCriteria.section && searchCriteria.section !== 'N/A' && searchCriteria.section !== 'সাধারণ (শাখা বিহীন)') {
+                content += `<p><strong>শাখাঃ</strong> ${sanitize(searchCriteria.section)}</p>`;
+            }
+            content += `<p><strong>রোল নম্বরঃ</strong> ${Number(searchCriteria.roll).toLocaleString('bn-BD')}</p>`;
+            content += `<p><strong>পরীক্ষার বর্ষঃ</strong> ${Number(searchCriteria.year).toLocaleString('bn-BD')}</p>`;
+            
+            if(resultData.gpa) content += `<p><strong>জি.পি.এ / প্রাপ্ত নম্বরঃ</strong> ${String(resultData.gpa).toLocaleString('bn-BD')}</p>`;
+            if(resultData.status) content += `<p><strong>ফলাফলের অবস্থাঃ</strong> ${sanitize(resultData.status)}</p>`;
+
+            if (resultData.resultUrl) {
+                content += `<a href="${sanitize(resultData.resultUrl)}" target="_blank" rel="noopener noreferrer" class="result-link btn btn-gold">
+                                <span class="material-icons-outlined">picture_as_pdf</span> সম্পূর্ণ ফলাফল দেখুন (PDF/Image)
+                            </a>`;
+            } else {
+                content += `<p style="margin-top:1.5rem; color: var(--text-secondary);"><em>এই ফলাফলের জন্য কোনো বিস্তারিত ফাইল (পিডিএফ/ছবি) সংযুক্ত করা হয়নি।</em></p>`;
+            }
+             if (resultData.publishedDate) {
+                let publishedDateStr = 'N/A';
+                try {
+                    publishedDateStr = new Date(resultData.publishedDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', hour12: true });
+                } catch(e) { console.warn("Invalid date format for publishedDate", resultData.publishedDate); }
+                content += `<p style="font-size:0.95em; margin-top:2rem; color:var(--text-secondary);">প্রকাশের তারিখঃ ${publishedDateStr}</p>`;
+            }
+            card.innerHTML = content;
+            resultDisplayArea.appendChild(card);
+        }
+        if (resultSearchBtn) { /* ... (same as before) ... */
+            resultSearchBtn.addEventListener('click', searchForResult);
+        }
+
+        async function initializeApp() { /* ... (same as before) ... */
+            populateMobileNav();
+            listenForFirebaseNotices();
+            await getAllStudentsFromFirebase(); 
+            showPage('home-page'); 
+        }
+
+        initializeApp();
+
+    });
+    </script>
+</body>
+</html>
