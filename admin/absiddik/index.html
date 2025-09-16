@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Admin Panel</title>
+    <style>
+        /* --- General Styles --- */
+        :root {
+            --dark-theme-bg: #2c3e50; /* Dark background for sidebar */
+            --dark-theme-text: #ecf0f1; /* Light text for dark theme */
+            --accent-color: #3498db; /* Blue accent */
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --border-color: #ddd;
+            --input-bg: #f8f9fa;
+            --button-hover-bg: #2980b9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        /* --- Sidebar Styles --- */
+        #sidebar {
+            width: 250px;
+            background-color: var(--dark-theme-bg);
+            color: var(--dark-theme-text);
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: width 0.3s ease;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            overflow-y: auto; /* Enable scrolling if content overflows */
+            height: 100vh;
+            position: fixed; /* Fixed position for sidebar */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensure sidebar is above other content */
+        }
+
+        #sidebar.collapsed {
+            width: 60px;
+        }
+
+        #sidebar .logo {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+            padding: 0 15px;
+        }
+
+        #sidebar.collapsed .logo {
+            font-size: 1.5em;
+            padding: 0 5px;
+        }
+
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #sidebar ul li {
+            margin: 0;
+        }
+
+        #sidebar ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--dark-theme-text);
+            text-decoration: none;
+            transition: background-color 0.3s ease, padding-left 0.3s ease;
+            font-size: 1.1em;
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflowed text */
+            text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+        }
+
+        #sidebar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 30px;
+        }
+
+        #sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 1.2em;
+            min-width: 20px; /* Ensure icons have consistent spacing */
+            display: inline-block; /* Align icons properly */
+            text-align: center;
+        }
+
+        #sidebar.collapsed ul li a {
+            padding: 15px 15px;
+            text-align: center;
+            font-size: 1.3em;
+        }
+
+        #sidebar.collapsed ul li a i {
+            margin-right: 0;
+        }
+
+        #sidebar.collapsed ul li span.tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            left: 100%;
+            top: 50%;
+            margin-top: -5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #sidebar.collapsed ul li:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        #sidebar-toggle {
+            position: fixed;
+            top: 15px;
+            left: 260px; /* Position next to the sidebar */
+            z-index: 1001; /* Above sidebar */
+            background-color: var(--dark-theme-bg);
+            color: var(--dark-theme-text);
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: left 0.3s ease;
+            border-radius: 5px;
+        }
+
+        #sidebar.collapsed ~ #main-content {
+            margin-left: 60px; /* Adjust main content when sidebar is collapsed */
+        }
+
+        #sidebar-toggle.collapsed {
+            left: 70px;
+        }
+
+        /* --- Main Content Styles --- */
+        #main-content {
+            flex-grow: 1;
+            padding: 30px;
+            margin-left: 250px; /* Initial margin to make space for sidebar */
+            transition: margin-left 0.3s ease;
+            background-color: #f4f7f6;
+        }
+
+        .top-navbar {
+            background-color: var(--card-bg);
+            padding: 15px 30px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            position: sticky; /* Make navbar sticky */
+            top: 0;
+            z-index: 999; /* Ensure it's above content */
+        }
+
+        .top-navbar h1 {
+            margin: 0;
+            color: var(--dark-theme-bg);
+            font-size: 1.8em;
+        }
+
+        .content-area {
+            background-color: var(--card-bg);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            border-radius: 8px;
+            min-height: calc(100vh - 150px); /* Adjust height to fit screen */
+        }
+
+        /* --- Dashboard Styles --- */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 1.3em;
+            color: var(--dark-theme-bg);
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        /* --- Form Styles --- */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-theme-bg);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 1em;
+            background-color: var(--input-bg);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .form-group select {
+            appearance: none; /* Remove default dropdown arrow */
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 2L6 7L1.5 2' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 12px 8px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block; /* For proper alignment */
+        }
+
+        .btn:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* --- Table Styles --- */
+        .table-container {
+            overflow-x: auto; /* Enable horizontal scrolling for tables on small screens */
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table thead th {
+            background-color: #e9ecef;
+            color: var(--dark-theme-bg);
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .data-table .btn-delete {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #e74c3c;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .data-table .btn-delete:hover {
+            color: #c0392b;
+            transform: scale(1.1);
+        }
+
+        /* --- Responsiveness --- */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 200px;
+                transform: translateX(-200px); /* Initially hidden */
+                position: fixed;
+                z-index: 1000;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar-toggle {
+                left: 10px; /* Show toggle button */
+                top: 15px;
+            }
+
+            #main-content {
+                margin-left: 0; /* Full width when sidebar is hidden */
+                padding-top: 70px; /* Space for sticky navbar */
+            }
+
+            .top-navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 998; /* Below sidebar toggle */
+                padding: 15px 20px;
+            }
+
+            .top-navbar h1 {
+                font-size: 1.5em;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr; /* Stack stats on small screens */
+            }
+
+            .form-container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+        /* --- Loading Spinner --- */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid var(--accent-color); /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <div class="logo">QueenSchool</div>
+        <ul>
+            <li><a href="#" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> <span class="menu-text">Dashboard</span></a></li>
+            <li><a href="#" data-section="add-year"><i class="fas fa-calendar-alt"></i> <span class="menu-text">Add Year</span></a></li>
+            <li><a href="#" data-section="add-class"><i class="fas fa-chalkboard"></i> <span class="menu-text">Add Class</span></a></li>
+            <li><a href="#" data-section="add-section"><i class="fas fa-door-open"></i> <span class="menu-text">Add Section</span></a></li>
+            <li><a href="#" data-section="add-student"><i class="fas fa-user-plus"></i> <span class="menu-text">Add Student</span></a></li>
+            <li><a href="#" data-section="add-result"><i class="fas fa-poll"></i> <span class="menu-text">Add Result</span></a></li>
+            <li><a href="#" data-section="manage-years"><i class="fas fa-list-alt"></i> <span class="menu-text">Manage Years</span></a></li>
+            <li><a href="#" data-section="manage-classes"><i class="fas fa-list-alt"></i> <span class="menu-text">Manage Classes</span></a></li>
+            <li><a href="#" data-section="manage-sections"><i class="fas fa-list-alt"></i> <span class="menu-text">Manage Sections</span></a></li>
+            <li><a href="#" data-section="manage-students"><i class="fas fa-list-alt"></i> <span class="menu-text">Manage Students</span></a></li>
+            <li><a href="#" data-section="manage-results"><i class="fas fa-list-alt"></i> <span class="menu-text">Manage Results</span></a></li>
+        </ul>
+    </div>
+
+    <button id="sidebar-toggle" class="sidebar-toggle-icon"><i class="fas fa-bars"></i></button>
+
+    <div id="main-content">
+        <div class="top-navbar">
+            <h1 id="current-title">Dashboard</h1>
+            <!-- Could add user info or other quick links here -->
+        </div>
+        <div class="content-area" id="content-area">
+            <!-- Content will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // --- Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
+            authDomain: "queenschool-803d9.firebaseapp.com",
+            databaseURL: "https://queenschool-803d9-default-rtdb.firebaseio.com",
+            projectId: "queenschool-803d9",
+            storageBucket: "queenschool-803d9.firestorage.app", // Corrected typo: storageBucket
+            messagingSenderId: "1078969444409",
+            appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // --- DOM Elements ---
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const mainContent = document.getElementById('main-content');
+        const contentArea = document.getElementById('content-area');
+        const currentTitle = document.getElementById('current-title');
+        const sidebarLinks = document.querySelectorAll('#sidebar ul li a');
+
+        // --- State Variables ---
+        let isSidebarCollapsed = false;
+
+        // --- Helper Functions ---
+
+        /**
+         * Displays a loading spinner.
+         */
+        function showLoader() {
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            contentArea.innerHTML = ''; // Clear previous content
+            contentArea.appendChild(loader);
+            loader.style.display = 'block';
+        }
+
+        /**
+         * Hides the loading spinner.
+         */
+        function hideLoader() {
+            const loader = contentArea.querySelector('.loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        }
+
+        /**
+         * Dynamically loads content into the main area.
+         * @param {string} section - The name of the section to load.
+         * @param {string} title - The title for the current page.
+         */
+        function loadSection(section, title) {
+            currentTitle.textContent = title;
+            contentArea.innerHTML = '<div class="loader"></div>'; // Show loader immediately
+            setTimeout(() => { // Simulate loading delay for better UX
+                switch (section) {
+                    case 'dashboard':
+                        renderDashboard();
+                        break;
+                    case 'add-year':
+                        renderAddYearForm();
+                        break;
+                    case 'add-class':
+                        renderAddClassForm();
+                        break;
+                    case 'add-section':
+                        renderAddSectionForm();
+                        break;
+                    case 'add-student':
+                        renderAddStudentForm();
+                        break;
+                    case 'add-result':
+                        renderAddResultForm();
+                        break;
+                    case 'manage-years':
+                        renderManageYears();
+                        break;
+                    case 'manage-classes':
+                        renderManageClasses();
+                        break;
+                    case 'manage-sections':
+                        renderManageSections();
+                        break;
+                    case 'manage-students':
+                        renderManageStudents();
+                        break;
+                    case 'manage-results':
+                        renderManageResults();
+                        break;
+                    default:
+                        contentArea.innerHTML = '<h2>Section not found</h2>';
+                }
+                hideLoader();
+            }, 100); // Short delay to show loader
+        }
+
+        /**
+         * Toggles the sidebar's collapsed state.
+         */
+        function toggleSidebar() {
+            isSidebarCollapsed = !isSidebarCollapsed;
+            sidebar.classList.toggle('collapsed');
+            sidebarToggle.classList.toggle('collapsed');
+            mainContent.style.marginLeft = isSidebarCollapsed ? '60px' : '250px';
+            sidebarLinks.forEach(link => {
+                const menuText = link.querySelector('.menu-text');
+                if (menuText) {
+                    menuText.style.display = isSidebarCollapsed ? 'none' : 'inline';
+                }
+                if (isSidebarCollapsed) {
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'tooltip-text';
+                    tooltip.textContent = link.querySelector('.menu-text').textContent;
+                    link.appendChild(tooltip);
+                } else {
+                    const tooltip = link.querySelector('.tooltip-text');
+                    if (tooltip) tooltip.remove();
+                }
+            });
+             // Adjust sidebar-toggle position when collapsed
+             if (isSidebarCollapsed) {
+                sidebarToggle.style.left = '70px';
+             } else {
+                sidebarToggle.style.left = '260px';
+             }
+        }
+
+        /**
+         * Handles clicks on sidebar navigation links.
+         * @param {Event} e - The click event.
+         */
+        function handleSidebarClick(e) {
+            e.preventDefault();
+            const section = e.currentTarget.getAttribute('data-section');
+            const title = e.currentTarget.querySelector('.menu-text').textContent;
+            loadSection(section, title);
+        }
+
+        // --- Firebase Functions ---
+
+        // Years
+        async function addYear(year) {
+            const newYearRef = database.ref('years').push();
+            await newYearRef.set({
+                id: newYearRef.key,
+                year: year
+            });
+            return newYearRef.key;
+        }
+
+        async function getYears() {
+            const snapshot = await database.ref('years').once('value');
+            const years = [];
+            snapshot.forEach(child => {
+                years.push({ id: child.key, ...child.val() });
+            });
+            return years;
+        }
+
+        async function deleteYear(yearId) {
+            await database.ref(`years/${yearId}`).remove();
+        }
+
+        // Classes
+        async function addClass(className) {
+            const newClassRef = database.ref('classes').push();
+            await newClassRef.set({
+                id: newClassRef.key,
+                name: className
+            });
+            return newClassRef.key;
+        }
+
+        async function getClasses() {
+            const snapshot = await database.ref('classes').once('value');
+            const classes = [];
+            snapshot.forEach(child => {
+                classes.push({ id: child.key, ...child.val() });
+            });
+            return classes;
+        }
+
+        async function deleteClass(classId) {
+            await database.ref(`classes/${classId}`).remove();
+        }
+
+        // Sections
+        async function addSection(sectionName) {
+            const newSectionRef = database.ref('sections').push();
+            await newSectionRef.set({
+                id: newSectionRef.key,
+                name: sectionName
+            });
+            return newSectionRef.key;
+        }
+
+        async function getSections() {
+            const snapshot = await database.ref('sections').once('value');
+            const sections = [];
+            snapshot.forEach(child => {
+                sections.push({ id: child.key, ...child.val() });
+            });
+            return sections;
+        }
+
+        async function deleteSection(sectionId) {
+            await database.ref(`sections/${sectionId}`).remove();
+        }
+
+        // Students
+        async function addStudent(name, classId, yearId, sectionId, roll, userId = null) {
+            const newStudentRef = database.ref('students').push();
+            await newStudentRef.set({
+                id: newStudentRef.key,
+                name: name,
+                classId: classId,
+                yearId: yearId,
+                sectionId: sectionId,
+                roll: roll,
+                userId: userId || ''
+            });
+            return newStudentRef.key;
+        }
+
+        async function getStudents() {
+            const snapshot = await database.ref('students').once('value');
+            const students = [];
+            snapshot.forEach(child => {
+                students.push({ id: child.key, ...child.val() });
+            });
+            return students;
+        }
+
+        async function deleteStudent(studentId) {
+            await database.ref(`students/${studentId}`).remove();
+        }
+
+        // Results
+        async function addResult(studentId, classId, resultLink) {
+            const newResultRef = database.ref('results').push();
+            await newResultRef.set({
+                id: newResultRef.key,
+                studentId: studentId,
+                classId: classId,
+                resultLink: resultLink,
+                timestamp: new Date().toISOString()
+            });
+            return newResultRef.key;
+        }
+
+        async function getResults() {
+            const snapshot = await database.ref('results').once('value');
+            const results = [];
+            snapshot.forEach(child => {
+                results.push({ id: child.key, ...child.val() });
+            });
+            return results;
+        }
+
+        async function deleteResult(resultId) {
+            await database.ref(`results/${resultId}`).remove();
+        }
+
+        // --- Render Functions ---
+
+        // Dashboard
+        async function renderDashboard() {
+            let totalStudents = 0;
+            let totalClasses = 0;
+            let totalSections = 0;
+            let totalResults = 0;
+
+            try {
+                const [studentsSnapshot, classesSnapshot, sectionsSnapshot, resultsSnapshot] = await Promise.all([
+                    database.ref('students').once('value'),
+                    database.ref('classes').once('value'),
+                    database.ref('sections').once('value'),
+                    database.ref('results').once('value')
+                ]);
+
+                totalStudents = studentsSnapshot.numChildren();
+                totalClasses = classesSnapshot.numChildren();
+                totalSections = sectionsSnapshot.numChildren();
+                totalResults = resultsSnapshot.numChildren();
+
+            } catch (error) {
+                console.error("Error fetching dashboard stats:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load dashboard statistics.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Total Students</h3>
+                        <p>${totalStudents}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Classes</h3>
+                        <p>${totalClasses}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Sections</h3>
+                        <p>${totalSections}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Results</h3>
+                        <p>${totalResults}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add Year Form
+        function renderAddYearForm() {
+            contentArea.innerHTML = `
+                <div class="form-container">
+                    <h2>Add New Academic Year</h2>
+                    <form id="add-year-form">
+                        <div class="form-group">
+                            <label for="year">Academic Year:</label>
+                            <input type="text" id="year" name="year" placeholder="e.g., 2023-2024" required>
+                        </div>
+                        <button type="submit" class="btn">Add Year</button>
+                    </form>
+                </div>
+            `;
+            document.getElementById('add-year-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const yearInput = document.getElementById('year');
+                const yearValue = yearInput.value.trim();
+                if (yearValue) {
+                    try {
+                        await addYear(yearValue);
+                        alert('Academic Year added successfully!');
+                        yearInput.value = ''; // Clear the input
+                    } catch (error) {
+                        console.error("Error adding year:", error);
+                        alert('Failed to add academic year. Please try again.');
+                    }
+                }
+            });
+        }
+
+        // Add Class Form
+        function renderAddClassForm() {
+            contentArea.innerHTML = `
+                <div class="form-container">
+                    <h2>Add New Class</h2>
+                    <form id="add-class-form">
+                        <div class="form-group">
+                            <label for="class-name">Class Name:</label>
+                            <input type="text" id="class-name" name="class-name" placeholder="e.g., Grade 10" required>
+                        </div>
+                        <button type="submit" class="btn">Add Class</button>
+                    </form>
+                </div>
+            `;
+            document.getElementById('add-class-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const classNameInput = document.getElementById('class-name');
+                const classNameValue = classNameInput.value.trim();
+                if (classNameValue) {
+                    try {
+                        await addClass(classNameValue);
+                        alert('Class added successfully!');
+                        classNameInput.value = '';
+                    } catch (error) {
+                        console.error("Error adding class:", error);
+                        alert('Failed to add class. Please try again.');
+                    }
+                }
+            });
+        }
+
+        // Add Section Form
+        function renderAddSectionForm() {
+            contentArea.innerHTML = `
+                <div class="form-container">
+                    <h2>Add New Section</h2>
+                    <form id="add-section-form">
+                        <div class="form-group">
+                            <label for="section-name">Section Name:</label>
+                            <input type="text" id="section-name" name="section-name" placeholder="e.g., Section A" required>
+                        </div>
+                        <button type="submit" class="btn">Add Section</button>
+                    </form>
+                </div>
+            `;
+            document.getElementById('add-section-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const sectionNameInput = document.getElementById('section-name');
+                const sectionNameValue = sectionNameInput.value.trim();
+                if (sectionNameValue) {
+                    try {
+                        await addSection(sectionNameValue);
+                        alert('Section added successfully!');
+                        sectionNameInput.value = '';
+                    } catch (error) {
+                        console.error("Error adding section:", error);
+                        alert('Failed to add section. Please try again.');
+                    }
+                }
+            });
+        }
+
+        // Add Student Form
+        async function renderAddStudentForm() {
+            let years = [];
+            let classes = [];
+            let sections = [];
+
+            try {
+                [years, classes, sections] = await Promise.all([
+                    getYears(),
+                    getClasses(),
+                    getSections()
+                ]);
+            } catch (error) {
+                console.error("Error fetching data for student form:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load dropdown data.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="form-container">
+                    <h2>Add New Student</h2>
+                    <form id="add-student-form">
+                        <div class="form-group">
+                            <label for="student-name">Student Name:</label>
+                            <input type="text" id="student-name" name="student-name" placeholder="Enter student's full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-year">Academic Year:</label>
+                            <select id="student-year" name="student-year" required>
+                                <option value="" disabled selected>Select Year</option>
+                                ${years.map(year => `<option value="${year.id}">${year.year}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-class">Class:</label>
+                            <select id="student-class" name="student-class" required>
+                                <option value="" disabled selected>Select Class</option>
+                                ${classes.map(cls => `<option value="${cls.id}">${cls.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-section">Section:</label>
+                            <select id="student-section" name="student-section" required>
+                                <option value="" disabled selected>Select Section</option>
+                                ${sections.map(section => `<option value="${section.id}">${section.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-roll">Roll Number:</label>
+                            <input type="number" id="student-roll" name="student-roll" placeholder="Enter roll number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-userid">User ID (Optional):</label>
+                            <input type="text" id="student-userid" name="student-userid" placeholder="Enter user ID if applicable">
+                        </div>
+                        <button type="submit" class="btn">Add Student</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('student-name').value.trim();
+                const yearId = document.getElementById('student-year').value;
+                const classId = document.getElementById('student-class').value;
+                const sectionId = document.getElementById('student-section').value;
+                const roll = document.getElementById('student-roll').value.trim();
+                const userId = document.getElementById('student-userid').value.trim() || null;
+
+                if (name && yearId && classId && sectionId && roll) {
+                    try {
+                        await addStudent(name, classId, yearId, sectionId, roll, userId);
+                        alert('Student added successfully!');
+                        // Clear form
+                        document.getElementById('add-student-form').reset();
+                    } catch (error) {
+                        console.error("Error adding student:", error);
+                        alert('Failed to add student. Please try again.');
+                    }
+                } else {
+                    alert('Please fill in all required fields.');
+                }
+            });
+        }
+
+        // Add Result Form
+        async function renderAddResultForm() {
+            let students = [];
+            let classes = [];
+
+            try {
+                [students, classes] = await Promise.all([
+                    getStudents(),
+                    getClasses()
+                ]);
+            } catch (error) {
+                console.error("Error fetching data for result form:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load dropdown data.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="form-container">
+                    <h2>Add Student Result</h2>
+                    <form id="add-result-form">
+                        <div class="form-group">
+                            <label for="result-student">Student:</label>
+                            <select id="result-student" name="result-student" required>
+                                <option value="" disabled selected>Select Student</option>
+                                ${students.map(student => `<option value="${student.id}">${student.name} (Roll: ${student.roll})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="result-class">Class:</label>
+                            <select id="result-class" name="result-class" required>
+                                <option value="" disabled selected>Select Class</option>
+                                ${classes.map(cls => `<option value="${cls.id}">${cls.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="result-link">Result Link/File URL:</label>
+                            <input type="text" id="result-link" name="result-link" placeholder="Enter URL to result or file" required>
+                        </div>
+                        <button type="submit" class="btn">Add Result</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('add-result-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const studentId = document.getElementById('result-student').value;
+                const classId = document.getElementById('result-class').value;
+                const resultLink = document.getElementById('result-link').value.trim();
+
+                if (studentId && classId && resultLink) {
+                    try {
+                        await addResult(studentId, classId, resultLink);
+                        alert('Result added successfully!');
+                        document.getElementById('add-result-form').reset();
+                    } catch (error) {
+                        console.error("Error adding result:", error);
+                        alert('Failed to add result. Please try again.');
+                    }
+                } else {
+                    alert('Please fill in all required fields.');
+                }
+            });
+        }
+
+
+        // --- Manage Functions (List and Delete) ---
+
+        // Manage Years
+        async function renderManageYears() {
+            let years = [];
+            try {
+                years = await getYears();
+            } catch (error) {
+                console.error("Error fetching years:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load years.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="content-area">
+                    <h2>Manage Academic Years</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${years.map(year => `
+                                    <tr id="year-${year.id}">
+                                        <td>${year.year}</td>
+                                        <td>
+                                            <button class="btn-delete" data-id="${year.id}" data-type="year" title="Delete Year"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${years.length === 0 ? '<p class="no-data">No academic years found.</p>' : ''}
+                </div>
+            `;
+            addDeleteEventListeners('year');
+        }
+
+        // Manage Classes
+        async function renderManageClasses() {
+            let classes = [];
+            try {
+                classes = await getClasses();
+            } catch (error) {
+                console.error("Error fetching classes:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load classes.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="content-area">
+                    <h2>Manage Classes</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Class Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${classes.map(cls => `
+                                    <tr id="class-${cls.id}">
+                                        <td>${cls.name}</td>
+                                        <td>
+                                            <button class="btn-delete" data-id="${cls.id}" data-type="class" title="Delete Class"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${classes.length === 0 ? '<p class="no-data">No classes found.</p>' : ''}
+                </div>
+            `;
+            addDeleteEventListeners('class');
+        }
+
+        // Manage Sections
+        async function renderManageSections() {
+            let sections = [];
+            try {
+                sections = await getSections();
+            } catch (error) {
+                console.error("Error fetching sections:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load sections.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="content-area">
+                    <h2>Manage Sections</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${sections.map(section => `
+                                    <tr id="section-${section.id}">
+                                        <td>${section.name}</td>
+                                        <td>
+                                            <button class="btn-delete" data-id="${section.id}" data-type="section" title="Delete Section"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${sections.length === 0 ? '<p class="no-data">No sections found.</p>' : ''}
+                </div>
+            `;
+            addDeleteEventListeners('section');
+        }
+
+        // Manage Students
+        async function renderManageStudents() {
+            let students = [];
+            let classes = {}; // Cache class names
+            let years = {}; // Cache year names
+            let sections = {}; // Cache section names
+
+            try {
+                const [studentsData, classesData, yearsData, sectionsData] = await Promise.all([
+                    getStudents(),
+                    getClasses(),
+                    getYears(),
+                    getSections()
+                ]);
+                students = studentsData;
+                classesData.forEach(cls => classes[cls.id] = cls.name);
+                yearsData.forEach(year => years[year.id] = year.year);
+                sectionsData.forEach(section => sections[section.id] = section.name);
+
+            } catch (error) {
+                console.error("Error fetching data for manage students:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load student data.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="content-area">
+                    <h2>Manage Students</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Year</th>
+                                    <th>Section</th>
+                                    <th>Roll</th>
+                                    <th>User ID</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${students.map(student => `
+                                    <tr id="student-${student.id}">
+                                        <td>${student.name}</td>
+                                        <td>${classes[student.classId] || 'N/A'}</td>
+                                        <td>${years[student.yearId] || 'N/A'}</td>
+                                        <td>${sections[student.sectionId] || 'N/A'}</td>
+                                        <td>${student.roll}</td>
+                                        <td>${student.userId || '-'}</td>
+                                        <td>
+                                            <button class="btn-delete" data-id="${student.id}" data-type="student" title="Delete Student"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${students.length === 0 ? '<p class="no-data">No students found.</p>' : ''}
+                </div>
+            `;
+            addDeleteEventListeners('student');
+        }
+
+        // Manage Results
+        async function renderManageResults() {
+            let results = [];
+            let students = {}; // Cache student names
+            let classes = {}; // Cache class names
+
+            try {
+                const [resultsData, studentsData, classesData] = await Promise.all([
+                    getResults(),
+                    getStudents(),
+                    getClasses()
+                ]);
+                results = resultsData;
+                studentsData.forEach(student => students[student.id] = student.name);
+                classesData.forEach(cls => classes[cls.id] = cls.name);
+            } catch (error) {
+                console.error("Error fetching data for manage results:", error);
+                contentArea.innerHTML = '<p class="error-message">Could not load result data.</p>';
+                return;
+            }
+
+            contentArea.innerHTML = `
+                <div class="content-area">
+                    <h2>Manage Results</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Class</th>
+                                    <th>Result Link</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${results.map(result => `
+                                    <tr id="result-${result.id}">
+                                        <td>${students[result.studentId] || 'N/A'}</td>
+                                        <td>${classes[result.classId] || 'N/A'}</td>
+                                        <td><a href="${result.resultLink}" target="_blank">${result.resultLink.substring(0, 50)}${result.resultLink.length > 50 ? '...' : ''}</a></td>
+                                        <td>${new Date(result.timestamp).toLocaleDateString()}</td>
+                                        <td>
+                                            <button class="btn-delete" data-id="${result.id}" data-type="result" title="Delete Result"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${results.length === 0 ? '<p class="no-data">No results found.</p>' : ''}
+                </div>
+            `;
+            addDeleteEventListeners('result');
+        }
+
+        /**
+         * Adds event listeners for delete buttons.
+         * @param {string} itemType - The type of item being managed (e.g., 'year', 'student').
+         */
+        function addDeleteEventListeners(itemType) {
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const id = button.getAttribute('data-id');
+                    const confirmation = confirm(`Are you sure you want to delete this ${itemType}? This action cannot be undone.`);
+
+                    if (confirmation) {
+                        showLoader(); // Show loader while deleting
+                        try {
+                            switch (itemType) {
+                                case 'year':
+                                    await deleteYear(id);
+                                    break;
+                                case 'class':
+                                    await deleteClass(id);
+                                    break;
+                                case 'section':
+                                    await deleteSection(id);
+                                    break;
+                                case 'student':
+                                    await deleteStudent(id);
+                                    break;
+                                case 'result':
+                                    await deleteResult(id);
+                                    break;
+                            }
+                            alert(`${itemType.charAt(0).toUpperCase() + itemType.slice(1)} deleted successfully.`);
+                            // Re-render the current section to reflect changes
+                            const currentSection = currentTitle.textContent.toLowerCase().replace(/\s+/g, '-');
+                            loadSection(currentSection.replace('manage-', ''), currentTitle.textContent);
+                        } catch (error) {
+                            console.error(`Error deleting ${itemType}:`, error);
+                            alert(`Failed to delete ${itemType}. Please try again.`);
+                        } finally {
+                            hideLoader();
+                        }
+                    }
+                });
+            });
+        }
+
+        // --- Initialization ---
+
+        // Event listeners for sidebar toggle
+        sidebarToggle.addEventListener('click', toggleSidebar);
+
+        // Event listeners for sidebar navigation
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', handleSidebarClick);
+        });
+
+        // Load dashboard on initial page load
+        window.addEventListener('load', () => {
+            loadSection('dashboard', 'Dashboard');
+        });
+
+        // Handle responsive sidebar toggle for mobile
+        const mediaQuery = window.matchMedia('(max-width: 768px)');
+
+        function handleTabletChange(e) {
+            // If on small screen and sidebar is not collapsed, collapse it by default
+            if (e.matches && !isSidebarCollapsed) {
+                toggleSidebar(); // Collapse it to hide
+                sidebar.classList.add('collapsed'); // Ensure style is applied
+                sidebarToggle.classList.add('collapsed');
+                mainContent.style.marginLeft = '60px';
+                 sidebarToggle.style.left = '70px'; // Adjust toggle position
+
+                // Ensure menu texts are hidden when collapsed on mobile load
+                sidebarLinks.forEach(link => {
+                    const menuText = link.querySelector('.menu-text');
+                    if (menuText) {
+                        menuText.style.display = 'none';
+                    }
+                     // Add tooltips if collapsed
+                    if (!link.querySelector('.tooltip-text')) {
+                         const tooltip = document.createElement('span');
+                        tooltip.className = 'tooltip-text';
+                        tooltip.textContent = link.querySelector('.menu-text').textContent;
+                        link.appendChild(tooltip);
+                    }
+                });
+            } else if (!e.matches && isSidebarCollapsed) {
+                // If on larger screen and sidebar was collapsed, expand it
+                toggleSidebar(); // Expand it
+                 sidebar.classList.remove('collapsed');
+                sidebarToggle.classList.remove('collapsed');
+                mainContent.style.marginLeft = '250px';
+                sidebarToggle.style.left = '260px';
+
+                 // Ensure menu texts are visible when expanded on larger screens
+                sidebarLinks.forEach(link => {
+                    const menuText = link.querySelector('.menu-text');
+                    if (menuText) {
+                        menuText.style.display = 'inline';
+                    }
+                    // Remove tooltips if expanded
+                    const tooltip = link.querySelector('.tooltip-text');
+                    if (tooltip) tooltip.remove();
+                });
+            }
+        }
+
+        mediaQuery.addListener(handleTabletChange); // Listen for changes
+        handleTabletChange(mediaQuery); // Initial check
+
+
+        // Adjustments for collapsible sidebar
+        function adjustSidebarForMobile() {
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                // If sidebar is not already collapsed, collapse it and hide text
+                if (!isSidebarCollapsed) {
+                    sidebar.classList.add('collapsed');
+                    mainContent.style.marginLeft = '60px';
+                    sidebarToggle.style.left = '70px';
+                    sidebarLinks.forEach(link => {
+                        const menuText = link.querySelector('.menu-text');
+                        if (menuText) menuText.style.display = 'none';
+                        if (!link.querySelector('.tooltip-text')) {
+                            const tooltip = document.createElement('span');
+                            tooltip.className = 'tooltip-text';
+                            tooltip.textContent = link.querySelector('.menu-text').textContent;
+                            link.appendChild(tooltip);
+                        }
+                    });
+                    isSidebarCollapsed = true; // Update state
+                }
+            } else {
+                // If on desktop and sidebar was collapsed, expand it and show text
+                if (isSidebarCollapsed) {
+                    sidebar.classList.remove('collapsed');
+                    mainContent.style.marginLeft = '250px';
+                    sidebarToggle.style.left = '260px';
+                    sidebarLinks.forEach(link => {
+                        const menuText = link.querySelector('.menu-text');
+                        if (menuText) menuText.style.display = 'inline';
+                        const tooltip = link.querySelector('.tooltip-text');
+                        if (tooltip) tooltip.remove();
+                    });
+                    isSidebarCollapsed = false; // Update state
+                }
+            }
+        }
+
+        window.addEventListener('resize', adjustSidebarForMobile);
+        // Initial call for responsiveness
+        adjustSidebarForMobile();
+
+    </script>
+
+</body>
+</html>
