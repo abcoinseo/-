@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah Portal</title>
+    <title>Madrasah - Student Portal</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,173 +13,111 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-color: #2E7D32;
-            --secondary-color: #81C784;
-            --accent-color: #4FC3F7;
-            --cream-color: #FFF8E1;
-            --light-green: #E8F5E8;
-            --dark-green: #1B5E20;
-            --text-primary: #2C3E50;
-            --text-secondary: #7F8C8D;
-            --white: #FFFFFF;
-            --shadow: 0 4px 20px rgba(0,0,0,0.1);
-            --border-radius: 12px;
-            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-green) 100%);
-            --gradient-secondary: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
-        }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--cream-color) 0%, var(--light-green) 100%);
-            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             line-height: 1.6;
         }
 
-        /* Notice Marquee */
-        .notice-marquee {
-            background: var(--gradient-primary);
+        /* Top Notice Marquee */
+        .top-notice {
+            background: linear-gradient(90deg, #2e7d32, #1b5e20);
             color: white;
-            padding: 0.75rem 0;
+            padding: 10px 0;
             overflow: hidden;
-            position: relative;
-            z-index: 1000;
-        }
-
-        .marquee-content {
-            display: flex;
-            animation: scroll 30s linear infinite;
             white-space: nowrap;
+            position: relative;
         }
 
-        .notice-item {
-            margin-right: 3rem;
+        .notice-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 30s linear infinite;
             cursor: pointer;
-            transition: opacity 0.3s ease;
-            text-decoration: none;
-            color: inherit;
         }
 
-        .notice-item:hover {
-            opacity: 0.8;
-        }
-
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+        @keyframes scroll-left {
+            0% { transform: translate3d(100%, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
         }
 
         /* Header */
         .header {
-            background: var(--white);
-            box-shadow: var(--shadow);
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 999;
         }
 
-        .nav-container {
+        .header-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 70px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            gap: 15px;
+            color: #2e7d32;
             font-size: 1.5rem;
-        }
-
-        .logo-text h1 {
-            font-size: 1.5rem;
-            color: var(--primary-color);
             font-weight: 700;
-        }
-
-        .logo-text p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
         }
 
         .nav-menu {
             display: flex;
-            gap: 2rem;
+            list-style: none;
+            gap: 30px;
             align-items: center;
         }
 
-        .nav-item {
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
+            gap: 8px;
         }
 
-        .nav-item:hover, .nav-item.active {
-            background: var(--light-green);
-            color: var(--primary-color);
+        .nav-menu a:hover {
+            color: #2e7d32;
         }
 
         .mobile-menu-toggle {
             display: none;
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: var(--text-primary);
+            font-size: 24px;
             cursor: pointer;
+            color: #2e7d32;
         }
 
-        /* Hero Banner Slider */
-        .hero-slider {
+        /* Banner Slider */
+        .banner-slider {
             position: relative;
-            height: 400px;
+            height: 500px;
             overflow: hidden;
-            border-radius: var(--border-radius);
-            margin: 2rem auto;
-            max-width: 1200px;
-            box-shadow: var(--shadow);
-        }
-
-        .slider-container {
-            position: relative;
-            height: 100%;
+            margin-bottom: 50px;
         }
 
         .slide {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-            background: var(--gradient-primary);
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            color: white;
-            cursor: pointer;
         }
 
         .slide.active {
@@ -187,34 +125,51 @@
         }
 
         .slide-content {
-            max-width: 600px;
-            padding: 2rem;
+            text-align: center;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
 
-        .slide-icon {
+        .slide-content h2 {
             font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.9;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        .slide-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .slide-subtitle {
+        .slide-content p {
             font-size: 1.2rem;
-            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .slide-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .slide-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4);
         }
 
         .slider-nav {
             position: absolute;
-            bottom: 1rem;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 0.5rem;
+            gap: 10px;
         }
 
         .slider-dot {
@@ -223,286 +178,366 @@
             border-radius: 50%;
             background: rgba(255,255,255,0.5);
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .slider-dot.active {
             background: white;
+            transform: scale(1.2);
         }
 
         .slider-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: white;
+            background: rgba(255,255,255,0.2);
             border: none;
+            color: white;
+            font-size: 24px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .slider-arrow:hover {
-            background: rgba(0,0,0,0.7);
+            background: rgba(255,255,255,0.3);
         }
 
         .slider-arrow.prev {
-            left: 1rem;
+            left: 20px;
         }
 
         .slider-arrow.next {
-            right: 1rem;
+            right: 20px;
         }
 
         /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 0 20px;
         }
 
         .section {
-            margin-bottom: 3rem;
+            margin-bottom: 60px;
         }
 
         .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .section-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         .section-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--primary-color);
+            font-size: 2.5rem;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
         }
 
-        /* Results Section */
-        .search-bar {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 2px;
         }
 
-        .search-input {
-            flex: 1;
-            min-width: 200px;
-            padding: 0.75rem;
-            border: 2px solid #E0E0E0;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+        .section-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .filter-select {
-            padding: 0.75rem;
-            border: 2px solid #E0E0E0;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
+        /* Search Section */
+        .search-section {
             background: white;
-            cursor: pointer;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
         }
 
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .search-group {
+            position: relative;
+        }
+
+        .search-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .search-group input, .search-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-group input:focus, .search-group select:focus {
+            border-color: #4caf50;
+            outline: none;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-self: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Results Grid */
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
         .result-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
-            border-left: 4px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
         }
 
         .result-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
         .result-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .student-info h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
         }
 
-        .student-info p {
-            color: var(--text-secondary);
+        .result-info h3 {
+            color: #2e7d32;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .result-info p {
+            color: #666;
             font-size: 0.9rem;
         }
 
+        .result-details {
+            margin-bottom: 20px;
+        }
+
+        .result-details p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
         .result-link {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius);
+            padding: 12px 25px;
+            border-radius: 25px;
             text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            gap: 8px;
         }
 
         .result-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
         }
 
-        /* Banners Section */
-        .banners-grid {
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 50px;
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Banner Cards */
+        .banner-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
         .banner-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
+            background: white;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .banner-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
         .banner-image {
-            height: 150px;
-            background: var(--gradient-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
         }
 
         .banner-content {
-            padding: 1.5rem;
+            padding: 20px;
         }
 
         .banner-title {
             font-size: 1.3rem;
+            color: #2e7d32;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .banner-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Dashboard Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-weight: 500;
+            margin-bottom: 10px;
         }
 
         /* Footer */
         .footer {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+            padding: 30px 20px;
+            margin-top: 60px;
         }
 
-        .footer h3 {
-            margin-bottom: 0.5rem;
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .footer p {
-            opacity: 0.9;
+            margin-bottom: 15px;
         }
 
-        /* Loading Animation */
+        .footer a {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #8bc34a;
+        }
+
+        /* Loading and Empty States */
         .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
+            text-align: center;
+            padding: 40px;
+            color: #666;
         }
 
         .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4caf50;
+            border-radius: 50%;
             width: 40px;
             height: 40px;
-            border: 4px solid var(--cream-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -510,247 +545,233 @@
             100% { transform: rotate(360deg); }
         }
 
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #999;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
+                position: fixed;
+                top: 70px;
                 left: 0;
-                right: 0;
-                background: var(--white);
-                box-shadow: var(--shadow);
+                width: 100%;
+                background: white;
                 flex-direction: column;
-                padding: 1rem;
-                gap: 0.5rem;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                z-index: 998;
             }
 
-            .nav-menu.active {
-                display: flex;
+            .nav-menu.mobile-open {
+                transform: translateY(0);
             }
 
             .mobile-menu-toggle {
                 display: block;
             }
 
-            .hero-slider {
+            .banner-slider {
                 height: 300px;
-                margin: 1rem;
             }
 
-            .slide-title {
+            .slide-content h2 {
                 font-size: 2rem;
             }
 
-            .slide-subtitle {
-                font-size: 1rem;
-            }
-
-            .main-content {
-                padding: 1rem;
+            .slide-content {
+                padding: 20px;
             }
 
             .section-title {
-                font-size: 1.5rem;
+                font-size: 2rem;
             }
 
-            .search-bar {
-                flex-direction: column;
-                align-items: stretch;
+            .search-grid {
+                grid-template-columns: 1fr;
             }
 
             .results-grid {
                 grid-template-columns: 1fr;
             }
 
-            .banners-grid {
-                grid-template-columns: 1fr;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .banner-cards {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.6s ease;
-        }
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+            .header-content {
+                padding: 0 15px;
+            }
 
-        .slide-in-left {
-            animation: slideInLeft 0.6s ease;
-        }
-
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+            .main-content {
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Notice Marquee -->
-    <div class="notice-marquee">
-        <div class="marquee-content" id="noticeMarquee">
-            <!-- Notices will be loaded here -->
-        </div>
+    <!-- Top Notice -->
+    <div class="top-notice">
+        <div class="notice-text" id="noticeText">Welcome to Madrasah - Loading notices...</div>
     </div>
 
     <!-- Header -->
     <header class="header">
-        <nav class="nav-container">
+        <div class="header-content">
             <div class="logo">
-                <div class="logo-icon">
-                    <span class="material-icons">school</span>
-                </div>
-                <div class="logo-text">
-                    <h1>Madrasah Portal</h1>
-                    <p>Knowledge & Excellence</p>
-                </div>
+                <i class="material-icons">school</i>
+                <span>Al-Madrasah</span>
             </div>
-            
-            <div class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-item active" onclick="showSection('home')">
-                    <span class="material-icons">home</span>
-                    <span>Home</span>
-                </a>
-                <a href="#results" class="nav-item" onclick="showSection('results')">
-                    <span class="material-icons">assessment</span>
-                    <span>Results</span>
-                </a>
-                <a href="#banners" class="nav-item" onclick="showSection('banners')">
-                    <span class="material-icons">image</span>
-                    <span>Announcements</span>
-                </a>
-                <a href="#notices" class="nav-item" onclick="showSection('notices')">
-                    <span class="material-icons">announcement</span>
-                    <span>Notices</span>
-                </a>
-            </div>
-
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-                <span class="material-icons">menu</span>
+            <nav class="nav-menu" id="navMenu">
+                <li><a href="#home"><i class="material-icons">home</i> Home</a></li>
+                <li><a href="#results"><i class="material-icons">assignment</i> Results</a></li>
+                <li><a href="#banners"><i class="material-icons">image</i> Gallery</a></li>
+                <li><a href="#stats"><i class="material-icons">bar_chart</i> Stats</a></li>
+            </nav>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="material-icons">menu</i>
             </button>
-        </nav>
+        </div>
     </header>
 
-    <!-- Hero Banner Slider -->
-    <div class="hero-slider">
-        <div class="slider-container" id="sliderContainer">
-            <!-- Slides will be loaded here -->
-        </div>
-        <div class="slider-nav" id="sliderNav">
-            <!-- Navigation dots will be loaded here -->
-        </div>
-        <button class="slider-arrow prev" onclick="previousSlide()">
-            <span class="material-icons">chevron_left</span>
-        </button>
-        <button class="slider-arrow next" onclick="nextSlide()">
-            <span class="material-icons">chevron_right</span>
-        </button>
-    </div>
+    <!-- Banner Slider -->
+    <section class="banner-slider" id="bannerSlider">
+        <!-- Banner slides will be dynamically loaded -->
+    </section>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Home Section -->
-        <div id="home" class="section active">
-            <div class="section-header fade-in">
-                <div class="section-icon">
-                    <span class="material-icons">dashboard</span>
-                </div>
-                <h2 class="section-title">Dashboard</h2>
+        <!-- Results Section -->
+        <section class="section" id="results">
+            <div class="section-header">
+                <h2 class="section-title">Student Results</h2>
+                <p class="section-subtitle">Search and view student results by name, class, year, section, or roll number</p>
             </div>
-            
-            <div class="stats-grid fade-in">
-                <div class="stat-card">
-                    <div class="stat-value" id="dashboardResults">0</div>
-                    <div class="stat-label">Total Results</div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-grid">
+                    <div class="search-group">
+                        <label>Student Name</label>
+                        <input type="text" id="searchName" placeholder="Enter student name">
+                    </div>
+                    <div class="search-group">
+                        <label>Class</label>
+                        <select id="searchClass">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Year</label>
+                        <select id="searchYear">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Section</label>
+                        <select id="searchSection">
+                            <option value="">All Sections</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label>Roll Number</label>
+                        <input type="number" id="searchRoll" placeholder="Enter roll number">
+                    </div>
+                    <div class="search-group">
+                        <button class="search-btn" onclick="searchResults()">
+                            <i class="material-icons">search</i>
+                            Search Results
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="dashboardBanners">0</div>
-                    <div class="stat-label">Active Banners</div>
+            </div>
+
+            <!-- Results Display -->
+            <div id="resultsContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading results...</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="dashboardNotices">0</div>
-                    <div class="stat-label">Latest Notices</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="dashboardStudents">0</div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="section stats-section" id="stats">
+            <div class="section-header">
+                <h2 class="section-title">Overview</h2>
+                <p class="section-subtitle">Quick statistics about our madrasah</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="statStudents">0</div>
                     <div class="stat-label">Total Students</div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Results Section -->
-        <div id="results" class="section">
-            <div class="section-header fade-in">
-                <div class="section-icon">
-                    <span class="material-icons">assessment</span>
+                <div class="stat-item">
+                    <div class="stat-number" id="statResults">0</div>
+                    <div class="stat-label">Results Published</div>
                 </div>
-                <h2 class="section-title">Student Results</h2>
+                <div class="stat-item">
+                    <div class="stat-number" id="statClasses">0</div>
+                    <div class="stat-label">Active Classes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statNotices">0</div>
+                    <div class="stat-label">Recent Notices</div>
+                </div>
             </div>
-
-            <div class="search-bar fade-in">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search by student name...">
-                <select class="filter-select" id="classFilter">
-                    <option value="">All Classes</option>
-                </select>
-                <button class="nav-item" onclick="searchResults()" style="background: var(--primary-color); color: white;">
-                    <span class="material-icons">search</span>
-                    <span>Search</span>
-                </button>
-            </div>
-
-            <div class="results-grid" id="resultsGrid">
-                <!-- Results will be loaded here -->
-            </div>
-        </div>
+        </section>
 
         <!-- Banners Section -->
-        <div id="banners" class="section">
-            <div class="section-header fade-in">
-                <div class="section-icon">
-                    <span class="material-icons">image</span>
-                </div>
-                <h2 class="section-title">Announcements & Banners</h2>
+        <section class="section" id="banners">
+            <div class="section-header">
+                <h2 class="section-title">Gallery & Announcements</h2>
+                <p class="section-subtitle">Latest updates and announcements from our madrasah</p>
             </div>
-
-            <div class="banners-grid" id="bannersGrid">
-                <!-- Banners will be loaded here -->
+            <div class="banner-cards" id="bannerCards">
+                <!-- Banner cards will be dynamically loaded -->
             </div>
-        </div>
-
-        <!-- Notices Section -->
-        <div id="notices" class="section">
-            <div class="section-header fade-in">
-                <div class="section-icon">
-                    <span class="material-icons">announcement</span>
-                </div>
-                <h2 class="section-title">Important Notices</h2>
-            </div>
-
-            <div class="banners-grid" id="noticesGrid">
-                <!-- Notices will be loaded here -->
-            </div>
-        </div>
+        </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <h3>Madrasah Portal</h3>
-        <p>Empowering Education Through Technology</p>
-        <p>&copy; 2024 Madrasah Portal. All rights reserved.</p>
+        <div class="footer-content">
+            <p>&copy; 2024 Al-Madrasah. All rights reserved.</p>
+            <p>Developed by <a href="https://t.me/abstudioseo" target="_blank">AB Siddik</a></p>
+        </div>
     </footer>
 
     <!-- Firebase Scripts -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
+    <script>
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
@@ -763,453 +784,389 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        // Global data storage
-        window.appData = {
-            notices: {},
-            banners: {},
-            results: {},
-            students: {},
-            classes: {}
-        };
+        // Global Variables
+        let allStudents = [];
+        let allResults = [];
+        let currentSlide = 0;
+        let slideInterval;
 
-        // Initialize app
-        window.addEventListener('load', () => {
-            loadAllData();
-            initializeSlider();
+        // DOM Elements
+        const noticeText = document.getElementById('noticeText');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+        const bannerSlider = document.getElementById('bannerSlider');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const bannerCards = document.getElementById('bannerCards');
+
+        // Mobile Menu Toggle
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('mobile-open');
         });
 
-        // Load all data from Firebase
-        function loadAllData() {
-            const dataTypes = ['notices', 'banners', 'results', 'students', 'classes'];
-            
-            dataTypes.forEach(dataType => {
-                const dataRef = ref(database, dataType);
-                onValue(dataRef, (snapshot) => {
-                    const data = snapshot.val() || {};
-                    window.appData[dataType] = data;
+        // Smooth Scrolling for Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // Close mobile menu
+                navMenu.classList.remove('mobile-open');
+            });
+        });
+
+        // Load Top Notice
+        function loadNotices() {
+            database.ref('notices').limitToLast(1).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const notices = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const notice = childSnapshot.val();
+                        notices.push(notice);
+                    });
                     
-                    switch(dataType) {
-                        case 'notices':
-                            updateNoticeMarquee(data);
-                            updateNoticesSection(data);
-                            break;
-                        case 'banners':
-                            updateHeroSlider(data);
-                            updateBannersSection(data);
-                            break;
-                        case 'results':
-                            updateResultsSection(data);
-                            break;
-                        case 'classes':
-                            updateClassFilter(data);
-                            break;
+                    if (notices.length > 0) {
+                        const notice = notices[0];
+                        noticeText.textContent = notice.text;
+                        if (notice.url) {
+                            noticeText.style.cursor = 'pointer';
+                            noticeText.onclick = () => window.open(notice.url, '_blank');
+                        }
                     }
+                } else {
+                    noticeText.textContent = 'Welcome to Al-Madrasah - Stay tuned for updates!';
+                }
+            });
+        }
+
+        // Load Banner Slider
+        function loadBannerSlider() {
+            database.ref('banners').on('value', (snapshot) => {
+                bannerSlider.innerHTML = '';
+                let slides = [];
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const banner = childSnapshot.val();
+                        slides.push(banner);
+                    });
+                }
+
+                // Add default slide if no banners
+                if (slides.length === 0) {
+                    slides.push({
+                        title: 'Welcome to Al-Madrasah',
+                        imageUrl: 'https://images.pexels.com/photos/256541/pexels-photo-256541.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                        link: ''
+                    });
+                }
+
+                slides.forEach((slide, index) => {
+                    const slideElement = document.createElement('div');
+                    slideElement.className = `slide ${index === 0 ? 'active' : ''}`;
+                    slideElement.style.backgroundImage = `url('${slide.imageUrl}')`;
                     
-                    updateDashboardStats();
+                    slideElement.innerHTML = `
+                        <div class="slide-content">
+                            <h2>${slide.title}</h2>
+                            ${slide.link ? `<a href="${slide.link}" target="_blank" class="slide-btn">Learn More</a>` : ''}
+                        </div>
+                    `;
+                    bannerSlider.appendChild(slideElement);
                 });
-            });
-        }
 
-        // Update notice marquee
-        function updateNoticeMarquee(notices) {
-            const marqueeContent = document.getElementById('noticeMarquee');
-            marqueeContent.innerHTML = '';
-            
-            const noticesArray = Object.entries(notices);
-            if (noticesArray.length === 0) {
-                marqueeContent.innerHTML = '<span class="notice-item">Welcome to Madrasah Portal - Your Educational Hub</span>';
-                return;
-            }
+                // Add navigation
+                if (slides.length > 1) {
+                    // Add arrows
+                    const prevArrow = document.createElement('button');
+                    prevArrow.className = 'slider-arrow prev';
+                    prevArrow.innerHTML = '<i class="material-icons">chevron_left</i>';
+                    prevArrow.onclick = () => changeSlide(-1);
+                    bannerSlider.appendChild(prevArrow);
 
-            noticesArray.forEach(([key, notice]) => {
-                const noticeElement = document.createElement('span');
-                noticeElement.className = 'notice-item';
-                noticeElement.textContent = notice.text;
-                
-                if (notice.url) {
-                    noticeElement.onclick = () => window.open(notice.url, '_blank');
-                    noticeElement.style.textDecoration = 'underline';
+                    const nextArrow = document.createElement('button');
+                    nextArrow.className = 'slider-arrow next';
+                    nextArrow.innerHTML = '<i class="material-icons">chevron_right</i>';
+                    nextArrow.onclick = () => changeSlide(1);
+                    bannerSlider.appendChild(nextArrow);
+
+                    // Add dots
+                    const dotsContainer = document.createElement('div');
+                    dotsContainer.className = 'slider-nav';
+                    slides.forEach((_, index) => {
+                        const dot = document.createElement('div');
+                        dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
+                        dot.onclick = () => goToSlide(index);
+                        dotsContainer.appendChild(dot);
+                    });
+                    bannerSlider.appendChild(dotsContainer);
+
+                    // Auto slide
+                    startSlideshow();
                 }
-                
-                marqueeContent.appendChild(noticeElement);
             });
         }
 
-        // Update hero slider
-        function updateHeroSlider(banners) {
-            const sliderContainer = document.getElementById('sliderContainer');
-            const sliderNav = document.getElementById('sliderNav');
+        // Slider Functions
+        function changeSlide(direction) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-dot');
             
-            sliderContainer.innerHTML = '';
-            sliderNav.innerHTML = '';
+            slides[currentSlide].classList.remove('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
             
-            const bannersArray = Object.entries(banners);
-            if (bannersArray.length === 0) {
-                // Default slide
-                const defaultSlide = document.createElement('div');
-                defaultSlide.className = 'slide active';
-                defaultSlide.innerHTML = `
-                    <div class="slide-content">
-                        <div class="slide-icon">
-                            <span class="material-icons">school</span>
-                        </div>
-                        <h1 class="slide-title">Welcome to Madrasah Portal</h1>
-                        <p class="slide-subtitle">Your Gateway to Educational Excellence</p>
-                    </div>
-                `;
-                sliderContainer.appendChild(defaultSlide);
-                
-                const dot = document.createElement('span');
-                dot.className = 'slider-dot active';
-                sliderNav.appendChild(dot);
-                return;
-            }
-
-            bannersArray.forEach(([key, banner], index) => {
-                // Create slide
-                const slide = document.createElement('div');
-                slide.className = `slide ${index === 0 ? 'active' : ''}`;
-                
-                if (banner.link) {
-                    slide.onclick = () => window.open(banner.link, '_blank');
-                }
-                
-                slide.innerHTML = `
-                    <div class="slide-content">
-                        ${banner.icon ? `<div class="slide-icon"><span class="material-icons">${banner.icon}</span></div>` : ''}
-                        ${banner.image ? `<div class="slide-icon"><img src="${banner.image}" alt="${banner.title}" style="width: 60px; height: 60px; border-radius: 50%;"></div>` : ''}
-                        <h1 class="slide-title">${banner.title}</h1>
-                        ${banner.subtitle ? `<p class="slide-subtitle">${banner.subtitle}</p>` : ''}
-                    </div>
-                `;
-                sliderContainer.appendChild(slide);
-                
-                // Create navigation dot
-                const dot = document.createElement('span');
-                dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
-                dot.onclick = () => goToSlide(index);
-                sliderNav.appendChild(dot);
-            });
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
             
-            window.totalSlides = bannersArray.length;
-            window.currentSlide = 0;
+            slides[currentSlide].classList.add('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.add('active');
         }
 
-        // Update results section
-        function updateResultsSection(results) {
-            const resultsGrid = document.getElementById('resultsGrid');
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-dot');
             
-            if (Object.keys(results).length === 0) {
-                resultsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-                return;
-            }
+            slides[currentSlide].classList.remove('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
             
-            resultsGrid.innerHTML = '';
+            currentSlide = index;
             
-            Object.entries(results).forEach(([key, result]) => {
-                const resultCard = document.createElement('div');
-                resultCard.className = 'result-card fade-in';
-                resultCard.innerHTML = `
-                    <div class="result-header">
-                        <div class="student-info">
-                            <h3>${result.studentName}</h3>
-                            <p>Class: ${result.class}</p>
-                        </div>
-                    </div>
-                    <a href="${result.link}" target="_blank" class="result-link">
-                        <span class="material-icons">description</span>
-                        View Result
-                    </a>
-                `;
-                resultsGrid.appendChild(resultCard);
-            });
+            slides[currentSlide].classList.add('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.add('active');
         }
 
-        // Update banners section
-        function updateBannersSection(banners) {
-            const bannersGrid = document.getElementById('bannersGrid');
-            
-            if (Object.keys(banners).length === 0) {
-                bannersGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-                return;
-            }
-            
-            bannersGrid.innerHTML = '';
-            
-            Object.entries(banners).forEach(([key, banner]) => {
-                const bannerCard = document.createElement('div');
-                bannerCard.className = 'banner-card fade-in';
-                
-                if (banner.link) {
-                    bannerCard.onclick = () => window.open(banner.link, '_blank');
-                }
-                
-                bannerCard.innerHTML = `
-                    <div class="banner-image">
-                        ${banner.icon ? `<span class="material-icons">${banner.icon}</span>` : ''}
-                        ${banner.image ? `<img src="${banner.image}" alt="${banner.title}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
-                        ${!banner.icon && !banner.image ? '<span class="material-icons">image</span>' : ''}
-                    </div>
-                    <div class="banner-content">
-                        <h3 class="banner-title">${banner.title}</h3>
-                        ${banner.link ? `<a href="${banner.link}" target="_blank" class="banner-link">Learn More <span class="material-icons">arrow_forward</span></a>` : ''}
-                    </div>
-                `;
-                bannersGrid.appendChild(bannerCard);
-            });
-        }
-
-        // Update notices section
-        function updateNoticesSection(notices) {
-            const noticesGrid = document.getElementById('noticesGrid');
-            
-            if (Object.keys(notices).length === 0) {
-                noticesGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-                return;
-            }
-            
-            noticesGrid.innerHTML = '';
-            
-            Object.entries(notices).forEach(([key, notice]) => {
-                const noticeCard = document.createElement('div');
-                noticeCard.className = 'banner-card fade-in';
-                
-                if (notice.url) {
-                    noticeCard.onclick = () => window.open(notice.url, '_blank');
-                }
-                
-                noticeCard.innerHTML = `
-                    <div class="banner-image">
-                        <span class="material-icons">announcement</span>
-                    </div>
-                    <div class="banner-content">
-                        <h3 class="banner-title">${notice.text}</h3>
-                        ${notice.url ? `<a href="${notice.url}" target="_blank" class="banner-link">Read More <span class="material-icons">arrow_forward</span></a>` : ''}
-                    </div>
-                `;
-                noticesGrid.appendChild(noticeCard);
-            });
-        }
-
-        // Update class filter
-        function updateClassFilter(classes) {
-            const classFilter = document.getElementById('classFilter');
-            const currentValue = classFilter.value;
-            
-            classFilter.innerHTML = '<option value="">All Classes</option>';
-            
-            Object.entries(classes).forEach(([key, classData]) => {
-                const option = document.createElement('option');
-                option.value = classData.name || classData;
-                option.textContent = classData.name || classData;
-                classFilter.appendChild(option);
-            });
-            
-            classFilter.value = currentValue;
-        }
-
-        // Update dashboard stats
-        function updateDashboardStats() {
-            document.getElementById('dashboardResults').textContent = Object.keys(window.appData.results).length;
-            document.getElementById('dashboardBanners').textContent = Object.keys(window.appData.banners).length;
-            document.getElementById('dashboardNotices').textContent = Object.keys(window.appData.notices).length;
-            document.getElementById('dashboardStudents').textContent = Object.keys(window.appData.students).length;
-        }
-
-        // Search results function
-        window.searchResults = function() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const classFilter = document.getElementById('classFilter').value;
-            const resultsGrid = document.getElementById('resultsGrid');
-            
-            resultsGrid.innerHTML = '';
-            
-            let filteredResults = Object.entries(window.appData.results);
-            
-            if (searchTerm) {
-                filteredResults = filteredResults.filter(([key, result]) => 
-                    result.studentName.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            if (classFilter) {
-                filteredResults = filteredResults.filter(([key, result]) => 
-                    result.class === classFilter
-                );
-            }
-            
-            if (filteredResults.length === 0) {
-                resultsGrid.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">No results found</div>';
-                return;
-            }
-            
-            filteredResults.forEach(([key, result]) => {
-                const resultCard = document.createElement('div');
-                resultCard.className = 'result-card fade-in';
-                resultCard.innerHTML = `
-                    <div class="result-header">
-                        <div class="student-info">
-                            <h3>${result.studentName}</h3>
-                            <p>Class: ${result.class}</p>
-                        </div>
-                    </div>
-                    <a href="${result.link}" target="_blank" class="result-link">
-                        <span class="material-icons">description</span>
-                        View Result
-                    </a>
-                `;
-                resultsGrid.appendChild(resultCard);
-            });
-        };
-
-        // Initialize slider
-        function initializeSlider() {
-            window.currentSlide = 0;
-            window.totalSlides = 1;
-            
-            // Auto-play slider
-            setInterval(() => {
-                if (window.totalSlides > 1) {
-                    nextSlide();
-                }
+        function startSlideshow() {
+            slideInterval = setInterval(() => {
+                changeSlide(1);
             }, 5000);
         }
-    </script>
 
-    <script>
-        // UI Functions
-        let mobileMenuOpen = false;
+        // Load Students Data
+        function loadStudents() {
+            database.ref('students').on('value', (snapshot) => {
+                allStudents = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const student = childSnapshot.val();
+                        student.id = childSnapshot.key;
+                        allStudents.push(student);
+                    });
+                }
+                loadSearchFilters();
+            });
+        }
 
-        // Toggle mobile menu
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            mobileMenuOpen = !mobileMenuOpen;
-            
-            if (mobileMenuOpen) {
-                navMenu.classList.add('active');
-            } else {
-                navMenu.classList.remove('active');
+        // Load Results Data
+        function loadResults() {
+            database.ref('results').on('value', (snapshot) => {
+                allResults = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const result = childSnapshot.val();
+                        result.id = childSnapshot.key;
+                        allResults.push(result);
+                    });
+                }
+                displayResults(allResults);
+            });
+        }
+
+        // Load Search Filters
+        function loadSearchFilters() {
+            // Load classes
+            const classSelect = document.getElementById('searchClass');
+            const classes = [...new Set(allStudents.map(s => s.className))];
+            classSelect.innerHTML = '<option value="">All Classes</option>';
+            classes.forEach(className => {
+                classSelect.innerHTML += `<option value="${className}">${className}</option>`;
+            });
+
+            // Load years
+            const yearSelect = document.getElementById('searchYear');
+            const years = [...new Set(allStudents.map(s => s.year))];
+            yearSelect.innerHTML = '<option value="">All Years</option>';
+            years.forEach(year => {
+                yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
+            });
+
+            // Load sections
+            const sectionSelect = document.getElementById('searchSection');
+            const sections = [...new Set(allStudents.map(s => s.section))];
+            sectionSelect.innerHTML = '<option value="">All Sections</option>';
+            sections.forEach(section => {
+                sectionSelect.innerHTML += `<option value="${section}">${section}</option>`;
+            });
+        }
+
+        // Search Results Function
+        function searchResults() {
+            const searchName = document.getElementById('searchName').value.toLowerCase().trim();
+            const searchClass = document.getElementById('searchClass').value;
+            const searchYear = document.getElementById('searchYear').value;
+            const searchSection = document.getElementById('searchSection').value;
+            const searchRoll = document.getElementById('searchRoll').value;
+
+            let filteredStudents = allStudents.filter(student => {
+                const nameMatch = !searchName || student.name.toLowerCase().includes(searchName);
+                const classMatch = !searchClass || student.className === searchClass;
+                const yearMatch = !searchYear || student.year === searchYear;
+                const sectionMatch = !searchSection || student.section === searchSection;
+                const rollMatch = !searchRoll || student.roll.toString() === searchRoll;
+
+                return nameMatch && classMatch && yearMatch && sectionMatch && rollMatch;
+            });
+
+            // Get results for filtered students
+            let filteredResults = allResults.filter(result => {
+                return filteredStudents.some(student => student.id === result.studentId);
+            });
+
+            displayResults(filteredResults);
+        }
+
+        // Display Results Function
+        function displayResults(results) {
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="material-icons">assignment</i>
+                        <h3>No Results Found</h3>
+                        <p>Try adjusting your search criteria or check back later.</p>
+                    </div>
+                `;
+                return;
             }
-        }
 
-        // Show section
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
+            const resultsGrid = document.createElement('div');
+            resultsGrid.className = 'results-grid';
+
+            results.forEach(result => {
+                const student = allStudents.find(s => s.id === result.studentId);
+                if (student) {
+                    const resultCard = document.createElement('div');
+                    resultCard.className = 'result-card';
+                    resultCard.innerHTML = `
+                        <div class="result-header">
+                            <div class="result-icon">
+                                <i class="material-icons">person</i>
+                            </div>
+                            <div class="result-info">
+                                <h3>${student.name}</h3>
+                                <p>Roll: ${student.roll} | Class: ${student.className}</p>
+                            </div>
+                        </div>
+                        <div class="result-details">
+                            <p><strong>Year:</strong> ${student.year}</p>
+                            <p><strong>Section:</strong> ${student.section}</p>
+                            <p><strong>Class:</strong> ${result.className}</p>
+                        </div>
+                        <a href="${result.resultLink}" target="_blank" class="result-link">
+                            <i class="material-icons">open_in_new</i>
+                            View Result
+                        </a>
+                    `;
+                    resultsGrid.appendChild(resultCard);
+                }
             });
-            
-            // Show selected section
-            document.getElementById(sectionName).classList.add('active');
-            
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
+
+            resultsContainer.innerHTML = '';
+            resultsContainer.appendChild(resultsGrid);
+        }
+
+        // Load Banner Cards
+        function loadBannerCards() {
+            database.ref('banners').on('value', (snapshot) => {
+                bannerCards.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const banner = childSnapshot.val();
+                        const bannerCard = document.createElement('div');
+                        bannerCard.className = 'banner-card';
+                        
+                        bannerCard.innerHTML = `
+                            <div class="banner-image" style="background-image: url('${banner.imageUrl}')"></div>
+                            <div class="banner-content">
+                                <h3 class="banner-title">${banner.title}</h3>
+                            </div>
+                        `;
+
+                        if (banner.link) {
+                            bannerCard.onclick = () => window.open(banner.link, '_blank');
+                        }
+
+                        bannerCards.appendChild(bannerCard);
+                    });
+                } else {
+                    bannerCards.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <i class="material-icons">image</i>
+                            <h3>No Banners Available</h3>
+                            <p>Check back later for updates and announcements.</p>
+                        </div>
+                    `;
+                }
             });
-            
-            event.target.closest('.nav-item').classList.add('active');
-            
-            // Close mobile menu
-            document.getElementById('navMenu').classList.remove('active');
-            mobileMenuOpen = false;
         }
 
-        // Slider functions
-        function nextSlide() {
-            if (window.totalSlides <= 1) return;
-            
-            const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.slider-dot');
-            
-            slides[window.currentSlide].classList.remove('active');
-            dots[window.currentSlide].classList.remove('active');
-            
-            window.currentSlide = (window.currentSlide + 1) % window.totalSlides;
-            
-            slides[window.currentSlide].classList.add('active');
-            dots[window.currentSlide].classList.add('active');
+        // Load Statistics
+        function loadStats() {
+            database.ref('students').once('value', (snapshot) => {
+                document.getElementById('statStudents').textContent = snapshot.numChildren();
+            });
+
+            database.ref('results').once('value', (snapshot) => {
+                document.getElementById('statResults').textContent = snapshot.numChildren();
+            });
+
+            database.ref('classes').once('value', (snapshot) => {
+                document.getElementById('statClasses').textContent = snapshot.numChildren();
+            });
+
+            database.ref('notices').once('value', (snapshot) => {
+                document.getElementById('statNotices').textContent = snapshot.numChildren();
+            });
         }
 
-        function previousSlide() {
-            if (window.totalSlides <= 1) return;
-            
-            const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.slider-dot');
-            
-            slides[window.currentSlide].classList.remove('active');
-            dots[window.currentSlide].classList.remove('active');
-            
-            window.currentSlide = window.currentSlide === 0 ? window.totalSlides - 1 : window.currentSlide - 1;
-            
-            slides[window.currentSlide].classList.add('active');
-            dots[window.currentSlide].classList.add('active');
-        }
-
-        function goToSlide(slideIndex) {
-            if (window.totalSlides <= 1) return;
-            
-            const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.slider-dot');
-            
-            slides[window.currentSlide].classList.remove('active');
-            dots[window.currentSlide].classList.remove('active');
-            
-            window.currentSlide = slideIndex;
-            
-            slides[window.currentSlide].classList.add('active');
-            dots[window.currentSlide].classList.add('active');
-        }
-
-        // Search on enter key
+        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('keypress', (e) => {
+            loadNotices();
+            loadBannerSlider();
+            loadStudents();
+            loadResults();
+            loadBannerCards();
+            loadStats();
+
+            // Add search on Enter key
+            ['searchName', 'searchRoll'].forEach(id => {
+                document.getElementById(id).addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         searchResults();
                     }
                 });
-            }
+            });
+
+            // Add search on dropdown change
+            ['searchClass', 'searchYear', 'searchSection'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => {
+                    searchResults();
+                });
+            });
         });
 
-        // Smooth scrolling for anchor links
-        document.addEventListener('click', (e) => {
-            if (e.target.matches('a[href^="#"]')) {
-                e.preventDefault();
-                const target = document.querySelector(e.target.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
+        // Pause slideshow on hover
+        bannerSlider?.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
         });
 
-        // Add fade-in animation to elements when they come into view
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all fade-in elements
-        document.addEventListener('DOMContentLoaded', () => {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(el);
-            });
+        bannerSlider?.addEventListener('mouseleave', () => {
+            startSlideshow();
         });
     </script>
 </body>
