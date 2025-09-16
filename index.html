@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah - User Panel</title>
+    <title>Madrasah User Panel</title>
     <!-- Firebase App (Core) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <!-- Firebase Realtime Database -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        /* --- General Styles & Theme --- */
+        /* --- Variables for Madrasah Theme --- */
         :root {
             --primary-color: #4CAF50; /* Green */
-            --secondary-color: #2196F3; /* Light Blue */
-            --background-color: #FFF8E1; /* Creamy Yellow */
+            --secondary-color: #FFC107; /* Amber/Yellow */
+            --background-color: #F5F5DC; /* Cream */
             --text-color: #333;
             --card-background: #FFFFFF;
-            --sidebar-background: #E8F5E9; /* Light Green */
-            --border-color: #D0D0D0;
-            --hover-color: #E0E0E0;
-            --accent-color: #FF9800; /* Orange for emphasis if needed */
+            --border-color: #e0e0e0;
+            --nav-background: #388E3C; /* Darker Green */
+            --hover-bg: #e8f5e9; /* Light Green hover */
+            --footer-background: #2E7D32; /* Dark Green */
+            --light-blue: #81D4FA; /* Light Blue */
+            --soft-green: #A5D6A7; /* Soft Green */
+            --soft-cream: #FFF9C4; /* Soft Cream */
         }
 
+        /* --- General Styles --- */
         * {
             margin: 0;
             padding: 0;
@@ -30,493 +34,734 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern readable */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
+            line-height: 1.6;
+            scroll-behavior: smooth; /* For smooth scrolling */
         }
 
-        /* --- Sidebar / Top Menu --- */
-        .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-background);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background-color: var(--footer-background);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
             color: var(--text-color);
-            padding: 20px 0;
-            position: fixed;
-            height: 100%;
-            overflow-y: auto;
-            transition: width 0.3s ease, transform 0.3s ease;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border-right: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background-color: var(--secondary-color); /* Slightly darker or more saturated on hover */
+            opacity: 0.9;
         }
 
-        .sidebar .brand {
-            text-align: center;
+        .section {
+            padding: 60px 0;
+            min-height: 80vh; /* Ensure sections take up space */
+        }
+
+        /* --- Top Navbar & Hero Section --- */
+        .top-navbar {
+            background-color: var(--nav-background);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .top-navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-navbar .brand {
             font-size: 1.8em;
             font-weight: bold;
-            margin-bottom: 30px;
-            color: var(--primary-color);
+            color: white;
             letter-spacing: 1px;
-            padding: 0 10px;
         }
 
-        .sidebar ul {
+        .top-navbar .nav-links ul {
             list-style: none;
-            padding: 0;
+            display: flex;
         }
 
-        .sidebar li {
-            margin-bottom: 5px;
+        .top-navbar .nav-links li {
+            margin-left: 25px;
         }
 
-        .sidebar a {
-            display: block;
-            padding: 12px 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
+        .top-navbar .nav-links a {
+            color: white;
             font-size: 1.1em;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .top-navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .top-navbar .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+        .top-navbar .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 80px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
             position: relative;
             overflow: hidden;
-            border-left: 4px solid transparent; /* For active indicator */
         }
 
-        .sidebar a:hover {
-            background-color: var(--hover-color);
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-        }
-
-        .sidebar a.active {
-            background-color: var(--sidebar-background); /* Keep sidebar background */
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .sidebar a .icon {
-            margin-right: 15px;
-            font-size: 1.2em;
-            vertical-align: middle;
-        }
-
-        /* Hamburger Button */
-        .hamburger-btn {
-            display: none; /* Hidden on large screens */
+        .hero-section::before {
+            content: '';
             position: absolute;
-            top: 15px;
-            left: 15px;
-            background: none;
-            border: none;
-            font-size: 1.8em;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://via.placeholder.com/1500x500/81D4FA/FFFFFF?text=Madrasah+Welcome'); /* Placeholder image */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7; /* Soften the background image */
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.8); /* Slightly transparent white background for content */
+            padding: 40px 60px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .hero-content h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
             color: var(--primary-color);
-            cursor: pointer;
-            z-index: 1001;
         }
 
-        /* --- Main Content --- */
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-            margin-left: 250px; /* Matches sidebar width */
-            transition: margin-left 0.3s ease;
-            background-color: var(--background-color);
-            border-radius: 8px;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+        .hero-content p {
+            font-size: 1.3em;
+            color: var(--text-color);
+            margin-bottom: 30px;
         }
 
-        .top-navbar {
-            background-color: var(--sidebar-background);
-            color: var(--primary-color);
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.6em;
-            font-weight: bold;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-bottom: 1px solid var(--border-color);
-        }
+        /* --- Section Specific Styles --- */
 
-        /* --- Content Sections --- */
-        .content-section {
-            display: none; /* Hidden by default */
-            animation: fadeIn 0.5s ease;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* --- Dashboard Stats --- */
+        /* Dashboard */
         .dashboard-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
         .stat-card {
             background-color: var(--card-background);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 25px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            border-left: 5px solid var(--primary-color);
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+            background-color: var(--hover-bg);
         }
 
         .stat-card .icon {
-            font-size: 2.8em;
-            margin-bottom: 10px;
-            color: var(--secondary-color);
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
         }
 
         .stat-card .count {
             font-size: 2.8em;
             font-weight: bold;
-            color: var(--text-color);
+            color: var(--primary-color);
         }
 
         .stat-card .label {
             font-size: 1.1em;
-            color: var(--text-color);
-            opacity: 0.8;
+            color: #555;
             margin-top: 5px;
+            font-weight: 500;
         }
 
-        /* --- Search & Filter --- */
-        .search-filter-container {
-            background-color: var(--card-background);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
+        .quick-links {
+            text-align: center;
+            margin-top: 30px;
         }
 
-        .search-filter-container label {
-            font-weight: bold;
-            margin-right: 5px;
+        .quick-links h2 {
+            color: var(--primary-color);
+        }
+
+        .quick-links a {
+            margin: 10px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: var(--soft-green);
             color: var(--text-color);
-            opacity: 0.9;
+            border: 2px solid var(--soft-green);
         }
 
-        .search-filter-container input[type="text"],
-        .search-filter-container select {
-            padding: 10px 15px;
+        .quick-links a:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Students List */
+        .student-filter-form {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: flex-end; /* Align buttons to bottom */
+        }
+
+        .student-filter-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .student-filter-form input[type="text"],
+        .student-filter-form select {
+            width: 100%;
+            padding: 10px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 5px;
             background-color: var(--background-color);
             color: var(--text-color);
             font-size: 1em;
-            transition: border-color 0.3s ease;
         }
-        .search-filter-container input[type="text"]:focus,
-        .search-filter-container select:focus {
+
+        .student-filter-form input[type="text"]:focus,
+        .student-filter-form select:focus {
             outline: none;
             border-color: var(--primary-color);
         }
 
-        .search-filter-container input[type="text"] {
-            flex-grow: 1; /* Allow input to take available space */
-            min-width: 150px; /* Minimum width for input */
-        }
-        .search-filter-container select {
-             min-width: 150px;
+        .student-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
-        /* --- Table Styles --- */
-        .table-container {
+        .student-card {
             background-color: var(--card-background);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow-x: auto; /* For responsiveness */
-            border: 1px solid var(--border-color);
-        }
-
-        .table-container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-            font-size: 1.8em;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate; /* Use separate for rounded corners on cells */
-            border-spacing: 0 10px; /* Space between rows */
-        }
-
-        th, td {
-            padding: 15px 20px;
-            text-align: left;
-            white-space: nowrap; /* Prevent text wrapping in cells */
-        }
-
-        th {
-            background-color: var(--sidebar-background);
-            color: var(--primary-color);
-            font-weight: bold;
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        tr {
-            background-color: var(--card-background);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-radius: 8px;
-        }
-
-        tr:hover {
-            background-color: var(--hover-color);
-        }
-
-        td {
-            border-bottom: 1px solid var(--border-color); /* Subtle line for rows without spacing */
-        }
-        tr:last-child td {
-            border-bottom: none; /* No bottom border for the last row in a group */
-        }
-
-        td a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        td a:hover {
-            color: var(--accent-color);
-            text-decoration: underline;
-        }
-
-        /* --- Banner/Notice Cards --- */
-        .banner-card {
-            background-color: var(--card-background);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
-            align-items: center;
-            gap: 15px;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes button to bottom if present */
         }
 
-        .banner-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        .student-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
         }
 
-        .banner-card .icon {
-            font-size: 2em;
-            color: var(--secondary-color);
-            flex-shrink: 0; /* Prevent icon from shrinking */
-        }
-
-        .banner-card .content {
-            flex-grow: 1;
-        }
-
-        .banner-card .title {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-
-        .banner-card .link {
-            font-size: 0.9em;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-        .banner-card .link a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-        .banner-card .link a:hover {
-            text-decoration: underline;
-            color: var(--accent-color);
-        }
-
-        /* --- Carousel (Optional - Basic implementation) --- */
-        .carousel-container {
-            position: relative;
-            max-width: 700px; /* Max width for banners */
-            margin: 20px auto;
-            overflow: hidden;
-            background-color: var(--card-background);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
-        }
-
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-item {
-            min-width: 100%; /* Each item takes full width of the container */
-            box-sizing: border-box;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .carousel-item .title {
-            font-size: 1.3em;
-            font-weight: bold;
+        .student-card h3 {
+            font-size: 1.4em;
             margin-bottom: 10px;
             color: var(--primary-color);
         }
 
-        .carousel-item .link a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-        .carousel-item .link a:hover {
-            text-decoration: underline;
-            color: var(--accent-color);
+        .student-card p {
+            margin-bottom: 5px;
+            font-size: 1em;
+            color: #555;
         }
 
-        .carousel-nav {
+        .student-card p strong {
+            color: var(--text-color);
+        }
+
+        /* Results Section */
+        .result-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .result-info {
+            flex-grow: 1;
+            margin-right: 20px;
+            min-width: 200px; /* Prevent too much shrinking */
+        }
+
+        .result-info h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .result-info p {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .result-info p strong {
+            color: var(--text-color);
+        }
+
+        .result-actions a {
+            padding: 10px 18px;
+            background-color: var(--soft-blue); /* Using light blue as action color */
+            color: var(--text-color);
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .result-actions a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+
+        /* Banners / Notices Section */
+        .banner-section {
+            background-color: var(--soft-cream); /* Soft cream for banners */
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .banner-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 40px;
+        }
+
+        .banner-carousel {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden; /* Hides slides not currently in view */
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .banner-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 350px; /* Fixed height for banners */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            transition: transform 0.5s ease-in-out; /* For carousel effect */
+            flex-shrink: 0; /* Prevents shrinking when animating */
+            width: 100%;
+        }
+
+        .banner-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Dark overlay for text readability */
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            padding: 30px;
+        }
+
+        .banner-content h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: white; /* White text on dark overlay */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .banner-content p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .banner-controls {
             position: absolute;
             top: 50%;
+            transform: translateY(-50%);
             width: 100%;
             display: flex;
             justify-content: space-between;
-            transform: translateY(-50%);
-            padding: 0 10px;
-            z-index: 10;
+            z-index: 3;
         }
 
-        .carousel-nav button {
-            background: rgba(0, 0, 0, 0.3);
+        .banner-controls .arrow {
+            background: rgba(0,0,0,0.5);
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5em;
+            padding: 15px;
+            font-size: 1.8em;
             cursor: pointer;
-            transition: background 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .carousel-nav button:hover {
-            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+            margin: 0 20px;
         }
 
-        /* --- Contact / Info Section --- */
-        .contact-info {
-            background-color: var(--card-background);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
+        .banner-controls .arrow:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .banner-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            gap: 10px;
+        }
+
+        .banner-dot {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .banner-dot.active {
+            background-color: white;
+        }
+
+        /* Contact / Info Section */
+        .contact-section {
+            background-color: var(--nav-background); /* Use dark green for footer-like section */
+            color: white;
+            padding: 60px 0;
             text-align: center;
         }
 
-        .contact-info h2 {
-            color: var(--primary-color);
-            font-size: 1.8em;
-            margin-bottom: 25px;
+        .contact-section h2 {
+            color: white;
+            margin-bottom: 30px;
         }
 
-        .contact-info p {
-            margin-bottom: 15px;
-            font-size: 1.1em;
-            line-height: 1.6;
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
         }
 
-        .contact-info .icon {
-            margin-right: 10px;
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-item .icon {
+            font-size: 2.5em;
             color: var(--secondary-color);
-            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .contact-item h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .contact-item p {
+            font-size: 1em;
+            color: #ddd;
+        }
+
+        .contact-item a {
+            color: white;
+        }
+        .contact-item a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--footer-background);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            margin-top: 40px; /* Space from last content section */
         }
 
         /* --- Responsive Adjustments --- */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 220px;
-                transform: translateX(-220px); /* Hidden by default */
-                position: fixed; /* Ensure it stays fixed */
+            .top-navbar {
+                padding: 10px 0;
             }
 
-            .sidebar.open {
-                transform: translateX(0);
+            .top-navbar .brand {
+                font-size: 1.5em;
             }
 
-            .main-content {
-                margin-left: 0; /* Full width when sidebar is hidden */
+            .top-navbar .nav-links {
+                display: none; /* Hide on mobile, will use hamburger */
             }
 
-            .main-content.sidebar-open {
-                margin-left: 220px; /* Adjust when sidebar is open */
+            .hamburger-menu {
+                display: block !important; /* Show hamburger */
             }
 
-            .hamburger-btn {
-                display: block; /* Show hamburger on small screens */
+            .hero-section {
+                padding: 50px 0;
+                min-height: 40vh;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2em;
+            }
+
+            .hero-content p {
+                font-size: 1.1em;
+            }
+
+            .section {
+                padding: 40px 0;
             }
 
             .dashboard-stats {
                 grid-template-columns: 1fr; /* Stack cards on mobile */
             }
 
-            .search-filter-container {
-                flex-direction: column; /* Stack search/filter elements */
-                align-items: stretch;
-            }
-            .search-filter-container input[type="text"],
-            .search-filter-container select {
-                width: 100%; /* Full width on mobile */
+            .student-filter-form {
+                grid-template-columns: 1fr; /* Stack filters on mobile */
             }
 
-            .table-container, .contact-info {
-                padding: 20px;
+            .student-cards-container, .result-card {
+                grid-template-columns: 1fr; /* Stack cards on mobile */
             }
-            th, td {
-                padding: 10px 15px;
-                white-space: normal; /* Allow text wrapping on mobile */
+
+            .result-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .result-actions {
+                margin-top: 15px;
+                width: 100%;
+                text-align: left;
+            }
+
+            .result-actions a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .banner-section {
+                padding: 40px 0;
+            }
+
+            .banner-slide {
+                height: 250px; /* Smaller banners on mobile */
+            }
+
+            .banner-content h3 {
+                font-size: 1.6em;
+            }
+
+            .banner-controls .arrow {
+                padding: 10px;
+                font-size: 1.5em;
+            }
+            .contact-info {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Scrollbar styling for Webkit browsers */
-        ::-webkit-scrollbar {
-            width: 10px;
+        /* Off-canvas Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Hidden by default */
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background-color: var(--nav-background);
+            color: white;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; /* Space for close button */
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--background-color);
-            border-radius: 5px;
+        .mobile-menu.open {
+            right: 0;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 5px;
+        .mobile-menu .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2em;
+            cursor: pointer;
+            color: white;
+            transition: color 0.3s ease;
+        }
+        .mobile-menu .close-btn:hover {
+            color: var(--secondary-color);
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
+        .mobile-menu ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1; /* Take up available space */
+        }
+
+        .mobile-menu li {
+            margin-bottom: 5px;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background-color: var(--hover-bg);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu .brand {
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .mobile-menu .bottom-links {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .mobile-menu .bottom-links a {
+            margin: 5px 0;
+            display: block;
+        }
+
+        .hamburger-menu {
+            display: none; /* Hidden by default */
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Styles for dynamically loaded content */
+        .loading-message {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+            padding: 30px;
+        }
+
+        .error-message {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            padding: 30px;
         }
     </style>
 </head>
@@ -525,634 +770,707 @@
     <!-- Firebase Configuration -->
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
-            authDomain: "queenschool-803d9.firebaseapp.com",
-            databaseURL: "https://queenschool-803d9-default-rtdb.firebaseio.com",
-            projectId: "queenschool-803d9",
-            storageBucket: "queenschool-803d9.firebasestorage.app",
-            messagingSenderId: "1078969444409",
-            appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8"
+            apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc", // *** REPLACE WITH YOUR ACTUAL FIREBASE API KEY ***
+            authDomain: "queenschool-803d9.firebaseapp.com", // *** REPLACE WITH YOUR ACTUAL FIREBASE AUTH DOMAIN ***
+            databaseURL: "https://queenschool-803d9-default-rtdb.firebaseio.com", // *** REPLACE WITH YOUR ACTUAL FIREBASE DATABASE URL ***
+            projectId: "queenschool-803d9", // *** REPLACE WITH YOUR ACTUAL FIREBASE PROJECT ID ***
+            storageBucket: "queenschool-803d9.firebasestorage.app", // *** REPLACE WITH YOUR ACTUAL FIREBASE STORAGE BUCKET ***
+            messagingSenderId: "1078969444409", // *** REPLACE WITH YOUR ACTUAL FIREBASE MESSAGING SENDER ID ***
+            appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8" // *** REPLACE WITH YOUR ACTUAL FIREBASE APP ID ***
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+        } catch (e) {
+            console.error("Firebase initialization error:", e);
+            alert("Firebase initialization failed. Please check your Firebase configuration. Error: " + e.message);
+        }
     </script>
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="brand">Madrasah</div>
-        <button class="hamburger-btn">&#9776;</button>
+    <!-- Top Navbar -->
+    <header class="top-navbar">
+        <div class="container">
+            <div class="brand">Madrasah Name</div>
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#students">Students</a></li>
+                    <li><a href="#results">Results</a></li>
+                    <li><a href="#banners">Banners</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger-menu">&#9776;</div>
+        </div>
+    </header>
+
+    <!-- Mobile Off-canvas Menu -->
+    <div class="mobile-menu">
+        <span class="close-btn">&times;</span>
+        <div class="brand">Madrasah Name</div>
         <ul>
-            <li><a href="#dashboard" data-section="dashboard"><span class="icon">📊</span> Dashboard</a></li>
-            <li><a href="#students" data-section="students"><span class="icon">🧑‍🎓</span> Students</a></li>
-            <li><a href="#results" data-section="results"><span class="icon">📈</span> Results</a></li>
-            <li><a href="#banners" data-section="banners"><span class="icon">📣</span> Notices</a></li>
-            <li><a href="#contact" data-section="contact"><span class="icon">📞</span> Contact</a></li>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#students">Students</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#banners">Banners</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
+        <div class="bottom-links">
+            <p>&copy; 2023 Madrasah Name</p>
+        </div>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <div class="top-navbar">Madrasah Portal</div>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to Our Madrasah</h1>
+            <p>Empowering knowledge and character through Islamic education.</p>
+            <a href="#students" class="btn btn-secondary">View Student Details</a>
+        </div>
+    </section>
 
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="content-section active">
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="icon">👨‍🎓</div>
-                    <div class="count" id="total-students">0</div>
-                    <div class="label">Total Students</div>
+    <!-- Main Content Sections -->
+    <main>
+        <!-- Dashboard / Home Section -->
+        <section id="dashboard" class="section">
+            <div class="container">
+                <h2>Dashboard / Welcome</h2>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="icon">👨‍🎓</div>
+                        <div class="count" id="total-students">0</div>
+                        <div class="label">Total Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">📚</div>
+                        <div class="count" id="total-classes">0</div>
+                        <div class="label">Total Classes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">📦</div>
+                        <div class="count" id="total-sections">0</div>
+                        <div class="label">Total Sections</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">📈</div>
+                        <div class="count" id="total-results">0</div>
+                        <div class="label">Total Results</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">📣</div>
+                        <div class="count" id="total-banners">0</div>
+                        <div class="label">Announcements</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="icon">📚</div>
-                    <div class="count" id="total-classes">0</div>
-                    <div class="label">Active Classes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon">📦</div>
-                    <div class="count" id="total-sections">0</div>
-                    <div class="label">Total Sections</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon">📈</div>
-                    <div class="count" id="total-results">0</div>
-                    <div class="label">Published Results</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon">📣</div>
-                    <div class="count" id="total-banners">0</div>
-                    <div class="label">New Notices</div>
-                </div>
-            </div>
 
-            <div class="carousel-container">
-                <h2>Latest Notices</h2>
-                <div class="carousel-track" id="banner-carousel-track">
-                    <!-- Carousel items will be loaded here -->
-                </div>
-                <div class="carousel-nav">
-                    <button id="prev-banner">&#10094;</button>
-                    <button id="next-banner">&#10095;</button>
+                <div class="quick-links">
+                    <h2>Quick Links</h2>
+                    <a href="#students">View Students</a>
+                    <a href="#results">View Results</a>
+                    <a href="#banners">View Notices</a>
+                    <a href="#contact">Get In Touch</a>
                 </div>
             </div>
         </section>
 
-        <!-- Students List Section -->
-        <section id="students" class="content-section">
-            <div class="search-filter-container">
-                <input type="text" id="student-search" placeholder="Search by Name...">
-                <select id="student-year-filter"></select>
-                <select id="student-class-filter"></select>
-                <select id="student-section-filter"></select>
-            </div>
-            <div class="table-container">
-                <h2>Student Directory</h2>
-                <table id="students-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Year</th>
-                            <th>Class</th>
-                            <th>Section</th>
-                            <th>Roll No.</th>
-                            <th>User ID</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Student data will be loaded here -->
-                    </tbody>
-                </table>
+        <!-- Students Section -->
+        <section id="students" class="section">
+            <div class="container">
+                <h2>Our Students</h2>
+                <div class="student-filter-form">
+                    <div>
+                        <label for="filter-name">Search by Name</label>
+                        <input type="text" id="filter-name" placeholder="Student Name">
+                    </div>
+                    <div>
+                        <label for="filter-class">Filter by Class</label>
+                        <select id="filter-class"><option value="">All Classes</option></select>
+                    </div>
+                    <div>
+                        <label for="filter-section">Filter by Section</label>
+                        <select id="filter-section"><option value="">All Sections</option></select>
+                    </div>
+                    <div>
+                        <label for="filter-year">Filter by Year</label>
+                        <select id="filter-year"><option value="">All Years</option></select>
+                    </div>
+                    <button class="btn btn-secondary" onclick="applyFilters()">Apply Filters</button>
+                </div>
+                <div id="student-cards-container" class="student-cards-container">
+                    <!-- Student cards will be loaded here -->
+                    <p class="loading-message">Loading students...</p>
+                </div>
             </div>
         </section>
 
-        <!-- Results List Section -->
-        <section id="results" class="content-section">
-            <div class="search-filter-container">
-                <input type="text" id="result-search" placeholder="Search by Student Name...">
-                <select id="result-class-filter"></select>
-                <!-- Add more filters if needed, e.g., by year -->
-            </div>
-            <div class="table-container">
-                <h2>Exam Results</h2>
-                <table id="results-table">
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Class</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Result data will be loaded here -->
-                    </tbody>
-                </table>
+        <!-- Results Section -->
+        <section id="results" class="section">
+            <div class="container">
+                <h2>Student Results</h2>
+                <div id="results-container" class="results-container">
+                    <!-- Result cards will be loaded here -->
+                    <p class="loading-message">Loading results...</p>
+                </div>
             </div>
         </section>
 
         <!-- Banners / Notices Section -->
-        <section id="banners" class="content-section">
-            <div class="table-container">
-                <h2>All Notices</h2>
-                <div id="all-banners-list">
-                    <!-- Banner cards will be loaded here -->
+        <section id="banners" class="banner-section">
+            <div class="container">
+                <h2>Announcements & Notices</h2>
+                <div class="banner-carousel" id="banner-carousel">
+                    <!-- Banners will be loaded here -->
+                    <p class="loading-message" style="color: white;">Loading announcements...</p>
+                </div>
+                <div class="banner-controls">
+                    <div class="arrow" id="prevBanner">&#10094;</div>
+                    <div class="arrow" id="nextBanner">&#10095;</div>
+                </div>
+                <div class="banner-dots" id="banner-dots">
+                    <!-- Dots will be generated by JS -->
                 </div>
             </div>
         </section>
 
         <!-- Contact / Info Section -->
-        <section id="contact" class="content-section">
-            <div class="contact-info">
+        <section id="contact" class="contact-section">
+            <div class="container">
                 <h2>Contact Us</h2>
-                <p><span class="icon">&#127968;</span> <strong>Address:</strong> 123 Madrasah Lane, City, Country</p>
-                <p><span class="icon">&#9742;</span> <strong>Phone:</strong> +1 234 567 890</p>
-                <p><span class="icon">&#128236;</span> <strong>Email:</strong> info@madrasah.com</p>
-                <p><span class="icon">&#128197;</span> <strong>Website:</strong> <a href="http://www.madrasah.com" target="_blank">www.madrasah.com</a></p>
-                <p>We are dedicated to providing quality Islamic education. Feel free to reach out for any inquiries.</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="icon">🏢</div>
+                        <h3>Our Address</h3>
+                        <p id="madrasah-address">123 Madrasah Lane, City, Country</p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon">📞</div>
+                        <h3>Phone</h3>
+                        <p id="madrasah-phone">+1 (123) 456-7890</p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon">✉️</div>
+                        <h3>Email</h3>
+                        <p><a href="mailto:info@madrasah.com" id="madrasah-email">info@madrasah.com</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon">🌍</div>
+                        <h3>Website</h3>
+                        <p><a href="https://www.madrasah.com" target="_blank" id="madrasah-website">www.madrasah.com</a></p>
+                    </div>
+                </div>
             </div>
         </section>
+    </main>
 
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Madrasah Name. All rights reserved.</p>
+        </div>
+    </footer>
 
+    <!-- Firebase Data and Logic -->
     <script>
-        // --- Firebase Configuration & Initialization ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
-            authDomain: "queenschool-803d9.firebaseapp.com",
-            databaseURL: "https://queenschool-803d9-default-rtdb.firebaseio.com",
-            projectId: "queenschool-803d9",
-            storageBucket: "queenschool-803d9.firebasestorage.app",
-            messagingSenderId: "1078969444409",
-            appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // Ensure Firebase is initialized before proceeding
+        let database;
+        try {
+            database = firebase.database();
+        } catch (e) {
+            // Handle case where firebaseConfig might be invalid or not set
+            console.error("Firebase is not initialized. Please check firebaseConfig.");
+        }
 
         // --- Firebase Paths ---
-        const yearsRef = database.ref('years');
-        const classesRef = database.ref('classes');
-        const sectionsRef = database.ref('sections');
-        const studentsRef = database.ref('students');
-        const resultsRef = database.ref('results');
-        const bannersRef = database.ref('banners');
+        const yearsRef = database?.ref('years'); // Assuming 'years' node exists
+        const classesRef = database?.ref('classes'); // Assuming 'classes' node exists
+        const sectionsRef = database?.ref('sections'); // Assuming 'sections' node exists
+        const studentsRef = database?.ref('students');
+        const resultsRef = database?.ref('results');
+        const bannersRef = database?.ref('banners');
+
+        // --- Static Info ---
+        // You can also fetch this from Firebase if needed
+        const madrasahInfo = {
+            name: "Our Madrasah",
+            address: "123 Islamic Way, Knowledge City, Scholars Town",
+            phone: "+1 (555) 123-4567",
+            email: "info@ourmadrasah.edu",
+            website: "https://www.ourmadrasah.edu",
+            heroImage: "https://via.placeholder.com/1500x500/81D4FA/FFFFFF?text=Welcome+to+Our+Madrasah+Family" // Placeholder
+        };
 
         // --- DOM Elements ---
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-        const hamburgerBtn = document.querySelector('.hamburger-btn');
-        const sidebarLinks = document.querySelectorAll('.sidebar a');
-        const contentSections = document.querySelectorAll('.content-section');
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const closeMobileMenuBtn = mobileMenu.querySelector('.close-btn');
+        const navLinks = document.querySelectorAll('.top-navbar .nav-links a, .mobile-menu a');
 
-        // Carousel elements
-        const bannerCarouselTrack = document.getElementById('banner-carousel-track');
-        const prevBannerBtn = document.getElementById('prev-banner');
-        const nextBannerBtn = document.getElementById('next-banner');
+        const totalStudentsEl = document.getElementById('total-students');
+        const totalClassesEl = document.getElementById('total-classes');
+        const totalSectionsEl = document.getElementById('total-sections');
+        const totalResultsEl = document.getElementById('total-results');
+        const totalBannersEl = document.getElementById('total-banners');
+
+        const studentCardsContainer = document.getElementById('student-cards-container');
+        const resultsContainer = document.getElementById('results-container');
+        const bannerCarousel = document.getElementById('banner-carousel');
+        const prevBannerBtn = document.getElementById('prevBanner');
+        const nextBannerBtn = document.getElementById('nextBanner');
+        const bannerDotsContainer = document.getElementById('banner-dots');
+
+        const filterNameInput = document.getElementById('filter-name');
+        const filterClassSelect = document.getElementById('filter-class');
+        const filterSectionSelect = document.getElementById('filter-section');
+        const filterYearSelect = document.getElementById('filter-year');
+
+        const madrasahAddressEl = document.getElementById('madrasah-address');
+        const madrasahPhoneEl = document.getElementById('madrasah-phone');
+        const madrasahEmailEl = document.getElementById('madrasah-email');
+        const madrasahWebsiteEl = document.getElementById('madrasah-website');
+        const madrasahBrandEl = document.querySelectorAll('.brand');
+
+        let allStudents = []; // To store all students for filtering
+        let allClasses = []; // To store all classes
+        let allSections = []; // To store all sections
+        let allYears = []; // To store all years
         let currentBannerIndex = 0;
-        let bannerItems = []; // To store fetched banners
-
-        // Student filter elements
-        const studentSearchInput = document.getElementById('student-search');
-        const studentYearFilter = document.getElementById('student-year-filter');
-        const studentClassFilter = document.getElementById('student-class-filter');
-        const studentSectionFilter = document.getElementById('student-section-filter');
-
-        // Result filter elements
-        const resultSearchInput = document.getElementById('result-search');
-        const resultClassFilter = document.getElementById('result-class-filter');
+        let bannerSlides = [];
 
         // --- Helper Functions ---
 
-        function showSection(sectionId) {
-            contentSections.forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
+        function updateMadrasahInfo() {
+            document.title = `${madrasahInfo.name} - Official Website`;
+            madrasahBrandEl.forEach(el => el.textContent = madrasahInfo.name);
+            madrasahAddressEl.textContent = madrasahInfo.address;
+            madrasahPhoneEl.textContent = madrasahInfo.phone;
+            madrasahEmailEl.href = `mailto:${madrasahInfo.email}`;
+            madrasahEmailEl.textContent = madrasahInfo.email;
+            madrasahWebsiteEl.href = madrasahInfo.website;
+            madrasahWebsiteEl.target = "_blank";
+            madrasahWebsiteEl.textContent = new URL(madrasahInfo.website).hostname;
 
-        function setActiveLink(targetHref) {
-            sidebarLinks.forEach(link => {
-                if (link.getAttribute('href') === targetHref) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-        }
-
-        function toggleSidebar() {
-            sidebar.classList.toggle('open');
-            mainContent.classList.toggle('sidebar-open');
-            if (sidebar.classList.contains('open')) {
-                hamburgerBtn.innerHTML = '&#10006;'; // Close icon
-            } else {
-                hamburgerBtn.innerHTML = '&#9776;'; // Hamburger icon
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection) {
+                heroSection.style.backgroundImage = `url('${madrasahInfo.heroImage}')`;
+                heroSection.style.backgroundSize = 'cover';
+                heroSection.style.backgroundPosition = 'center';
             }
         }
 
-        async function getItemName(ref, id, field = 'name') {
-            if (!id) return 'N/A';
-            try {
-                const snapshot = await ref.child(id).once('value');
-                const item = snapshot.val();
-                return item ? item[field] || item.name || item.title || item.year : 'Deleted Item';
-            } catch (error) {
-                console.error("Error fetching item name:", error);
-                return 'Error';
-            }
+        function showLoading(container, message = "Loading...") {
+            container.innerHTML = `<p class="loading-message">${message}</p>`;
         }
 
-        async function getStudentName(studentId) {
-            if (!studentId) return 'N/A';
-            try {
-                const snapshot = await studentsRef.child(studentId).once('value');
-                const student = snapshot.val();
-                return student ? student.name : 'Deleted Student';
-            } catch (error) {
-                console.error("Error fetching student name:", error);
-                return 'Error';
-            }
+        function showError(container, message = "Failed to load data.") {
+            container.innerHTML = `<p class="error-message">${message}</p>`;
         }
 
-        async function populateDropdown(ref, selectElementId, valueField = 'key', textField = 'name') {
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+        }
+
+        // Helper to get item name by ID
+        function getItemName(itemsArray, id, nameField = 'name') {
+            if (!id || !itemsArray) return 'N/A';
+            const item = itemsArray.find(item => item.id === id);
+            return item ? item[nameField] : 'N/A';
+        }
+
+        // Populate dropdown options
+        function populateDropdown(selectElementId, items, valueField = 'id', textField = 'name') {
             const selectElement = document.getElementById(selectElementId);
-            selectElement.innerHTML = '<option value="">All</option>'; // Default "All" option
+            selectElement.innerHTML = '<option value="">All</option>'; // Reset with a default option
+            if (items) {
+                items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item[valueField];
+                    option.textContent = item[textField] || item.title || item.name;
+                    selectElement.appendChild(option);
+                });
+            }
+        }
 
+        // --- Data Fetching and Rendering ---
+
+        async function fetchAndRenderStudents() {
+            showLoading(studentCardsContainer, "Loading students...");
             try {
-                const snapshot = await ref.once('value');
-                const items = snapshot.val();
-                if (items) {
-                    Object.keys(items).sort((a, b) => { // Sort alphabetically
-                        const itemA = items[a];
-                        const itemB = items[b];
-                        const textA = itemA[textField] || itemA.name || itemA.title || itemA.year;
-                        const textB = itemB[textField] || itemB.name || itemB.title || itemB.year;
-                        if (textA < textB) return -1;
-                        if (textA > textB) return 1;
-                        return 0;
-                    }).forEach(key => {
-                        const item = items[key];
-                        const option = document.createElement('option');
-                        option.value = key;
-                        option.textContent = item[textField] || item.name || item.title || item.year;
-                        selectElement.appendChild(option);
+                const snapshot = await studentsRef.once('value');
+                allStudents = []; // Clear existing
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        const studentData = childSnapshot.val();
+                        allStudents.push({ id: childSnapshot.key, ...studentData });
                     });
                 }
+
+                renderStudentCards(allStudents); // Render all initially
+                // Populate filters after fetching students
+                await fetchAndRenderClasses(); // Need classes to populate class/section/year filters
             } catch (error) {
-                console.error("Error populating dropdown:", error);
-                // Optionally display an error message on the page
+                console.error("Error fetching students:", error);
+                showError(studentCardsContainer, "Failed to load student data.");
             }
         }
 
-        // --- Carousel Functions ---
-        function updateCarousel() {
-            bannerCarouselTrack.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
-        }
-
-        function nextBanner() {
-            if (bannerItems.length > 0) {
-                currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
-                updateCarousel();
-            }
-        }
-
-        function prevBanner() {
-            if (bannerItems.length > 0) {
-                currentBannerIndex = (currentBannerIndex - 1 + bannerItems.length) % bannerItems.length;
-                updateCarousel();
-            }
-        }
-
-        // --- Data Loading Functions ---
-
-        // Dashboard Stats
-        async function loadDashboardStats() {
+        async function fetchAndRenderClasses() {
             try {
-                const [studentsSnapshot, classesSnapshot, sectionsSnapshot, resultsSnapshot, bannersSnapshot] = await Promise.all([
-                    studentsRef.once('value'),
-                    classesRef.once('value'),
-                    sectionsRef.once('value'),
-                    resultsRef.once('value'),
-                    bannersRef.once('value')
-                ]);
-
-                document.getElementById('total-students').textContent = studentsSnapshot.numChildren() || 0;
-                document.getElementById('total-classes').textContent = classesSnapshot.numChildren() || 0;
-                document.getElementById('total-sections').textContent = sectionsSnapshot.numChildren() || 0;
-                document.getElementById('total-results').textContent = resultsSnapshot.numChildren() || 0;
-                document.getElementById('total-banners').textContent = bannersSnapshot.numChildren() || 0;
-            } catch (error) {
-                console.error("Error loading dashboard stats:", error);
-                document.getElementById('total-students').textContent = 'Err';
-                document.getElementById('total-classes').textContent = 'Err';
-                document.getElementById('total-sections').textContent = 'Err';
-                document.getElementById('total-results').textContent = 'Err';
-                document.getElementById('total-banners').textContent = 'Err';
-            }
-        }
-
-        // Load Banners for Carousel and List
-        async function loadBanners(limit = null) {
-            const bannerListDiv = document.getElementById('all-banners-list');
-            bannerListDiv.innerHTML = '<p style="text-align:center; padding: 20px;">Loading notices...</p>';
-
-            try {
-                let query = bannersRef.orderByKey();
-                if (limit) {
-                    query = query.limitToLast(limit); // For carousel
-                }
-                const snapshot = await query.once('value');
-                const items = snapshot.val();
-                bannerItems = []; // Reset carousel items
-                bannerListDiv.innerHTML = ''; // Clear loading state for list
-
-                if (items) {
-                    const bannerKeys = Object.keys(items).reverse(); // Show most recent first
-
-                    bannerKeys.forEach(key => {
-                        const banner = items[key];
-                        const bannerData = { key, ...banner };
-                        bannerItems.push(bannerData); // Add to carousel items
-
-                        // Add to the "All Notices" list
-                        const bannerCard = document.createElement('div');
-                        bannerCard.className = 'banner-card';
-                        bannerCard.innerHTML = `
-                            ${banner.iconUrl ? `<span class="icon">&#${banner.iconUrl};</span>` : '<span class="icon">&#128205;</span>'}
-                            <div class="content">
-                                <div class="title">${banner.title}</div>
-                                ${banner.link ? `<div class="link"><a href="${banner.link}" target="_blank">Read More &#10142;</a></div>` : ''}
-                            </div>
-                        `;
-                        bannerListDiv.appendChild(bannerCard);
+                const classesSnapshot = await classesRef.once('value');
+                allClasses = [];
+                if (classesSnapshot.exists()) {
+                    classesSnapshot.forEach(childSnapshot => {
+                        const classData = childSnapshot.val();
+                        allClasses.push({ id: childSnapshot.key, ...classData });
                     });
+                }
+                populateDropdown('filter-class', allClasses, 'id', 'name');
 
-                    // Populate Carousel
-                    if (limit && bannerItems.length > 0) {
-                        bannerCarouselTrack.innerHTML = ''; // Clear previous carousel content
-                        bannerItems.forEach(banner => {
-                            const carouselItem = document.createElement('div');
-                            carouselItem.className = 'carousel-item';
-                            carouselItem.innerHTML = `
-                                <div class="title">${banner.title}</div>
-                                ${banner.link ? `<div class="link"><a href="${banner.link}" target="_blank">Learn More &#10142;</a></div>` : ''}
-                            `;
-                            bannerCarouselTrack.appendChild(carouselItem);
-                        });
-                        updateCarousel(); // Set initial carousel position
-                        if (bannerItems.length <= 1) {
-                            prevBannerBtn.style.display = 'none';
-                            nextBannerBtn.style.display = 'none';
-                        } else {
-                             prevBannerBtn.style.display = 'flex';
-                             nextBannerBtn.style.display = 'flex';
-                        }
-                    } else if (limit && bannerItems.length === 0) {
-                        prevBannerBtn.style.display = 'none';
-                        nextBannerBtn.style.display = 'none';
-                    }
-                } else {
-                    bannerListDiv.innerHTML = '<p style="text-align:center; padding: 20px;">No notices available at the moment.</p>';
-                    if (limit) {
-                        prevBannerBtn.style.display = 'none';
-                        nextBannerBtn.style.display = 'none';
-                    }
-                }
+                // Fetch sections and years, then render student cards
+                await fetchAndRenderSections();
+                await fetchAndRenderYears();
+                // Once all dropdowns are populated, render initial student cards
+                renderStudentCards(allStudents);
+
             } catch (error) {
-                console.error("Error loading banners:", error);
-                bannerListDiv.innerHTML = '<p style="text-align:center; padding: 20px;">Error loading notices.</p>';
-                if (limit) {
-                    prevBannerBtn.style.display = 'none';
-                    nextBannerBtn.style.display = 'none';
-                }
+                console.error("Error fetching classes:", error);
             }
         }
 
-        // Load Students with Filters
-        async function loadStudents(search = '', yearId = '', classId = '', sectionId = '') {
-            const tableBody = document.getElementById('students-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading students...</td></tr>';
-
+        async function fetchAndRenderSections() {
             try {
-                const studentsSnapshot = await studentsRef.once('value');
-                const students = studentsSnapshot.val();
-                tableBody.innerHTML = ''; // Clear loading state
-
-                if (students) {
-                    const studentKeys = Object.keys(students).filter(key => {
-                        const student = students[key];
-                        const matchesSearch = student.name.toLowerCase().includes(search.toLowerCase());
-                        const matchesYear = !yearId || student.yearId === yearId;
-                        const matchesClass = !classId || student.classId === classId;
-                        const matchesSection = !sectionId || student.sectionId === sectionId;
-                        return matchesSearch && matchesYear && matchesClass && matchesSection;
+                const sectionsSnapshot = await sectionsRef.once('value');
+                allSections = [];
+                if (sectionsSnapshot.exists()) {
+                    sectionsSnapshot.forEach(childSnapshot => {
+                        const sectionData = childSnapshot.val();
+                        allSections.push({ id: childSnapshot.key, ...sectionData });
                     });
-
-                    if (studentKeys.length === 0) {
-                        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No students found matching your criteria.</td></tr>';
-                        return;
-                    }
-
-                    // Sort students by Roll Number
-                    studentKeys.sort((a, b) => students[a].roll - students[b].roll);
-
-                    for (const key of studentKeys) {
-                        const student = students[key];
-                        const yearName = await getItemName(yearsRef, student.yearId, 'name');
-                        const className = await getItemName(classesRef, student.classId, 'name');
-                        const sectionName = await getItemName(sectionsRef, student.sectionId, 'name');
-
-                        const row = tableBody.insertRow();
-                        row.innerHTML = `
-                            <td>${student.name}</td>
-                            <td>${yearName}</td>
-                            <td>${className}</td>
-                            <td>${sectionName}</td>
-                            <td>${student.roll}</td>
-                            <td>${student.userId || 'N/A'}</td>
-                        `;
-                    }
-                } else {
-                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No student data available.</td></tr>';
                 }
+                populateDropdown('filter-section', allSections, 'id', 'name');
             } catch (error) {
-                console.error("Error loading students:", error);
-                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading students. ${error.message}</td></tr>`;
+                console.error("Error fetching sections:", error);
             }
         }
 
-        // Load Results with Filters
-        async function loadResults(search = '', classId = '') {
-            const tableBody = document.getElementById('results-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Loading results...</td></tr>';
+        async function fetchAndRenderYears() {
+            try {
+                const yearsSnapshot = await yearsRef.once('value');
+                allYears = [];
+                if (yearsSnapshot.exists()) {
+                    yearsSnapshot.forEach(childSnapshot => {
+                        const yearData = childSnapshot.val();
+                        allYears.push({ id: childSnapshot.key, ...yearData });
+                    });
+                }
+                populateDropdown('filter-year', allYears, 'id', 'name');
+            } catch (error) {
+                console.error("Error fetching years:", error);
+            }
+        }
 
+
+        function renderStudentCards(students) {
+            const container = document.getElementById('student-cards-container');
+            container.innerHTML = ''; // Clear previous content
+
+            if (students.length === 0) {
+                container.innerHTML = '<p class="loading-message">No students found matching your criteria.</p>';
+                return;
+            }
+
+            students.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.classList.add('student-card');
+
+                const className = getItemName(allClasses, student.classId, 'name');
+                const sectionName = getItemName(allSections, student.sectionId, 'name');
+                const yearName = getItemName(allYears, student.yearId, 'name');
+
+
+                studentCard.innerHTML = `
+                    <h3>${student.name}</h3>
+                    <p><strong>Class:</strong> ${className}</p>
+                    <p><strong>Section:</strong> ${sectionName}</p>
+                    <p><strong>Year:</strong> ${yearName}</p>
+                    <p><strong>Roll No:</strong> ${student.roll || 'N/A'}</p>
+                    ${student.userId ? `<p><strong>User ID:</strong> ${student.userId}</p>` : ''}
+                `;
+                container.appendChild(studentCard);
+            });
+        }
+
+        async function fetchAndRenderResults() {
+            showLoading(resultsContainer, "Loading results...");
             try {
                 const resultsSnapshot = await resultsRef.once('value');
-                const results = resultsSnapshot.val();
-                tableBody.innerHTML = ''; // Clear loading state
+                const studentsSnapshot = await studentsRef.once('value'); // Fetch students to map IDs to names
+                const classesSnapshot = await classesRef.once('value'); // Fetch classes to map IDs to names
 
-                if (results) {
-                    const resultEntries = Object.entries(results); // Get [key, value] pairs
+                const studentsMap = {};
+                studentsSnapshot.forEach(snap => { studentsMap[snap.key] = snap.val().name; });
 
-                    // Filter results
-                    const filteredResults = await Promise.all(resultEntries.filter(async ([key, result]) => {
-                        const studentName = await getStudentName(result.studentId);
-                        const matchesSearch = studentName.toLowerCase().includes(search.toLowerCase());
-                        const matchesClass = !classId || result.classId === classId;
-                        return matchesSearch && matchesClass;
-                    }).map(async ([key, result]) => {
-                        const studentName = await getStudentName(result.studentId);
-                        const className = await getItemName(classesRef, result.classId, 'name');
-                        return { key, studentName, className, result };
-                    }));
+                const classesMap = {};
+                classesSnapshot.forEach(snap => { classesMap[snap.key] = snap.val().name; });
 
-                    if (filteredResults.length === 0) {
-                        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No results found matching your criteria.</td></tr>';
-                        return;
-                    }
-
-                    // Sort by Student Name
-                    filteredResults.sort((a, b) => a.studentName.localeCompare(b.studentName));
-
-                    filteredResults.forEach(({ key, studentName, className, result }) => {
-                        const row = tableBody.insertRow();
-                        row.innerHTML = `
-                            <td>${studentName}</td>
-                            <td>${className}</td>
-                            <td><a href="${result.link}" target="_blank" title="Click to view result">View Result &#10142;</a></td>
-                        `;
-                    });
-                } else {
-                    tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No result data available.</td></tr>';
+                if (!resultsSnapshot.exists()) {
+                    resultsContainer.innerHTML = '<p class="loading-message">No results available yet.</p>';
+                    return;
                 }
+
+                const resultItems = [];
+                resultsSnapshot.forEach(childSnapshot => {
+                    resultItems.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
+
+                resultsContainer.innerHTML = ''; // Clear loading message
+
+                // Sort results by student name or class for better organization
+                resultItems.sort((a, b) => {
+                    const studentNameA = studentsMap[a.studentId] || 'N/A';
+                    const studentNameB = studentsMap[b.studentId] || 'N/A';
+                    if (studentNameA < studentNameB) return -1;
+                    if (studentNameA > studentNameB) return 1;
+                    // If student names are the same, sort by class
+                    const classNameA = classesMap[a.classId] || 'N/A';
+                    const classNameB = classesMap[b.classId] || 'N/A';
+                    if (classNameA < classNameB) return -1;
+                    if (classNameA > classNameB) return 1;
+                    return 0;
+                });
+
+
+                resultItems.forEach(result => {
+                    const resultCard = document.createElement('div');
+                    resultCard.classList.add('result-card');
+
+                    const studentName = studentsMap[result.studentId] || 'Unknown Student';
+                    const className = classesMap[result.classId] || 'Unknown Class';
+
+                    resultCard.innerHTML = `
+                        <div class="result-info">
+                            <h3>${studentName} - ${className}</h3>
+                            <p><strong>Result Status:</strong> ${result.status || 'Available'}</p>
+                        </div>
+                        <div class="result-actions">
+                            <a href="${result.link}" target="_blank" class="btn btn-secondary">View Result</a>
+                        </div>
+                    `;
+                    resultsContainer.appendChild(resultCard);
+                });
+
             } catch (error) {
-                console.error("Error loading results:", error);
-                tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error loading results. ${error.message}</td></tr>`;
+                console.error("Error fetching results:", error);
+                showError(resultsContainer, "Failed to load result data.");
             }
         }
 
-        // --- Initialization ---
+        async function fetchAndRenderBanners() {
+            showLoading(bannerCarousel, "Loading announcements...");
+            try {
+                const snapshot = await bannersRef.once('value');
+                let banners = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        banners.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                    });
+                }
 
-        // Pre-populate filters on load
-        async function prePopulateFilters() {
-            await populateDropdown(yearsRef, 'student-year-filter', 'key', 'name');
-            await populateDropdown(classesRef, 'student-class-filter', 'key', 'name');
-            await populateDropdown(sectionsRef, 'student-section-filter', 'key', 'name');
-            await populateDropdown(classesRef, 'result-class-filter', 'key', 'name');
+                if (banners.length === 0) {
+                    bannerCarousel.innerHTML = '<p class="loading-message" style="color: white;">No announcements available.</p>';
+                    document.querySelector('.banner-controls').style.display = 'none';
+                    document.getElementById('banner-dots').style.display = 'none';
+                    return;
+                }
+
+                // Sort banners by key (assuming chronological order based on push order) or by a timestamp if available
+                // For simplicity here, we'll just use the order from Firebase
+                bannerSlides = banners; // Store for carousel control
+
+                bannerCarousel.innerHTML = ''; // Clear loading message
+                bannerDotsContainer.innerHTML = ''; // Clear existing dots
+
+                bannerSlides.forEach((banner, index) => {
+                    const slide = document.createElement('div');
+                    slide.classList.add('banner-slide');
+                    slide.style.backgroundImage = banner.imageUrl ? `url(${banner.imageUrl})` : `url('https://via.placeholder.com/800x350/A5D6A7/FFFFFF?text=Madrasah+Notice')`; // Placeholder if no image URL
+
+                    const bannerContent = document.createElement('div');
+                    bannerContent.classList.add('banner-content');
+
+                    let contentHtml = '';
+                    if (banner.iconUrl) {
+                        contentHtml += `<img src="${banner.iconUrl}" alt="Icon" style="width: 50px; height: 50px; margin-bottom: 15px; border-radius: 8px;"> `;
+                    }
+                    contentHtml += `<h3>${banner.title}</h3>`;
+                    if (banner.link) {
+                        contentHtml += `<p><a href="${banner.link}" target="_blank" class="btn btn-secondary">Learn More</a></p>`;
+                    }
+                    bannerContent.innerHTML = contentHtml;
+                    slide.appendChild(bannerContent);
+                    bannerCarousel.appendChild(slide);
+
+                    // Create dots
+                    const dot = document.createElement('div');
+                    dot.classList.add('banner-dot');
+                    dot.dataset.index = index;
+                    dot.addEventListener('click', () => goToBanner(index));
+                    bannerDotsContainer.appendChild(dot);
+                });
+
+                updateBannerDisplay(); // Show the first banner
+                setupBannerCarouselControls(); // Add event listeners for arrows
+            } catch (error) {
+                console.error("Error fetching banners:", error);
+                showError(bannerCarousel, "Failed to load announcements.");
+            }
         }
 
-        // Function to load data for the currently active section
-        function loadDataForSection(sectionId) {
-            switch (sectionId) {
-                case 'dashboard':
-                    loadDashboardStats();
-                    loadBanners(5); // Load latest 5 for carousel
-                    break;
-                case 'students':
-                    loadStudents(); // Initial load without filters
-                    break;
-                case 'results':
-                    loadResults(); // Initial load without filters
-                    break;
-                case 'banners':
-                    loadBanners(); // Load all banners for the list view
-                    break;
-                case 'contact':
-                    // No data fetching needed for contact section
-                    break;
-                default:
-                    break;
-            }
+        function updateBannerDisplay() {
+            if (bannerSlides.length === 0) return;
+
+            // Adjust carousel transform for the current slide
+            const offset = -currentBannerIndex * 100; // Move slide by percentage width
+            bannerCarousel.style.transform = `translateX(${offset}%)`;
+
+            // Update active dot
+            document.querySelectorAll('.banner-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentBannerIndex);
+            });
+        }
+
+        function goToBanner(index) {
+            currentBannerIndex = index;
+            updateBannerDisplay();
+        }
+
+        function setupBannerCarouselControls() {
+            prevBannerBtn.addEventListener('click', () => {
+                currentBannerIndex = (currentBannerIndex - 1 + bannerSlides.length) % bannerSlides.length;
+                updateBannerDisplay();
+            });
+
+            nextBannerBtn.addEventListener('click', () => {
+                currentBannerIndex = (currentBannerIndex + 1) % bannerSlides.length;
+                updateBannerDisplay();
+            });
+
+            // Auto-carousel
+            setInterval(() => {
+                if (bannerSlides.length > 1) { // Only auto-advance if there are multiple banners
+                    currentBannerIndex = (currentBannerIndex + 1) % bannerSlides.length;
+                    updateBannerDisplay();
+                }
+            }, 5000); // Change banner every 5 seconds
+        }
+
+        function applyFilters() {
+            const filterName = filterNameInput.value.toLowerCase().trim();
+            const filterClass = filterClassSelect.value;
+            const filterSection = filterSectionSelect.value;
+            const filterYear = filterYearSelect.value;
+
+            const filteredStudents = allStudents.filter(student => {
+                const matchesName = student.name.toLowerCase().includes(filterName);
+                const matchesClass = filterClass ? student.classId === filterClass : true;
+                const matchesSection = filterSection ? student.sectionId === filterSection : true;
+                const matchesYear = filterYear ? student.yearId === filterYear : true;
+
+                return matchesName && matchesClass && matchesSection && matchesYear;
+            });
+
+            renderStudentCards(filteredStudents);
+        }
+
+        function loadDashboardStats() {
+            if (!database) return; // Firebase not initialized
+
+            // Use Promise.all to fetch all stats concurrently
+            Promise.all([
+                studentsRef.once('value'),
+                classesRef.once('value'),
+                sectionsRef.once('value'),
+                resultsRef.once('value'),
+                bannersRef.once('value')
+            ]).then(([studentsSnapshot, classesSnapshot, sectionsSnapshot, resultsSnapshot, bannersSnapshot]) => {
+                totalStudentsEl.textContent = studentsSnapshot.numChildren() || 0;
+                totalClassesEl.textContent = classesSnapshot.numChildren() || 0;
+                totalSectionsEl.textContent = sectionsSnapshot.numChildren() || 0;
+                totalResultsEl.textContent = resultsSnapshot.numChildren() || 0;
+                totalBannersEl.textContent = bannersSnapshot.numChildren() || 0;
+            }).catch(error => {
+                console.error("Error fetching dashboard stats:", error);
+                // Display errors on elements if needed
+                totalStudentsEl.textContent = 'Error';
+                totalClassesEl.textContent = 'Error';
+                totalSectionsEl.textContent = 'Error';
+                totalResultsEl.textContent = 'Error';
+                totalBannersEl.textContent = 'Error';
+            });
         }
 
         // --- Event Listeners ---
+        hamburgerMenu.addEventListener('click', toggleMobileMenu);
+        closeMobileMenuBtn.addEventListener('click', closeMobileMenu);
 
-        // Sidebar navigation clicks
-        sidebarLinks.forEach(link => {
+        navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const sectionId = link.getAttribute('data-section');
-                const targetHref = link.getAttribute('href');
+                const targetId = link.getAttribute('href').substring(1); // Get id from href (e.g., "#students" -> "students")
+                const targetElement = document.getElementById(targetId);
 
-                if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
-                    toggleSidebar();
+                if (targetElement) {
+                    // Close mobile menu if open
+                    closeMobileMenu();
+
+                    // Scroll to the target section
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+
+                    // Highlight active link (optional, but good UX)
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    link.classList.add('active');
                 }
-
-                showSection(sectionId);
-                setActiveLink(targetHref);
-                loadDataForSection(sectionId);
             });
         });
 
-        // Hamburger button click
-        hamburgerBtn.addEventListener('click', toggleSidebar);
-
-        // Close sidebar when clicking outside of it (on mobile)
+        // Close mobile menu when clicking outside of it
         document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                toggleSidebar();
+            if (!mobileMenu.contains(e.target) && !hamburgerMenu.contains(e.target) && mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
             }
-        });
-
-        // Resize listener for sidebar adjustment
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                if (sidebar.classList.contains('open')) {
-                    sidebar.classList.remove('open');
-                    mainContent.classList.remove('sidebar-open');
-                    hamburgerBtn.innerHTML = '&#9776;';
-                }
-            }
-        });
-
-        // Carousel navigation
-        nextBannerBtn.addEventListener('click', nextBanner);
-        prevBannerBtn.addEventListener('click', prevBanner);
-
-        // Student filter event listeners
-        studentSearchInput.addEventListener('input', () => {
-            loadStudents(studentSearchInput.value, studentYearFilter.value, studentClassFilter.value, studentSectionFilter.value);
-        });
-        studentYearFilter.addEventListener('change', () => {
-            loadStudents(studentSearchInput.value, studentYearFilter.value, studentClassFilter.value, studentSectionFilter.value);
-        });
-        studentClassFilter.addEventListener('change', () => {
-            loadStudents(studentSearchInput.value, studentYearFilter.value, studentClassFilter.value, studentSectionFilter.value);
-        });
-        studentSectionFilter.addEventListener('change', () => {
-            loadStudents(studentSearchInput.value, studentYearFilter.value, studentClassFilter.value, studentSectionFilter.value);
-        });
-
-        // Result filter event listeners
-        resultSearchInput.addEventListener('input', () => {
-            loadResults(resultSearchInput.value, resultClassFilter.value);
-        });
-        resultClassFilter.addEventListener('change', () => {
-            loadResults(resultSearchInput.value, resultClassFilter.value);
         });
 
         // --- Initial Load ---
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Set default active link and section
-            const initialSectionId = 'dashboard';
-            const initialLink = document.querySelector(`.sidebar a[data-section="${initialSectionId}"]`);
-            if (initialLink) {
-                initialLink.classList.add('active');
-            }
-            showSection(initialSectionId);
+        document.addEventListener('DOMContentLoaded', () => {
+            if (database) { // Only proceed if Firebase initialized successfully
+                updateMadrasahInfo(); // Set static info and dynamic elements
+                loadDashboardStats();
+                fetchAndRenderStudents(); // This will also fetch and render classes, sections, years for filters
+                fetchAndRenderResults();
+                fetchAndRenderBanners();
 
-            // Pre-populate filters first
-            await prePopulateFilters();
-
-            // Then load data for the initial section
-            loadDataForSection(initialSectionId);
-
-            // Optional: Auto-play carousel
-            setInterval(() => {
-                if (document.getElementById('banners').classList.contains('active') && bannerItems.length > 1) {
-                    nextBanner();
+                // Set initial active link based on hash, or default to Home
+                const hash = window.location.hash || '#hero';
+                const activeLink = document.querySelector(`.nav-links a[href="${hash}"], .mobile-menu a[href="${hash}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
                 }
-            }, 5000); // Change banner every 5 seconds
+                // Scroll to the section on page load if there's a hash
+                if (hash && hash !== '#hero') {
+                    const targetElement = document.getElementById(hash.substring(1));
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            } else {
+                // Handle case where Firebase failed to initialize
+                document.body.innerHTML = '<div class="error-message">Application failed to initialize due to Firebase configuration error. Please contact the administrator.</div>';
+            }
         });
     </script>
 </body>
