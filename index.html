@@ -3,765 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah User Panel</title>
+    <title>Madrasah Al-Noor</title>
     <!-- Firebase App (Core) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <!-- Firebase Realtime Database -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Optional: Firebase Storage if you want to upload images later -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script> -->
 
     <style>
-        /* --- Variables for Madrasah Theme --- */
+        /* --- Global Styles --- */
         :root {
-            --primary-color: #4CAF50; /* Green */
-            --secondary-color: #FFC107; /* Amber/Yellow */
-            --background-color: #F5F5DC; /* Cream */
+            --primary-color: #2E7D32; /* Muted Green */
+            --secondary-color: #FFF9C4; /* Soft Cream */
+            --accent-color: #81D4FA; /* Light Blue */
             --text-color: #333;
-            --card-background: #FFFFFF;
-            --border-color: #e0e0e0;
-            --nav-background: #388E3C; /* Darker Green */
-            --hover-bg: #e8f5e9; /* Light Green hover */
-            --footer-background: #2E7D32; /* Dark Green */
-            --light-blue: #81D4FA; /* Light Blue */
-            --soft-green: #A5D6A7; /* Soft Green */
-            --soft-cream: #FFF9C4; /* Soft Cream */
+            --light-text-color: #555;
+            --card-bg: #FFFFFF;
+            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --button-hover-bg: #388E3C; /* Darker Green */
+            --link-color: #1976D2; /* Standard Link Blue */
+            --link-hover-color: #1565C0;
         }
 
-        /* --- General Styles --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
+            background-color: var(--secondary-color);
             color: var(--text-color);
             line-height: 1.6;
-            scroll-behavior: smooth; /* For smooth scrolling */
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
 
         h1, h2, h3 {
             color: var(--primary-color);
-            margin-bottom: 15px;
+            margin-bottom: 1em;
+            text-align: center;
         }
 
         a {
-            color: var(--primary-color);
+            color: var(--link-color);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         a:hover {
-            color: var(--secondary-color);
+            color: var(--link-hover-color);
         }
 
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .btn:hover {
-            background-color: var(--footer-background);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-        .btn-secondary:hover {
-            background-color: var(--secondary-color); /* Slightly darker or more saturated on hover */
-            opacity: 0.9;
-        }
-
-        .section {
-            padding: 60px 0;
-            min-height: 80vh; /* Ensure sections take up space */
-        }
-
-        /* --- Top Navbar & Hero Section --- */
+        /* --- Top Navbar --- */
         .top-navbar {
-            background-color: var(--nav-background);
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 100%;
         }
 
-        .top-navbar .container {
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .top-navbar .brand {
+        .navbar-brand {
             font-size: 1.8em;
             font-weight: bold;
-            color: white;
             letter-spacing: 1px;
+            color: var(--secondary-color);
         }
 
-        .top-navbar .nav-links ul {
+        .navbar-menu ul {
             list-style: none;
             display: flex;
         }
 
-        .top-navbar .nav-links li {
+        .navbar-menu li {
             margin-left: 25px;
         }
 
-        .top-navbar .nav-links a {
-            color: white;
+        .navbar-menu a {
+            color: var(--secondary-color);
             font-size: 1.1em;
             font-weight: 500;
             transition: color 0.3s ease;
-            padding: 5px 0;
-            position: relative;
         }
 
-        .top-navbar .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--secondary-color);
-            transition: width 0.3s ease;
+        .navbar-menu a:hover {
+            color: var(--accent-color);
         }
 
-        .top-navbar .nav-links a:hover {
+        .hamburger-menu {
+            display: none; /* Hidden on desktop */
+            font-size: 2em;
             color: var(--secondary-color);
-        }
-        .top-navbar .nav-links a:hover::after {
-            width: 100%;
+            cursor: pointer;
         }
 
-        /* Hero Section */
-        .hero-section {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            text-align: center;
-            padding: 80px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 60vh;
+        /* --- Hero Banner Slider --- */
+        .hero-slider-container {
             position: relative;
+            width: 100%;
+            height: 70vh; /* Adjust height as needed */
             overflow: hidden;
+            background-color: var(--primary-color); /* Fallback */
         }
 
-        .hero-section::before {
-            content: '';
+        .hero-slide {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://via.placeholder.com/1500x500/81D4FA/FFFFFF?text=Madrasah+Welcome'); /* Placeholder image */
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             background-size: cover;
             background-position: center;
-            opacity: 0.7; /* Soften the background image */
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+            background-blend-mode: overlay;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
             z-index: 1;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.8); /* Slightly transparent white background for content */
-            padding: 40px 60px;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .hero-content h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .hero-content p {
-            font-size: 1.3em;
-            color: var(--text-color);
-            margin-bottom: 30px;
-        }
-
-        /* --- Section Specific Styles --- */
-
-        /* Dashboard */
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-            background-color: var(--hover-bg);
-        }
-
-        .stat-card .icon {
-            font-size: 3em;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .stat-card .count {
-            font-size: 2.8em;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .stat-card .label {
-            font-size: 1.1em;
-            color: #555;
-            margin-top: 5px;
-            font-weight: 500;
-        }
-
-        .quick-links {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .quick-links h2 {
-            color: var(--primary-color);
-        }
-
-        .quick-links a {
-            margin: 10px;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            background-color: var(--soft-green);
-            color: var(--text-color);
-            border: 2px solid var(--soft-green);
-        }
-
-        .quick-links a:hover {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* Students List */
-        .student-filter-form {
-            background-color: var(--card-background);
+        .hero-slide .slide-content {
+            color: var(--secondary-color);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            align-items: flex-end; /* Align buttons to bottom */
-        }
-
-        .student-filter-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .student-filter-form input[type="text"],
-        .student-filter-form select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            font-size: 1em;
-        }
-
-        .student-filter-form input[type="text"]:focus,
-        .student-filter-form select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .student-cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .student-card {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Pushes button to bottom if present */
-        }
-
-        .student-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-        }
-
-        .student-card h3 {
-            font-size: 1.4em;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .student-card p {
-            margin-bottom: 5px;
-            font-size: 1em;
-            color: #555;
-        }
-
-        .student-card p strong {
-            color: var(--text-color);
-        }
-
-        /* Results Section */
-        .result-card {
-            background-color: var(--card-background);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        }
-
-        .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .result-info {
-            flex-grow: 1;
-            margin-right: 20px;
-            min-width: 200px; /* Prevent too much shrinking */
-        }
-
-        .result-info h3 {
-            font-size: 1.3em;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-
-        .result-info p {
-            font-size: 1em;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .result-info p strong {
-            color: var(--text-color);
-        }
-
-        .result-actions a {
-            padding: 10px 18px;
-            background-color: var(--soft-blue); /* Using light blue as action color */
-            color: var(--text-color);
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        .result-actions a:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-
-        /* Banners / Notices Section */
-        .banner-section {
-            background-color: var(--soft-cream); /* Soft cream for banners */
-            padding: 60px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .banner-section h2 {
-            color: var(--primary-color);
-            margin-bottom: 40px;
-        }
-
-        .banner-carousel {
             max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden; /* Hides slides not currently in view */
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        .banner-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 350px; /* Fixed height for banners */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            transition: transform 0.5s ease-in-out; /* For carousel effect */
-            flex-shrink: 0; /* Prevents shrinking when animating */
-            width: 100%;
-        }
-
-        .banner-slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Dark overlay for text readability */
-        }
-
-        .banner-content {
-            position: relative;
-            z-index: 2;
-            color: white;
-            padding: 30px;
-        }
-
-        .banner-content h3 {
-            font-size: 2em;
-            margin-bottom: 15px;
-            color: white; /* White text on dark overlay */
+        .hero-slide h2 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            color: var(--secondary-color);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        .banner-content p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        .hero-slide p {
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
         }
 
-        .banner-controls {
+        .hero-slide .icon-img {
+            max-width: 80px;
+            height: auto;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        /* Slider Controls (Arrows) */
+        .slider-arrows {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             width: 100%;
             display: flex;
             justify-content: space-between;
-            z-index: 3;
+            z-index: 10;
         }
 
-        .banner-controls .arrow {
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 15px;
-            font-size: 1.8em;
+        .slider-arrow {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--secondary-color);
+            border: none;
+            font-size: 2.5em;
+            padding: 10px 15px;
             cursor: pointer;
-            border-radius: 50%;
             transition: background-color 0.3s ease;
-            margin: 0 20px;
+            border-radius: 4px;
         }
 
-        .banner-controls .arrow:hover {
-            background: rgba(0,0,0,0.8);
+        .slider-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .banner-dots {
+        /* Slider Indicators (Dots) */
+        .slider-dots {
             position: absolute;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 3;
+            z-index: 10;
             display: flex;
-            gap: 10px;
         }
 
-        .banner-dot {
+        .slider-dot {
             width: 12px;
             height: 12px;
             background-color: rgba(255, 255, 255, 0.6);
             border-radius: 50%;
+            margin: 0 8px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .banner-dot.active {
-            background-color: white;
+        .slider-dot.active {
+            background-color: var(--secondary-color);
         }
 
-        /* Contact / Info Section */
-        .contact-section {
-            background-color: var(--nav-background); /* Use dark green for footer-like section */
-            color: white;
-            padding: 60px 0;
-            text-align: center;
+        /* --- Content Sections --- */
+        .content-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .contact-section h2 {
-            color: white;
-            margin-bottom: 30px;
+        .section-header h2 {
+            margin-bottom: 1.5em;
         }
 
-        .contact-info {
+        /* --- Dashboard / Home --- */
+        .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
+            margin-top: 30px;
         }
 
-        .contact-item {
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px 25px;
             text-align: center;
-        }
-
-        .contact-item .icon {
-            font-size: 2.5em;
-            color: var(--secondary-color);
-            margin-bottom: 10px;
-        }
-
-        .contact-item h3 {
-            font-size: 1.3em;
-            margin-bottom: 5px;
-            color: white;
-        }
-
-        .contact-item p {
-            font-size: 1em;
-            color: #ddd;
-        }
-
-        .contact-item a {
-            color: white;
-        }
-        .contact-item a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Footer */
-        .footer {
-            background-color: var(--footer-background);
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            font-size: 0.9em;
-            margin-top: 40px; /* Space from last content section */
-        }
-
-        /* --- Responsive Adjustments --- */
-        @media (max-width: 768px) {
-            .top-navbar {
-                padding: 10px 0;
-            }
-
-            .top-navbar .brand {
-                font-size: 1.5em;
-            }
-
-            .top-navbar .nav-links {
-                display: none; /* Hide on mobile, will use hamburger */
-            }
-
-            .hamburger-menu {
-                display: block !important; /* Show hamburger */
-            }
-
-            .hero-section {
-                padding: 50px 0;
-                min-height: 40vh;
-            }
-
-            .hero-content h1 {
-                font-size: 2.2em;
-            }
-
-            .hero-content p {
-                font-size: 1.1em;
-            }
-
-            .section {
-                padding: 40px 0;
-            }
-
-            .dashboard-stats {
-                grid-template-columns: 1fr; /* Stack cards on mobile */
-            }
-
-            .student-filter-form {
-                grid-template-columns: 1fr; /* Stack filters on mobile */
-            }
-
-            .student-cards-container, .result-card {
-                grid-template-columns: 1fr; /* Stack cards on mobile */
-            }
-
-            .result-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .result-actions {
-                margin-top: 15px;
-                width: 100%;
-                text-align: left;
-            }
-
-            .result-actions a {
-                width: 100%;
-                text-align: center;
-            }
-
-            .banner-section {
-                padding: 40px 0;
-            }
-
-            .banner-slide {
-                height: 250px; /* Smaller banners on mobile */
-            }
-
-            .banner-content h3 {
-                font-size: 1.6em;
-            }
-
-            .banner-controls .arrow {
-                padding: 10px;
-                font-size: 1.5em;
-            }
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Off-canvas Mobile Menu */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%; /* Hidden by default */
-            width: 80%;
-            max-width: 300px;
-            height: 100%;
-            background-color: var(--nav-background);
-            color: white;
-            z-index: 1001;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            padding-top: 60px; /* Space for close button */
-        }
-
-        .mobile-menu.open {
-            right: 0;
-        }
-
-        .mobile-menu .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 2em;
-            cursor: pointer;
-            color: white;
-            transition: color 0.3s ease;
-        }
-        .mobile-menu .close-btn:hover {
-            color: var(--secondary-color);
-        }
-
-        .mobile-menu ul {
-            list-style: none;
-            padding: 0;
-            flex-grow: 1; /* Take up available space */
-        }
-
-        .mobile-menu li {
-            margin-bottom: 5px;
-        }
-
-        .mobile-menu a {
-            display: block;
-            padding: 15px 20px;
-            color: white;
-            font-size: 1.1em;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-
-        .mobile-menu a:hover {
-            background-color: var(--hover-bg);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             color: var(--primary-color);
         }
 
-        .mobile-menu .brand {
-            text-align: center;
-            font-size: 1.6em;
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card .icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .stat-card .count {
+            font-size: 3em;
             font-weight: bold;
-            margin-bottom: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            color: var(--primary-color);
+            margin-bottom: 5px;
         }
 
-        .mobile-menu .bottom-links {
-            padding: 20px;
+        .stat-card .label {
+            font-size: 1.1em;
+            color: var(--light-text-color);
+            font-weight: 500;
+        }
+
+        /* --- Results List & Banners Section --- */
+        .item-list-container {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .item-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes button to bottom */
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-card h3 {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .item-card .item-details {
+            font-size: 0.95em;
+            color: var(--light-text-color);
+            margin-bottom: 15px;
+            flex-grow: 1; /* Allows details to take up available space */
+        }
+
+        .item-card .item-link {
+            display: block; /* Makes the whole area clickable */
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 12px 20px;
+            border-radius: 5px;
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .mobile-menu .bottom-links a {
-            margin: 5px 0;
-            display: block;
-        }
-
-        .hamburger-menu {
-            display: none; /* Hidden by default */
-            font-size: 2em;
-            color: white;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        /* Styles for dynamically loaded content */
-        .loading-message {
-            text-align: center;
-            font-style: italic;
-            color: #777;
-            padding: 30px;
-        }
-
-        .error-message {
-            text-align: center;
-            color: red;
             font-weight: bold;
-            padding: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: auto; /* Pushes button to the bottom */
+        }
+
+        .item-card .item-link:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+
+        .item-card .icon-img {
+            max-width: 50px;
+            height: auto;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* --- Banners Section (below hero) --- */
+        #banners-section .item-list-container {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        /* --- Contact / Info Section --- */
+        #contact-section {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        #contact-section h2 {
+            color: var(--secondary-color);
+        }
+
+        #contact-section p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5em;
+        }
+
+        #contact-section .contact-details {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        #contact-section .contact-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        #contact-section .contact-item .icon {
+            font-size: 1.8em;
+            margin-right: 15px;
+            color: var(--accent-color);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #333;
+            color: #eee;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 992px) {
+            .navbar-brand {
+                font-size: 1.5em;
+            }
+            .navbar-menu a {
+                font-size: 1em;
+            }
+            .hero-slide h2 {
+                font-size: 2.5em;
+            }
+            .hero-slide p {
+                font-size: 1em;
+            }
+            .content-section {
+                padding: 40px 15px;
+            }
+            .dashboard-stats {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none; /* Hide desktop menu */
+            }
+            .hamburger-menu {
+                display: block; /* Show hamburger */
+            }
+
+            /* Mobile Menu Overlay */
+            .mobile-menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.8);
+                z-index: 1100;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .mobile-menu-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .mobile-menu-overlay ul {
+                list-style: none;
+                text-align: center;
+            }
+
+            .mobile-menu-overlay li {
+                margin-bottom: 20px;
+            }
+
+            .mobile-menu-overlay a {
+                color: var(--secondary-color);
+                font-size: 1.8em;
+                font-weight: bold;
+            }
+
+            .mobile-menu-overlay .close-menu {
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                font-size: 3em;
+                color: var(--secondary-color);
+                cursor: pointer;
+            }
+
+            .hero-slider-container {
+                height: 50vh; /* Shorter on mobile */
+            }
+
+            .hero-slide h2 {
+                font-size: 2em;
+            }
+
+            .hero-slide p {
+                font-size: 0.9em;
+            }
+
+            .hero-slide .icon-img {
+                max-width: 60px;
+            }
+
+            .content-section {
+                padding: 30px 15px;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr; /* Stack stats on mobile */
+            }
+
+            .item-list-container {
+                grid-template-columns: 1fr; /* Stack cards on mobile */
+            }
+
+            #contact-section .contact-details {
+                flex-direction: column;
+                gap: 20px;
+            }
         }
     </style>
 </head>
@@ -770,195 +500,124 @@
     <!-- Firebase Configuration -->
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc", // *** REPLACE WITH YOUR ACTUAL FIREBASE API KEY ***
-            authDomain: "queenschool-803d9.firebaseapp.com", // *** REPLACE WITH YOUR ACTUAL FIREBASE AUTH DOMAIN ***
-            databaseURL: "https://queenschool-803d9-default-rtdb.firebaseio.com", // *** REPLACE WITH YOUR ACTUAL FIREBASE DATABASE URL ***
-            projectId: "queenschool-803d9", // *** REPLACE WITH YOUR ACTUAL FIREBASE PROJECT ID ***
-            storageBucket: "queenschool-803d9.firebasestorage.app", // *** REPLACE WITH YOUR ACTUAL FIREBASE STORAGE BUCKET ***
-            messagingSenderId: "1078969444409", // *** REPLACE WITH YOUR ACTUAL FIREBASE MESSAGING SENDER ID ***
-            appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8" // *** REPLACE WITH YOUR ACTUAL FIREBASE APP ID ***
+            apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
+            authDomain: "queenschool-803d9.firebaseapp.com",
+            databaseURL: "https://queenschool-803d9-default-rtdb.firebaseio.com",
+            projectId: "queenschool-803d9",
+            storageBucket: "queenschool-803d9.firebasestorage.app",
+            messagingSenderId: "1078969444409",
+            appId: "1:1078969444409:web:4eff0ec9ffe9b399cdc5e8"
         };
 
         // Initialize Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            const database = firebase.database();
-        } catch (e) {
-            console.error("Firebase initialization error:", e);
-            alert("Firebase initialization failed. Please check your Firebase configuration. Error: " + e.message);
-        }
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const bannersRef = database.ref('banners');
+        const resultsRef = database.ref('results');
+        const contactInfoRef = database.ref('contactInfo');
     </script>
 
     <!-- Top Navbar -->
-    <header class="top-navbar">
-        <div class="container">
-            <div class="brand">Madrasah Name</div>
-            <nav class="nav-links">
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">Madrasah Al-Noor</div>
+            <div class="hamburger-menu">&#9776;</div>
+            <div class="navbar-menu">
                 <ul>
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#students">Students</a></li>
+                    <li><a href="#home">Home</a></li>
                     <li><a href="#results">Results</a></li>
-                    <li><a href="#banners">Banners</a></li>
+                    <li><a href="#banners">Notices</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-            </nav>
-            <div class="hamburger-menu">&#9776;</div>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Mobile Off-canvas Menu -->
-    <div class="mobile-menu">
-        <span class="close-btn">&times;</span>
-        <div class="brand">Madrasah Name</div>
+    <!-- Mobile Menu Overlay (Hidden by default) -->
+    <div class="mobile-menu-overlay">
+        <div class="close-menu">&times;</div>
         <ul>
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#students">Students</a></li>
+            <li><a href="#home">Home</a></li>
             <li><a href="#results">Results</a></li>
-            <li><a href="#banners">Banners</a></li>
+            <li><a href="#banners">Notices</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
-        <div class="bottom-links">
-            <p>&copy; 2023 Madrasah Name</p>
-        </div>
     </div>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero-section">
-        <div class="hero-content">
-            <h1>Welcome to Our Madrasah</h1>
-            <p>Empowering knowledge and character through Islamic education.</p>
-            <a href="#students" class="btn btn-secondary">View Student Details</a>
+    <!-- Hero Banner Slider -->
+    <header class="hero-slider-container" id="home">
+        <!-- Slides will be loaded here by JS -->
+        <div class="slider-arrows">
+            <button class="slider-arrow" id="prevBtn">&#10094;</button>
+            <button class="slider-arrow" id="nextBtn">&#10095;</button>
         </div>
-    </section>
+        <div class="slider-dots" id="sliderDots">
+            <!-- Dots will be generated by JS -->
+        </div>
+    </header>
 
     <!-- Main Content Sections -->
     <main>
         <!-- Dashboard / Home Section -->
-        <section id="dashboard" class="section">
-            <div class="container">
-                <h2>Dashboard / Welcome</h2>
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="icon">👨‍🎓</div>
-                        <div class="count" id="total-students">0</div>
-                        <div class="label">Total Students</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon">📚</div>
-                        <div class="count" id="total-classes">0</div>
-                        <div class="label">Total Classes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon">📦</div>
-                        <div class="count" id="total-sections">0</div>
-                        <div class="label">Total Sections</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon">📈</div>
-                        <div class="count" id="total-results">0</div>
-                        <div class="label">Total Results</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon">📣</div>
-                        <div class="count" id="total-banners">0</div>
-                        <div class="label">Announcements</div>
-                    </div>
+        <section class="content-section" id="home-section">
+            <div class="section-header">
+                <h2>Welcome to Madrasah Al-Noor</h2>
+                <p>Providing quality Islamic education for a brighter future.</p>
+            </div>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="icon">📊</div>
+                    <div class="count" id="total-results-stat">0</div>
+                    <div class="label">Total Results Published</div>
                 </div>
-
-                <div class="quick-links">
-                    <h2>Quick Links</h2>
-                    <a href="#students">View Students</a>
-                    <a href="#results">View Results</a>
-                    <a href="#banners">View Notices</a>
-                    <a href="#contact">Get In Touch</a>
+                <div class="stat-card">
+                    <div class="icon">📣</div>
+                    <div class="count" id="total-banners-stat">0</div>
+                    <div class="label">Latest Notices</div>
                 </div>
             </div>
         </section>
 
-        <!-- Students Section -->
-        <section id="students" class="section">
-            <div class="container">
-                <h2>Our Students</h2>
-                <div class="student-filter-form">
-                    <div>
-                        <label for="filter-name">Search by Name</label>
-                        <input type="text" id="filter-name" placeholder="Student Name">
-                    </div>
-                    <div>
-                        <label for="filter-class">Filter by Class</label>
-                        <select id="filter-class"><option value="">All Classes</option></select>
-                    </div>
-                    <div>
-                        <label for="filter-section">Filter by Section</label>
-                        <select id="filter-section"><option value="">All Sections</option></select>
-                    </div>
-                    <div>
-                        <label for="filter-year">Filter by Year</label>
-                        <select id="filter-year"><option value="">All Years</option></select>
-                    </div>
-                    <button class="btn btn-secondary" onclick="applyFilters()">Apply Filters</button>
-                </div>
-                <div id="student-cards-container" class="student-cards-container">
-                    <!-- Student cards will be loaded here -->
-                    <p class="loading-message">Loading students...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Results Section -->
-        <section id="results" class="section">
-            <div class="container">
+        <!-- Results List Section -->
+        <section class="content-section" id="results-section">
+            <div class="section-header">
                 <h2>Student Results</h2>
-                <div id="results-container" class="results-container">
-                    <!-- Result cards will be loaded here -->
-                    <p class="loading-message">Loading results...</p>
-                </div>
+            </div>
+            <div class="item-list-container" id="resultsList">
+                <!-- Results will be loaded here -->
+                <p style="text-align: center; grid-column: 1 / -1;">Loading results...</p>
             </div>
         </section>
 
         <!-- Banners / Notices Section -->
-        <section id="banners" class="banner-section">
-            <div class="container">
-                <h2>Announcements & Notices</h2>
-                <div class="banner-carousel" id="banner-carousel">
-                    <!-- Banners will be loaded here -->
-                    <p class="loading-message" style="color: white;">Loading announcements...</p>
-                </div>
-                <div class="banner-controls">
-                    <div class="arrow" id="prevBanner">&#10094;</div>
-                    <div class="arrow" id="nextBanner">&#10095;</div>
-                </div>
-                <div class="banner-dots" id="banner-dots">
-                    <!-- Dots will be generated by JS -->
-                </div>
+        <section class="content-section" id="banners-section">
+            <div class="section-header">
+                <h2>Latest Notices & Announcements</h2>
+            </div>
+            <div class="item-list-container" id="bannersList">
+                <!-- Banners will be loaded here -->
+                <p style="text-align: center; grid-column: 1 / -1;">Loading notices...</p>
             </div>
         </section>
 
         <!-- Contact / Info Section -->
-        <section id="contact" class="contact-section">
-            <div class="container">
-                <h2>Contact Us</h2>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="icon">🏢</div>
-                        <h3>Our Address</h3>
-                        <p id="madrasah-address">123 Madrasah Lane, City, Country</p>
-                    </div>
-                    <div class="contact-item">
-                        <div class="icon">📞</div>
-                        <h3>Phone</h3>
-                        <p id="madrasah-phone">+1 (123) 456-7890</p>
-                    </div>
-                    <div class="contact-item">
-                        <div class="icon">✉️</div>
-                        <h3>Email</h3>
-                        <p><a href="mailto:info@madrasah.com" id="madrasah-email">info@madrasah.com</a></p>
-                    </div>
-                    <div class="contact-item">
-                        <div class="icon">🌍</div>
-                        <h3>Website</h3>
-                        <p><a href="https://www.madrasah.com" target="_blank" id="madrasah-website">www.madrasah.com</a></p>
-                    </div>
+        <section class="content-section" id="contact-section">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+            </div>
+            <div class="contact-details">
+                <div class="contact-item">
+                    <span class="icon">📞</span>
+                    <span id="contact-phone">Loading...</span>
+                </div>
+                <div class="contact-item">
+                    <span class="icon">📧</span>
+                    <span id="contact-email">Loading...</span>
+                </div>
+                <div class="contact-item">
+                    <span class="icon">📍</span>
+                    <span id="contact-address">Loading...</span>
                 </div>
             </div>
         </section>
@@ -966,511 +625,357 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; 2023 Madrasah Name. All rights reserved.</p>
-        </div>
+        <p>&copy; 2023 Madrasah Al-Noor. All rights reserved.</p>
     </footer>
 
-    <!-- Firebase Data and Logic -->
+    <!-- JavaScript -->
     <script>
-        // Ensure Firebase is initialized before proceeding
-        let database;
-        try {
-            database = firebase.database();
-        } catch (e) {
-            // Handle case where firebaseConfig might be invalid or not set
-            console.error("Firebase is not initialized. Please check firebaseConfig.");
-        }
-
-        // --- Firebase Paths ---
-        const yearsRef = database?.ref('years'); // Assuming 'years' node exists
-        const classesRef = database?.ref('classes'); // Assuming 'classes' node exists
-        const sectionsRef = database?.ref('sections'); // Assuming 'sections' node exists
-        const studentsRef = database?.ref('students');
-        const resultsRef = database?.ref('results');
-        const bannersRef = database?.ref('banners');
-
-        // --- Static Info ---
-        // You can also fetch this from Firebase if needed
-        const madrasahInfo = {
-            name: "Our Madrasah",
-            address: "123 Islamic Way, Knowledge City, Scholars Town",
-            phone: "+1 (555) 123-4567",
-            email: "info@ourmadrasah.edu",
-            website: "https://www.ourmadrasah.edu",
-            heroImage: "https://via.placeholder.com/1500x500/81D4FA/FFFFFF?text=Welcome+to+Our+Madrasah+Family" // Placeholder
-        };
-
         // --- DOM Elements ---
+        const topNavbar = document.querySelector('.top-navbar');
         const hamburgerMenu = document.querySelector('.hamburger-menu');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const closeMobileMenuBtn = mobileMenu.querySelector('.close-btn');
-        const navLinks = document.querySelectorAll('.top-navbar .nav-links a, .mobile-menu a');
+        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+        const closeMenuButton = mobileMenuOverlay.querySelector('.close-menu');
+        const navbarLinks = document.querySelectorAll('.navbar-menu a, .mobile-menu-overlay a');
 
-        const totalStudentsEl = document.getElementById('total-students');
-        const totalClassesEl = document.getElementById('total-classes');
-        const totalSectionsEl = document.getElementById('total-sections');
-        const totalResultsEl = document.getElementById('total-results');
-        const totalBannersEl = document.getElementById('total-banners');
+        const heroSliderContainer = document.querySelector('.hero-slider-container');
+        const sliderDotsContainer = document.getElementById('sliderDots');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
 
-        const studentCardsContainer = document.getElementById('student-cards-container');
-        const resultsContainer = document.getElementById('results-container');
-        const bannerCarousel = document.getElementById('banner-carousel');
-        const prevBannerBtn = document.getElementById('prevBanner');
-        const nextBannerBtn = document.getElementById('nextBanner');
-        const bannerDotsContainer = document.getElementById('banner-dots');
+        const resultsListDiv = document.getElementById('resultsList');
+        const bannersListDiv = document.getElementById('bannersList');
+        const contactPhoneSpan = document.getElementById('contact-phone');
+        const contactEmailSpan = document.getElementById('contact-email');
+        const contactAddressSpan = document.getElementById('contact-address');
 
-        const filterNameInput = document.getElementById('filter-name');
-        const filterClassSelect = document.getElementById('filter-class');
-        const filterSectionSelect = document.getElementById('filter-section');
-        const filterYearSelect = document.getElementById('filter-year');
+        const totalResultsStat = document.getElementById('total-results-stat');
+        const totalBannersStat = document.getElementById('total-banners-stat');
 
-        const madrasahAddressEl = document.getElementById('madrasah-address');
-        const madrasahPhoneEl = document.getElementById('madrasah-phone');
-        const madrasahEmailEl = document.getElementById('madrasah-email');
-        const madrasahWebsiteEl = document.getElementById('madrasah-website');
-        const madrasahBrandEl = document.querySelectorAll('.brand');
+        // --- State Variables ---
+        let bannersData = [];
+        let currentSlideIndex = 0;
+        let slideInterval;
 
-        let allStudents = []; // To store all students for filtering
-        let allClasses = []; // To store all classes
-        let allSections = []; // To store all sections
-        let allYears = []; // To store all years
-        let currentBannerIndex = 0;
-        let bannerSlides = [];
+        // --- Firebase Data Fetching Functions ---
 
-        // --- Helper Functions ---
-
-        function updateMadrasahInfo() {
-            document.title = `${madrasahInfo.name} - Official Website`;
-            madrasahBrandEl.forEach(el => el.textContent = madrasahInfo.name);
-            madrasahAddressEl.textContent = madrasahInfo.address;
-            madrasahPhoneEl.textContent = madrasahInfo.phone;
-            madrasahEmailEl.href = `mailto:${madrasahInfo.email}`;
-            madrasahEmailEl.textContent = madrasahInfo.email;
-            madrasahWebsiteEl.href = madrasahInfo.website;
-            madrasahWebsiteEl.target = "_blank";
-            madrasahWebsiteEl.textContent = new URL(madrasahInfo.website).hostname;
-
-            const heroSection = document.querySelector('.hero-section');
-            if (heroSection) {
-                heroSection.style.backgroundImage = `url('${madrasahInfo.heroImage}')`;
-                heroSection.style.backgroundSize = 'cover';
-                heroSection.style.backgroundPosition = 'center';
-            }
-        }
-
-        function showLoading(container, message = "Loading...") {
-            container.innerHTML = `<p class="loading-message">${message}</p>`;
-        }
-
-        function showError(container, message = "Failed to load data.") {
-            container.innerHTML = `<p class="error-message">${message}</p>`;
-        }
-
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('open');
-        }
-
-        function closeMobileMenu() {
-            mobileMenu.classList.remove('open');
-        }
-
-        // Helper to get item name by ID
-        function getItemName(itemsArray, id, nameField = 'name') {
-            if (!id || !itemsArray) return 'N/A';
-            const item = itemsArray.find(item => item.id === id);
-            return item ? item[nameField] : 'N/A';
-        }
-
-        // Populate dropdown options
-        function populateDropdown(selectElementId, items, valueField = 'id', textField = 'name') {
-            const selectElement = document.getElementById(selectElementId);
-            selectElement.innerHTML = '<option value="">All</option>'; // Reset with a default option
-            if (items) {
-                items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item[valueField];
-                    option.textContent = item[textField] || item.title || item.name;
-                    selectElement.appendChild(option);
-                });
-            }
-        }
-
-        // --- Data Fetching and Rendering ---
-
-        async function fetchAndRenderStudents() {
-            showLoading(studentCardsContainer, "Loading students...");
+        async function fetchBanners() {
             try {
-                const snapshot = await studentsRef.once('value');
-                allStudents = []; // Clear existing
-                if (snapshot.exists()) {
-                    snapshot.forEach(childSnapshot => {
-                        const studentData = childSnapshot.val();
-                        allStudents.push({ id: childSnapshot.key, ...studentData });
-                    });
+                const snapshot = await bannersRef.once('value');
+                const data = snapshot.val();
+                if (data) {
+                    bannersData = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                    renderHeroSlider(bannersData);
+                    renderBannersList(bannersData);
+                    totalBannersStat.textContent = bannersData.length;
+                } else {
+                    bannersData = [];
+                    heroSliderContainer.innerHTML = '<p style="color: white; text-align: center;">No banners available.</p>';
+                    bannersListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No notices available.</p>';
+                    totalBannersStat.textContent = '0';
                 }
-
-                renderStudentCards(allStudents); // Render all initially
-                // Populate filters after fetching students
-                await fetchAndRenderClasses(); // Need classes to populate class/section/year filters
             } catch (error) {
-                console.error("Error fetching students:", error);
-                showError(studentCardsContainer, "Failed to load student data.");
+                console.error("Error fetching banners:", error);
+                heroSliderContainer.innerHTML = '<p style="color: white; text-align: center;">Error loading banners.</p>';
+                bannersListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Error loading notices.</p>';
+                totalBannersStat.textContent = 'Error';
             }
         }
 
-        async function fetchAndRenderClasses() {
+        async function fetchResults() {
             try {
-                const classesSnapshot = await classesRef.once('value');
-                allClasses = [];
-                if (classesSnapshot.exists()) {
-                    classesSnapshot.forEach(childSnapshot => {
-                        const classData = childSnapshot.val();
-                        allClasses.push({ id: childSnapshot.key, ...classData });
-                    });
+                const snapshot = await resultsRef.once('value');
+                const data = snapshot.val();
+                if (data) {
+                    const results = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                    renderResultsList(results);
+                    totalResultsStat.textContent = results.length;
+                } else {
+                    resultsListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No results available at the moment.</p>';
+                    totalResultsStat.textContent = '0';
                 }
-                populateDropdown('filter-class', allClasses, 'id', 'name');
-
-                // Fetch sections and years, then render student cards
-                await fetchAndRenderSections();
-                await fetchAndRenderYears();
-                // Once all dropdowns are populated, render initial student cards
-                renderStudentCards(allStudents);
-
             } catch (error) {
-                console.error("Error fetching classes:", error);
+                console.error("Error fetching results:", error);
+                resultsListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Error loading results.</p>';
+                totalResultsStat.textContent = 'Error';
             }
         }
 
-        async function fetchAndRenderSections() {
+        async function fetchContactInfo() {
             try {
-                const sectionsSnapshot = await sectionsRef.once('value');
-                allSections = [];
-                if (sectionsSnapshot.exists()) {
-                    sectionsSnapshot.forEach(childSnapshot => {
-                        const sectionData = childSnapshot.val();
-                        allSections.push({ id: childSnapshot.key, ...sectionData });
-                    });
+                const snapshot = await contactInfoRef.once('value');
+                const data = snapshot.val();
+                if (data) {
+                    contactPhoneSpan.textContent = data.phone || 'Not available';
+                    contactEmailSpan.textContent = data.email || 'Not available';
+                    contactAddressSpan.textContent = data.address || 'Not available';
+                } else {
+                    contactPhoneSpan.textContent = 'Not available';
+                    contactEmailSpan.textContent = 'Not available';
+                    contactAddressSpan.textContent = 'Not available';
                 }
-                populateDropdown('filter-section', allSections, 'id', 'name');
             } catch (error) {
-                console.error("Error fetching sections:", error);
+                console.error("Error fetching contact info:", error);
+                contactPhoneSpan.textContent = 'Error';
+                contactEmailSpan.textContent = 'Error';
+                contactAddressSpan.textContent = 'Error';
             }
         }
 
-        async function fetchAndRenderYears() {
-            try {
-                const yearsSnapshot = await yearsRef.once('value');
-                allYears = [];
-                if (yearsSnapshot.exists()) {
-                    yearsSnapshot.forEach(childSnapshot => {
-                        const yearData = childSnapshot.val();
-                        allYears.push({ id: childSnapshot.key, ...yearData });
-                    });
-                }
-                populateDropdown('filter-year', allYears, 'id', 'name');
-            } catch (error) {
-                console.error("Error fetching years:", error);
-            }
-        }
+        // --- Rendering Functions ---
 
+        function renderHeroSlider(banners) {
+            heroSliderContainer.innerHTML = ''; // Clear existing slides
 
-        function renderStudentCards(students) {
-            const container = document.getElementById('student-cards-container');
-            container.innerHTML = ''; // Clear previous content
-
-            if (students.length === 0) {
-                container.innerHTML = '<p class="loading-message">No students found matching your criteria.</p>';
+            if (banners.length === 0) {
+                heroSliderContainer.innerHTML = '<p style="color: white; text-align: center; margin-top: 50px;">No banners to display.</p>';
                 return;
             }
 
-            students.forEach(student => {
-                const studentCard = document.createElement('div');
-                studentCard.classList.add('student-card');
+            banners.forEach((banner, index) => {
+                const slide = document.createElement('div');
+                slide.classList.add('hero-slide');
+                if (index === 0) {
+                    slide.classList.add('active');
+                }
+                if (banner.iconUrl) {
+                    slide.style.backgroundImage = `url('${banner.iconUrl}')`;
+                } else {
+                    // Fallback background if no image is provided
+                    slide.style.backgroundColor = `var(--accent-color)`; // Example fallback
+                }
 
-                const className = getItemName(allClasses, student.classId, 'name');
-                const sectionName = getItemName(allSections, student.sectionId, 'name');
-                const yearName = getItemName(allYears, student.yearId, 'name');
+                const slideContent = document.createElement('div');
+                slideContent.classList.add('slide-content');
 
+                if (banner.iconUrl && banner.iconUrl.toLowerCase().endsWith('.svg')) { // Basic check for SVG icon
+                    const iconImg = document.createElement('img');
+                    iconImg.src = banner.iconUrl;
+                    iconImg.alt = 'Banner Icon';
+                    iconImg.classList.add('icon-img');
+                    slideContent.appendChild(iconImg);
+                }
 
-                studentCard.innerHTML = `
-                    <h3>${student.name}</h3>
-                    <p><strong>Class:</strong> ${className}</p>
-                    <p><strong>Section:</strong> ${sectionName}</p>
-                    <p><strong>Year:</strong> ${yearName}</p>
-                    <p><strong>Roll No:</strong> ${student.roll || 'N/A'}</p>
-                    ${student.userId ? `<p><strong>User ID:</strong> ${student.userId}</p>` : ''}
+                const title = document.createElement('h2');
+                title.textContent = banner.title || 'Welcome!';
+                slideContent.appendChild(title);
+
+                if (banner.subtitle) {
+                    const subtitle = document.createElement('p');
+                    subtitle.textContent = banner.subtitle;
+                    slideContent.appendChild(subtitle);
+                }
+
+                if (banner.link) {
+                    const linkButton = document.createElement('a');
+                    linkButton.href = banner.link;
+                    linkButton.textContent = 'Learn More';
+                    linkButton.classList.add('btn', 'btn-primary'); // Reusing admin panel button styles for consistency
+                    linkButton.style.marginTop = '20px';
+                    linkButton.style.backgroundColor = 'var(--secondary-color)';
+                    linkButton.style.color = 'var(--primary-color)';
+                    linkButton.style.padding = '12px 25px';
+                    linkButton.style.fontSize = '1.1em';
+                    linkButton.style.textDecoration = 'none';
+                    linkButton.target = '_blank'; // Open in new tab
+                    slideContent.appendChild(linkButton);
+                }
+                slide.appendChild(slideContent);
+                heroSliderContainer.appendChild(slide);
+            });
+
+            // Render dots
+            sliderDotsContainer.innerHTML = '';
+            banners.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (index === 0) {
+                    dot.classList.add('active');
+                }
+                dot.dataset.index = index;
+                dot.addEventListener('click', () => goToSlide(index));
+                sliderDotsContainer.appendChild(dot);
+            });
+
+            // Start automatic sliding
+            startAutoSlide();
+        }
+
+        function renderBannersList(banners) {
+            bannersListDiv.innerHTML = ''; // Clear existing
+            if (banners.length === 0) {
+                bannersListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No notices available.</p>';
+                return;
+            }
+            banners.forEach(banner => {
+                const card = document.createElement('div');
+                card.classList.add('item-card');
+
+                let cardContent = '';
+                if (banner.iconUrl) {
+                    cardContent += `<img src="${banner.iconUrl}" alt="Icon" class="icon-img">`;
+                }
+                cardContent += `<h3>${banner.title}</h3>`;
+                if (banner.subtitle) {
+                    cardContent += `<div class="item-details">${banner.subtitle}</div>`;
+                }
+                card.innerHTML = cardContent;
+
+                if (banner.link) {
+                    const linkElement = document.createElement('a');
+                    linkElement.href = banner.link;
+                    linkElement.textContent = 'Read More';
+                    linkElement.classList.add('item-link');
+                    linkElement.target = '_blank';
+                    card.appendChild(linkElement);
+                } else {
+                    // Add a placeholder if no link, so card still looks structured
+                    const placeholder = document.createElement('div');
+                    placeholder.style.height = '48px'; // Approximate height of the link button
+                    card.appendChild(placeholder);
+                }
+                bannersListDiv.appendChild(card);
+            });
+        }
+
+        function renderResultsList(results) {
+            resultsListDiv.innerHTML = ''; // Clear existing
+            if (results.length === 0) {
+                resultsListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No results available at the moment.</p>';
+                return;
+            }
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.classList.add('item-card');
+
+                const details = document.createElement('div');
+                details.classList.add('item-details');
+                details.innerHTML = `
+                    <h3>${result.studentName || 'Unnamed Student'}</h3>
+                    <p>Class: ${result.class || 'N/A'}</p>
                 `;
-                container.appendChild(studentCard);
+                card.appendChild(details);
+
+                const linkElement = document.createElement('a');
+                linkElement.href = result.link;
+                linkElement.textContent = 'View Result';
+                linkElement.classList.add('item-link');
+                linkElement.target = '_blank';
+                card.appendChild(linkElement);
+
+                resultsListDiv.appendChild(card);
             });
         }
 
-        async function fetchAndRenderResults() {
-            showLoading(resultsContainer, "Loading results...");
-            try {
-                const resultsSnapshot = await resultsRef.once('value');
-                const studentsSnapshot = await studentsRef.once('value'); // Fetch students to map IDs to names
-                const classesSnapshot = await classesRef.once('value'); // Fetch classes to map IDs to names
+        // --- Slider Logic ---
 
-                const studentsMap = {};
-                studentsSnapshot.forEach(snap => { studentsMap[snap.key] = snap.val().name; });
+        function goToSlide(index) {
+            if (index < 0 || index >= bannersData.length) return;
 
-                const classesMap = {};
-                classesSnapshot.forEach(snap => { classesMap[snap.key] = snap.val().name; });
+            const slides = heroSliderContainer.querySelectorAll('.hero-slide');
+            const dots = sliderDotsContainer.querySelectorAll('.slider-dot');
 
-                if (!resultsSnapshot.exists()) {
-                    resultsContainer.innerHTML = '<p class="loading-message">No results available yet.</p>';
-                    return;
-                }
+            // Deactivate current
+            slides[currentSlideIndex].classList.remove('active');
+            dots[currentSlideIndex].classList.remove('active');
 
-                const resultItems = [];
-                resultsSnapshot.forEach(childSnapshot => {
-                    resultItems.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                });
+            // Activate new
+            currentSlideIndex = index;
+            slides[currentSlideIndex].classList.add('active');
+            dots[currentSlideIndex].classList.add('active');
+        }
 
-                resultsContainer.innerHTML = ''; // Clear loading message
+        function nextSlide() {
+            goToSlide((currentSlideIndex + 1) % bannersData.length);
+        }
 
-                // Sort results by student name or class for better organization
-                resultItems.sort((a, b) => {
-                    const studentNameA = studentsMap[a.studentId] || 'N/A';
-                    const studentNameB = studentsMap[b.studentId] || 'N/A';
-                    if (studentNameA < studentNameB) return -1;
-                    if (studentNameA > studentNameB) return 1;
-                    // If student names are the same, sort by class
-                    const classNameA = classesMap[a.classId] || 'N/A';
-                    const classNameB = classesMap[b.classId] || 'N/A';
-                    if (classNameA < classNameB) return -1;
-                    if (classNameA > classNameB) return 1;
-                    return 0;
-                });
+        function prevSlide() {
+            goToSlide((currentSlideIndex - 1 + bannersData.length) % bannersData.length);
+        }
 
-
-                resultItems.forEach(result => {
-                    const resultCard = document.createElement('div');
-                    resultCard.classList.add('result-card');
-
-                    const studentName = studentsMap[result.studentId] || 'Unknown Student';
-                    const className = classesMap[result.classId] || 'Unknown Class';
-
-                    resultCard.innerHTML = `
-                        <div class="result-info">
-                            <h3>${studentName} - ${className}</h3>
-                            <p><strong>Result Status:</strong> ${result.status || 'Available'}</p>
-                        </div>
-                        <div class="result-actions">
-                            <a href="${result.link}" target="_blank" class="btn btn-secondary">View Result</a>
-                        </div>
-                    `;
-                    resultsContainer.appendChild(resultCard);
-                });
-
-            } catch (error) {
-                console.error("Error fetching results:", error);
-                showError(resultsContainer, "Failed to load result data.");
+        function startAutoSlide() {
+            if (bannersData.length > 1) {
+                slideInterval = setInterval(nextSlide, 7000); // Auto slide every 7 seconds
             }
         }
 
-        async function fetchAndRenderBanners() {
-            showLoading(bannerCarousel, "Loading announcements...");
-            try {
-                const snapshot = await bannersRef.once('value');
-                let banners = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach(childSnapshot => {
-                        banners.push({ id: childSnapshot.key, ...childSnapshot.val() });
-                    });
-                }
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
 
-                if (banners.length === 0) {
-                    bannerCarousel.innerHTML = '<p class="loading-message" style="color: white;">No announcements available.</p>';
-                    document.querySelector('.banner-controls').style.display = 'none';
-                    document.getElementById('banner-dots').style.display = 'none';
-                    return;
-                }
+        // --- Navigation and Mobile Menu ---
 
-                // Sort banners by key (assuming chronological order based on push order) or by a timestamp if available
-                // For simplicity here, we'll just use the order from Firebase
-                bannerSlides = banners; // Store for carousel control
-
-                bannerCarousel.innerHTML = ''; // Clear loading message
-                bannerDotsContainer.innerHTML = ''; // Clear existing dots
-
-                bannerSlides.forEach((banner, index) => {
-                    const slide = document.createElement('div');
-                    slide.classList.add('banner-slide');
-                    slide.style.backgroundImage = banner.imageUrl ? `url(${banner.imageUrl})` : `url('https://via.placeholder.com/800x350/A5D6A7/FFFFFF?text=Madrasah+Notice')`; // Placeholder if no image URL
-
-                    const bannerContent = document.createElement('div');
-                    bannerContent.classList.add('banner-content');
-
-                    let contentHtml = '';
-                    if (banner.iconUrl) {
-                        contentHtml += `<img src="${banner.iconUrl}" alt="Icon" style="width: 50px; height: 50px; margin-bottom: 15px; border-radius: 8px;"> `;
-                    }
-                    contentHtml += `<h3>${banner.title}</h3>`;
-                    if (banner.link) {
-                        contentHtml += `<p><a href="${banner.link}" target="_blank" class="btn btn-secondary">Learn More</a></p>`;
-                    }
-                    bannerContent.innerHTML = contentHtml;
-                    slide.appendChild(bannerContent);
-                    bannerCarousel.appendChild(slide);
-
-                    // Create dots
-                    const dot = document.createElement('div');
-                    dot.classList.add('banner-dot');
-                    dot.dataset.index = index;
-                    dot.addEventListener('click', () => goToBanner(index));
-                    bannerDotsContainer.appendChild(dot);
-                });
-
-                updateBannerDisplay(); // Show the first banner
-                setupBannerCarouselControls(); // Add event listeners for arrows
-            } catch (error) {
-                console.error("Error fetching banners:", error);
-                showError(bannerCarousel, "Failed to load announcements.");
+        function toggleMobileMenu() {
+            mobileMenuOverlay.classList.toggle('active');
+            if (mobileMenuOverlay.classList.contains('active')) {
+                hamburgerMenu.innerHTML = '&times;'; // Change to close icon
+            } else {
+                hamburgerMenu.innerHTML = '&#9776;'; // Change back to hamburger
             }
         }
 
-        function updateBannerDisplay() {
-            if (bannerSlides.length === 0) return;
-
-            // Adjust carousel transform for the current slide
-            const offset = -currentBannerIndex * 100; // Move slide by percentage width
-            bannerCarousel.style.transform = `translateX(${offset}%)`;
-
-            // Update active dot
-            document.querySelectorAll('.banner-dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentBannerIndex);
-            });
+        function closeMobileMenu() {
+            mobileMenuOverlay.classList.remove('active');
+            hamburgerMenu.innerHTML = '&#9776;'; // Reset icon
         }
 
-        function goToBanner(index) {
-            currentBannerIndex = index;
-            updateBannerDisplay();
-        }
+        // Smooth scroll to section when nav link is clicked
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
 
-        function setupBannerCarouselControls() {
-            prevBannerBtn.addEventListener('click', () => {
-                currentBannerIndex = (currentBannerIndex - 1 + bannerSlides.length) % bannerSlides.length;
-                updateBannerDisplay();
-            });
+                    // Close mobile menu if it's open
+                    if (mobileMenuOverlay.classList.contains('active')) {
+                        closeMobileMenu();
+                    }
 
-            nextBannerBtn.addEventListener('click', () => {
-                currentBannerIndex = (currentBannerIndex + 1) % bannerSlides.length;
-                updateBannerDisplay();
-            });
-
-            // Auto-carousel
-            setInterval(() => {
-                if (bannerSlides.length > 1) { // Only auto-advance if there are multiple banners
-                    currentBannerIndex = (currentBannerIndex + 1) % bannerSlides.length;
-                    updateBannerDisplay();
+                    // Stop/start slider when navigating to home
+                    if (targetId === '#home') {
+                        startAutoSlide();
+                    } else {
+                        stopAutoSlide();
+                    }
                 }
-            }, 5000); // Change banner every 5 seconds
-        }
-
-        function applyFilters() {
-            const filterName = filterNameInput.value.toLowerCase().trim();
-            const filterClass = filterClassSelect.value;
-            const filterSection = filterSectionSelect.value;
-            const filterYear = filterYearSelect.value;
-
-            const filteredStudents = allStudents.filter(student => {
-                const matchesName = student.name.toLowerCase().includes(filterName);
-                const matchesClass = filterClass ? student.classId === filterClass : true;
-                const matchesSection = filterSection ? student.sectionId === filterSection : true;
-                const matchesYear = filterYear ? student.yearId === filterYear : true;
-
-                return matchesName && matchesClass && matchesSection && matchesYear;
             });
-
-            renderStudentCards(filteredStudents);
-        }
-
-        function loadDashboardStats() {
-            if (!database) return; // Firebase not initialized
-
-            // Use Promise.all to fetch all stats concurrently
-            Promise.all([
-                studentsRef.once('value'),
-                classesRef.once('value'),
-                sectionsRef.once('value'),
-                resultsRef.once('value'),
-                bannersRef.once('value')
-            ]).then(([studentsSnapshot, classesSnapshot, sectionsSnapshot, resultsSnapshot, bannersSnapshot]) => {
-                totalStudentsEl.textContent = studentsSnapshot.numChildren() || 0;
-                totalClassesEl.textContent = classesSnapshot.numChildren() || 0;
-                totalSectionsEl.textContent = sectionsSnapshot.numChildren() || 0;
-                totalResultsEl.textContent = resultsSnapshot.numChildren() || 0;
-                totalBannersEl.textContent = bannersSnapshot.numChildren() || 0;
-            }).catch(error => {
-                console.error("Error fetching dashboard stats:", error);
-                // Display errors on elements if needed
-                totalStudentsEl.textContent = 'Error';
-                totalClassesEl.textContent = 'Error';
-                totalSectionsEl.textContent = 'Error';
-                totalResultsEl.textContent = 'Error';
-                totalBannersEl.textContent = 'Error';
-            });
-        }
+        });
 
         // --- Event Listeners ---
         hamburgerMenu.addEventListener('click', toggleMobileMenu);
-        closeMobileMenuBtn.addEventListener('click', closeMobileMenu);
+        closeMenuButton.addEventListener('click', closeMobileMenu);
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href').substring(1); // Get id from href (e.g., "#students" -> "students")
-                const targetElement = document.getElementById(targetId);
+        prevBtn.addEventListener('click', () => {
+            stopAutoSlide(); // Stop auto slide on manual navigation
+            prevSlide();
+            startAutoSlide(); // Restart auto slide
+        });
 
-                if (targetElement) {
-                    // Close mobile menu if open
-                    closeMobileMenu();
+        nextBtn.addEventListener('click', () => {
+            stopAutoSlide(); // Stop auto slide on manual navigation
+            nextSlide();
+            startAutoSlide(); // Restart auto slide
+        });
 
-                    // Scroll to the target section
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-
-                    // Highlight active link (optional, but good UX)
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    link.classList.add('active');
+        // Intersection Observer for pausing/resuming slider
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    startAutoSlide();
+                } else {
+                    stopAutoSlide();
                 }
             });
-        });
+        }, { threshold: 0.5 }); // Trigger when 50% of the element is visible
 
-        // Close mobile menu when clicking outside of it
-        document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && !hamburgerMenu.contains(e.target) && mobileMenu.classList.contains('open')) {
-                closeMobileMenu();
-            }
-        });
+        observer.observe(heroSliderContainer);
 
         // --- Initial Load ---
         document.addEventListener('DOMContentLoaded', () => {
-            if (database) { // Only proceed if Firebase initialized successfully
-                updateMadrasahInfo(); // Set static info and dynamic elements
-                loadDashboardStats();
-                fetchAndRenderStudents(); // This will also fetch and render classes, sections, years for filters
-                fetchAndRenderResults();
-                fetchAndRenderBanners();
-
-                // Set initial active link based on hash, or default to Home
-                const hash = window.location.hash || '#hero';
-                const activeLink = document.querySelector(`.nav-links a[href="${hash}"], .mobile-menu a[href="${hash}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('active');
-                }
-                // Scroll to the section on page load if there's a hash
-                if (hash && hash !== '#hero') {
-                    const targetElement = document.getElementById(hash.substring(1));
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-            } else {
-                // Handle case where Firebase failed to initialize
-                document.body.innerHTML = '<div class="error-message">Application failed to initialize due to Firebase configuration error. Please contact the administrator.</div>';
-            }
+            fetchBanners();
+            fetchResults();
+            fetchContactInfo();
         });
     </script>
 </body>
