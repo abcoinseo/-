@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah Student Portal</title>
+    <title>Madrasah Portal</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -13,27 +13,75 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #81C784;
+            --accent-color: #4FC3F7;
+            --cream-color: #FFF8E1;
+            --light-green: #E8F5E8;
+            --dark-green: #1B5E20;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --white: #FFFFFF;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-green) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #F5F5DC 0%, #E8F5E8 100%);
+            background: linear-gradient(135deg, var(--cream-color) 0%, var(--light-green) 100%);
+            color: var(--text-primary);
             line-height: 1.6;
         }
 
-        /* Header & Navigation */
-        .header {
-            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+        /* Notice Marquee */
+        .notice-marquee {
+            background: var(--gradient-primary);
             color: white;
-            padding: 1rem 0;
+            padding: 0.75rem 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .notice-item {
+            margin-right: 3rem;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .notice-item:hover {
+            opacity: 0.8;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            z-index: 999;
         }
 
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -42,57 +90,74 @@
         .logo {
             display: flex;
             align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
             font-weight: 700;
         }
 
-        .logo i {
-            margin-right: 0.75rem;
-            font-size: 2rem;
-            color: #4CAF50;
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         .nav-menu {
             display: flex;
-            list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
-        .nav-menu li a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        .nav-item {
             display: flex;
             align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
             font-weight: 500;
         }
 
-        .nav-menu li a i {
-            margin-right: 0.5rem;
+        .nav-item:hover, .nav-item.active {
+            background: var(--light-green);
+            color: var(--primary-color);
         }
 
-        .nav-menu li a:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-        }
-
-        .mobile-menu-btn {
+        .mobile-menu-toggle {
             display: none;
             background: none;
             border: none;
-            color: white;
             font-size: 1.5rem;
+            color: var(--text-primary);
             cursor: pointer;
         }
 
-        /* Banner Slider */
-        .banner-slider {
+        /* Hero Banner Slider */
+        .hero-slider {
             position: relative;
-            height: 500px;
+            height: 400px;
             overflow: hidden;
-            margin-bottom: 4rem;
+            border-radius: var(--border-radius);
+            margin: 2rem auto;
+            max-width: 1200px;
+            box-shadow: var(--shadow);
         }
 
         .slider-container {
@@ -106,14 +171,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            color: white;
             text-align: center;
+            color: white;
+            cursor: pointer;
         }
 
         .slide.active {
@@ -126,416 +192,300 @@
         }
 
         .slide-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-
-        .slide-icon img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .slide-title {
             font-size: 3rem;
-            font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .slide-subtitle {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
             opacity: 0.9;
         }
 
-        .slide-btn {
-            display: inline-flex;
-            align-items: center;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
 
-        .slide-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
+        .slide-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
 
-        .slide-btn i {
-            margin-right: 0.5rem;
-        }
-
-        /* Navigation arrows */
         .slider-nav {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: white;
+        }
+
+        .slider-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.5);
             color: white;
             border: none;
             width: 50px;
             height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
         }
 
-        .slider-nav:hover {
-            background: rgba(255,255,255,0.3);
+        .slider-arrow:hover {
+            background: rgba(0,0,0,0.7);
         }
 
-        .prev {
-            left: 2rem;
+        .slider-arrow.prev {
+            left: 1rem;
         }
 
-        .next {
-            right: 2rem;
-        }
-
-        /* Dots indicator */
-        .slider-dots {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: white;
-            transform: scale(1.2);
+        .slider-arrow.next {
+            right: 1rem;
         }
 
         /* Main Content */
-        .main-container {
+        .main-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 2rem;
         }
 
         .section {
-            margin-bottom: 4rem;
-        }
-
-        .section-header {
-            text-align: center;
             margin-bottom: 3rem;
         }
 
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #2E7D32;
-            margin-bottom: 1rem;
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-size: 1.3rem;
         }
 
-        .section-title i {
-            margin-right: 1rem;
-            color: #4CAF50;
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
         }
 
-        .section-subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Search Bar */
-        .search-container {
-            max-width: 500px;
-            margin: 0 auto 3rem;
-            position: relative;
+        /* Results Section */
+        .search-bar {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .search-input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
             border: 2px solid #E0E0E0;
-            border-radius: 50px;
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
+            transition: border-color 0.3s ease;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #2E7D32;
-            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+            border-color: var(--primary-color);
         }
 
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #E0E0E0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
         }
 
-        /* Cards Grid */
-        .cards-grid {
+        .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
-        .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
-            overflow: hidden;
+        .result-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
             transition: all 0.3s ease;
-            border: 1px solid rgba(46, 125, 50, 0.1);
+            border-left: 4px solid var(--primary-color);
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
 
-        .card-header {
-            padding: 1.5rem 2rem;
-            background: linear-gradient(135deg, #F8F9FA 0%, #E8F5E8 100%);
-            border-bottom: 1px solid rgba(46, 125, 50, 0.1);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #2E7D32;
-            margin-bottom: 0.5rem;
+        .result-header {
             display: flex;
             align-items: center;
-        }
-
-        .card-title i {
-            margin-right: 0.75rem;
-            color: #4CAF50;
-        }
-
-        .card-subtitle {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .card-body {
-            padding: 2rem;
-        }
-
-        .card-info {
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .info-item {
-            display: flex;
-            align-items: center;
-            color: #666;
+        .student-info h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .student-info p {
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
 
-        .info-item i {
-            margin-right: 0.5rem;
-            color: #4CAF50;
-        }
-
-        .result-btn {
-            display: inline-flex;
-            align-items: center;
-            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+        .result-link {
+            background: var(--gradient-primary);
             color: white;
             padding: 0.75rem 1.5rem;
-            border-radius: 50px;
+            border-radius: var(--border-radius);
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             font-weight: 500;
             transition: all 0.3s ease;
-            width: 100%;
-            justify-content: center;
         }
 
-        .result-btn:hover {
+        .result-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
         }
 
-        .result-btn i {
-            margin-right: 0.5rem;
-        }
-
-        /* Banner Cards */
-        .banner-cards {
+        /* Banners Section */
+        .banners-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
-            margin-top: 2rem;
         }
 
         .banner-card {
-            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
             transition: all 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(25, 118, 210, 0.3);
         }
 
         .banner-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(25, 118, 210, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
 
-        .banner-card.green {
-            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
-            box-shadow: 0 4px 20px rgba(46, 125, 50, 0.3);
-        }
-
-        .banner-card.orange {
-            background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
-            box-shadow: 0 4px 20px rgba(245, 124, 0, 0.3);
-        }
-
-        .banner-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1rem;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
+        .banner-image {
+            height: 150px;
+            background: var(--gradient-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            color: white;
+            font-size: 2rem;
         }
 
-        .banner-icon img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .banner-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Stats Section */
-        .stats-section {
-            text-align: center;
-            background: white;
-            padding: 4rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
-            margin: 4rem 0;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .stat-item {
+        .banner-content {
             padding: 1.5rem;
         }
 
-        .stat-number {
+        .banner-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .banner-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #2E7D32;
-            display: block;
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: #666;
+            color: var(--text-secondary);
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stat-label i {
-            margin-right: 0.5rem;
-            color: #4CAF50;
         }
 
         /* Footer */
         .footer {
-            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            background: var(--gradient-primary);
             color: white;
             text-align: center;
-            padding: 3rem 2rem;
-            margin-top: 4rem;
+            padding: 2rem;
+            margin-top: 3rem;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        .footer h3 {
+            margin-bottom: 0.5rem;
         }
 
-        .footer-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .footer-text {
+        .footer p {
             opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            background: rgba(255,255,255,0.1);
         }
 
         /* Loading Animation */
@@ -543,31 +493,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 4rem;
-            color: #2E7D32;
+            padding: 2rem;
         }
 
-        .loading i {
-            font-size: 2rem;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--cream-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* No Results */
-        .no-results {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #666;
-        }
-
-        .no-results i {
-            font-size: 4rem;
-            color: #E0E0E0;
-            margin-bottom: 1rem;
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
@@ -577,247 +517,240 @@
                 position: absolute;
                 top: 100%;
                 left: 0;
-                width: 100%;
-                background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+                right: 0;
+                background: var(--white);
+                box-shadow: var(--shadow);
                 flex-direction: column;
-                padding: 1rem 0;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                padding: 1rem;
+                gap: 0.5rem;
             }
 
             .nav-menu.active {
                 display: flex;
             }
 
-            .nav-menu li {
-                margin: 0;
-            }
-
-            .nav-menu li a {
-                padding: 1rem 2rem;
-                border-radius: 0;
-            }
-
-            .mobile-menu-btn {
+            .mobile-menu-toggle {
                 display: block;
             }
 
-            .nav-container {
-                padding: 0 1rem;
-            }
-
-            .main-container {
-                padding: 0 1rem;
+            .hero-slider {
+                height: 300px;
+                margin: 1rem;
             }
 
             .slide-title {
                 font-size: 2rem;
             }
 
+            .slide-subtitle {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
             .section-title {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
 
-            .slider-nav {
-                width: 40px;
-                height: 40px;
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .prev {
-                left: 1rem;
-            }
-
-            .next {
-                right: 1rem;
-            }
-
-            .cards-grid {
+            .results-grid {
                 grid-template-columns: 1fr;
             }
 
-            .card-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
+            .banners-grid {
+                grid-template-columns: 1fr;
             }
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
         }
 
         /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .fade-in {
+            animation: fadeIn 0.6s ease;
         }
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Scroll Animations */
-        .scroll-fade {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease;
         }
 
-        .scroll-fade.visible {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
 <body>
+    <!-- Notice Marquee -->
+    <div class="notice-marquee">
+        <div class="marquee-content" id="noticeMarquee">
+            <!-- Notices will be loaded here -->
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="header">
-        <div class="nav-container">
+        <nav class="nav-container">
             <div class="logo">
-                <i class="material-icons">school</i>
-                <span>Madrasah Portal</span>
+                <div class="logo-icon">
+                    <span class="material-icons">school</span>
+                </div>
+                <div class="logo-text">
+                    <h1>Madrasah Portal</h1>
+                    <p>Knowledge & Excellence</p>
+                </div>
             </div>
-            <nav class="nav-menu" id="navMenu">
-                <li><a href="#home"><i class="material-icons">home</i>Home</a></li>
-                <li><a href="#results"><i class="material-icons">assessment</i>Results</a></li>
-                <li><a href="#notices"><i class="material-icons">announcement</i>Notices</a></li>
-                <li><a href="#about"><i class="material-icons">info</i>About</a></li>
-            </nav>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="material-icons">menu</i>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-item active" onclick="showSection('home')">
+                    <span class="material-icons">home</span>
+                    <span>Home</span>
+                </a>
+                <a href="#results" class="nav-item" onclick="showSection('results')">
+                    <span class="material-icons">assessment</span>
+                    <span>Results</span>
+                </a>
+                <a href="#banners" class="nav-item" onclick="showSection('banners')">
+                    <span class="material-icons">image</span>
+                    <span>Announcements</span>
+                </a>
+                <a href="#notices" class="nav-item" onclick="showSection('notices')">
+                    <span class="material-icons">announcement</span>
+                    <span>Notices</span>
+                </a>
+            </div>
+
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <span class="material-icons">menu</span>
             </button>
-        </div>
+        </nav>
     </header>
 
-    <!-- Banner Slider -->
-    <section class="banner-slider" id="home">
-        <div class="slider-container">
-            <div class="slide active">
-                <div class="slide-content">
-                    <div class="slide-icon">
-                        <i class="material-icons">school</i>
-                    </div>
-                    <h1 class="slide-title">Welcome to Madrasah</h1>
-                    <p class="slide-subtitle">Excellence in Islamic Education and Character Building</p>
-                    <a href="#results" class="slide-btn">
-                        <i class="material-icons">assessment</i>
-                        View Results
-                    </a>
+    <!-- Hero Banner Slider -->
+    <div class="hero-slider">
+        <div class="slider-container" id="sliderContainer">
+            <!-- Slides will be loaded here -->
+        </div>
+        <div class="slider-nav" id="sliderNav">
+            <!-- Navigation dots will be loaded here -->
+        </div>
+        <button class="slider-arrow prev" onclick="previousSlide()">
+            <span class="material-icons">chevron_left</span>
+        </button>
+        <button class="slider-arrow next" onclick="nextSlide()">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <div id="home" class="section active">
+            <div class="section-header fade-in">
+                <div class="section-icon">
+                    <span class="material-icons">dashboard</span>
+                </div>
+                <h2 class="section-title">Dashboard</h2>
+            </div>
+            
+            <div class="stats-grid fade-in">
+                <div class="stat-card">
+                    <div class="stat-value" id="dashboardResults">0</div>
+                    <div class="stat-label">Total Results</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dashboardBanners">0</div>
+                    <div class="stat-label">Active Banners</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dashboardNotices">0</div>
+                    <div class="stat-label">Latest Notices</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dashboardStudents">0</div>
+                    <div class="stat-label">Total Students</div>
                 </div>
             </div>
         </div>
-        
-        <button class="slider-nav prev" onclick="prevSlide()">
-            <i class="material-icons">chevron_left</i>
-        </button>
-        <button class="slider-nav next" onclick="nextSlide()">
-            <i class="material-icons">chevron_right</i>
-        </button>
-        
-        <div class="slider-dots" id="sliderDots"></div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="main-container">
-        <!-- Dashboard Stats -->
-        <section class="stats-section scroll-fade">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="material-icons">dashboard</i>
-                    Quick Overview
-                </h2>
-                <p class="section-subtitle">Stay updated with the latest statistics from our Madrasah</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-number" id="statsResults">0</span>
-                    <span class="stat-label">
-                        <i class="material-icons">assessment</i>
-                        Published Results
-                    </span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="statsNotices">0</span>
-                    <span class="stat-label">
-                        <i class="material-icons">announcement</i>
-                        Active Notices
-                    </span>
-                </div>
-            </div>
-        </section>
 
         <!-- Results Section -->
-        <section class="section scroll-fade" id="results">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="material-icons">assessment</i>
-                    Student Results
-                </h2>
-                <p class="section-subtitle">Search and access your academic results quickly and easily</p>
-            </div>
-            
-            <div class="search-container">
-                <i class="material-icons search-icon">search</i>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search by student name or class...">
-            </div>
-            
-            <div class="cards-grid" id="resultsContainer">
-                <div class="loading">
-                    <i class="material-icons">refresh</i>
-                    <span style="margin-left: 1rem;">Loading results...</span>
+        <div id="results" class="section">
+            <div class="section-header fade-in">
+                <div class="section-icon">
+                    <span class="material-icons">assessment</span>
                 </div>
+                <h2 class="section-title">Student Results</h2>
             </div>
-        </section>
+
+            <div class="search-bar fade-in">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by student name...">
+                <select class="filter-select" id="classFilter">
+                    <option value="">All Classes</option>
+                </select>
+                <button class="nav-item" onclick="searchResults()" style="background: var(--primary-color); color: white;">
+                    <span class="material-icons">search</span>
+                    <span>Search</span>
+                </button>
+            </div>
+
+            <div class="results-grid" id="resultsGrid">
+                <!-- Results will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Banners Section -->
+        <div id="banners" class="section">
+            <div class="section-header fade-in">
+                <div class="section-icon">
+                    <span class="material-icons">image</span>
+                </div>
+                <h2 class="section-title">Announcements & Banners</h2>
+            </div>
+
+            <div class="banners-grid" id="bannersGrid">
+                <!-- Banners will be loaded here -->
+            </div>
+        </div>
 
         <!-- Notices Section -->
-        <section class="section scroll-fade" id="notices">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="material-icons">announcement</i>
-                    Notices & Announcements
-                </h2>
-                <p class="section-subtitle">Stay informed with the latest updates and important announcements</p>
-            </div>
-            
-            <div class="banner-cards" id="noticesContainer">
-                <div class="loading">
-                    <i class="material-icons">refresh</i>
-                    <span style="margin-left: 1rem;">Loading notices...</span>
+        <div id="notices" class="section">
+            <div class="section-header fade-in">
+                <div class="section-icon">
+                    <span class="material-icons">announcement</span>
                 </div>
+                <h2 class="section-title">Important Notices</h2>
             </div>
-        </section>
+
+            <div class="banners-grid" id="noticesGrid">
+                <!-- Notices will be loaded here -->
+            </div>
+        </div>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <h3 class="footer-title">Madrasah Student Portal</h3>
-            <p class="footer-text">Empowering students through quality education and moral development</p>
-            <div class="footer-links">
-                <a href="#home">Home</a>
-                <a href="#results">Results</a>
-                <a href="#notices">Notices</a>
-                <a href="#about">About Us</a>
-            </div>
-            <p>&copy; 2024 Madrasah Portal. All rights reserved.</p>
-        </div>
+        <h3>Madrasah Portal</h3>
+        <p>Empowering Education Through Technology</p>
+        <p>&copy; 2024 Madrasah Portal. All rights reserved.</p>
     </footer>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- Firebase Scripts -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-    <script>
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
@@ -830,359 +763,453 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
-        // Global variables
-        let bannersData = {};
-        let resultsData = {};
-        let studentsData = {};
-        let classesData = {};
-        let currentSlide = 0;
-        let slideInterval;
-        let allResults = [];
+        // Global data storage
+        window.appData = {
+            notices: {},
+            banners: {},
+            results: {},
+            students: {},
+            classes: {}
+        };
 
         // Initialize app
-        window.onload = function() {
+        window.addEventListener('load', () => {
             loadAllData();
             initializeSlider();
-            setupScrollAnimations();
-            setupSmoothScrolling();
-        };
+        });
 
         // Load all data from Firebase
         function loadAllData() {
-            database.ref('/').on('value', (snapshot) => {
-                const data = snapshot.val() || {};
-                
-                bannersData = data.banners || {};
-                resultsData = data.results || {};
-                studentsData = data.students || {};
-                classesData = data.classes || {};
-                
-                setupBannerSlider();
-                displayResults();
-                displayNotices();
-                updateStats();
+            const dataTypes = ['notices', 'banners', 'results', 'students', 'classes'];
+            
+            dataTypes.forEach(dataType => {
+                const dataRef = ref(database, dataType);
+                onValue(dataRef, (snapshot) => {
+                    const data = snapshot.val() || {};
+                    window.appData[dataType] = data;
+                    
+                    switch(dataType) {
+                        case 'notices':
+                            updateNoticeMarquee(data);
+                            updateNoticesSection(data);
+                            break;
+                        case 'banners':
+                            updateHeroSlider(data);
+                            updateBannersSection(data);
+                            break;
+                        case 'results':
+                            updateResultsSection(data);
+                            break;
+                        case 'classes':
+                            updateClassFilter(data);
+                            break;
+                    }
+                    
+                    updateDashboardStats();
+                });
             });
         }
 
-        // Setup banner slider with Firebase data
-        function setupBannerSlider() {
-            const sliderContainer = document.querySelector('.slider-container');
-            const dotsContainer = document.getElementById('sliderDots');
+        // Update notice marquee
+        function updateNoticeMarquee(notices) {
+            const marqueeContent = document.getElementById('noticeMarquee');
+            marqueeContent.innerHTML = '';
+            
+            const noticesArray = Object.entries(notices);
+            if (noticesArray.length === 0) {
+                marqueeContent.innerHTML = '<span class="notice-item">Welcome to Madrasah Portal - Your Educational Hub</span>';
+                return;
+            }
+
+            noticesArray.forEach(([key, notice]) => {
+                const noticeElement = document.createElement('span');
+                noticeElement.className = 'notice-item';
+                noticeElement.textContent = notice.text;
+                
+                if (notice.url) {
+                    noticeElement.onclick = () => window.open(notice.url, '_blank');
+                    noticeElement.style.textDecoration = 'underline';
+                }
+                
+                marqueeContent.appendChild(noticeElement);
+            });
+        }
+
+        // Update hero slider
+        function updateHeroSlider(banners) {
+            const sliderContainer = document.getElementById('sliderContainer');
+            const sliderNav = document.getElementById('sliderNav');
             
             sliderContainer.innerHTML = '';
-            dotsContainer.innerHTML = '';
+            sliderNav.innerHTML = '';
             
-            const bannerArray = Object.entries(bannersData);
-            
-            if (bannerArray.length === 0) {
-                // Default slide if no banners
-                sliderContainer.innerHTML = `
-                    <div class="slide active">
-                        <div class="slide-content">
-                            <div class="slide-icon">
-                                <i class="material-icons">school</i>
-                            </div>
-                            <h1 class="slide-title">Welcome to Madrasah</h1>
-                            <p class="slide-subtitle">Excellence in Islamic Education and Character Building</p>
-                            <a href="#results" class="slide-btn">
-                                <i class="material-icons">assessment</i>
-                                View Results
-                            </a>
+            const bannersArray = Object.entries(banners);
+            if (bannersArray.length === 0) {
+                // Default slide
+                const defaultSlide = document.createElement('div');
+                defaultSlide.className = 'slide active';
+                defaultSlide.innerHTML = `
+                    <div class="slide-content">
+                        <div class="slide-icon">
+                            <span class="material-icons">school</span>
                         </div>
+                        <h1 class="slide-title">Welcome to Madrasah Portal</h1>
+                        <p class="slide-subtitle">Your Gateway to Educational Excellence</p>
                     </div>
                 `;
+                sliderContainer.appendChild(defaultSlide);
+                
+                const dot = document.createElement('span');
+                dot.className = 'slider-dot active';
+                sliderNav.appendChild(dot);
+                return;
+            }
+
+            bannersArray.forEach(([key, banner], index) => {
+                // Create slide
+                const slide = document.createElement('div');
+                slide.className = `slide ${index === 0 ? 'active' : ''}`;
+                
+                if (banner.link) {
+                    slide.onclick = () => window.open(banner.link, '_blank');
+                }
+                
+                slide.innerHTML = `
+                    <div class="slide-content">
+                        ${banner.icon ? `<div class="slide-icon"><span class="material-icons">${banner.icon}</span></div>` : ''}
+                        ${banner.image ? `<div class="slide-icon"><img src="${banner.image}" alt="${banner.title}" style="width: 60px; height: 60px; border-radius: 50%;"></div>` : ''}
+                        <h1 class="slide-title">${banner.title}</h1>
+                        ${banner.subtitle ? `<p class="slide-subtitle">${banner.subtitle}</p>` : ''}
+                    </div>
+                `;
+                sliderContainer.appendChild(slide);
+                
+                // Create navigation dot
+                const dot = document.createElement('span');
+                dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(index);
+                sliderNav.appendChild(dot);
+            });
+            
+            window.totalSlides = bannersArray.length;
+            window.currentSlide = 0;
+        }
+
+        // Update results section
+        function updateResultsSection(results) {
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            if (Object.keys(results).length === 0) {
+                resultsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
                 return;
             }
             
-            bannerArray.forEach(([id, banner], index) => {
-                const slideColors = [
-                    'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)',
-                    'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)',
-                    'linear-gradient(135deg, #F57C00 0%, #E65100 100%)',
-                    'linear-gradient(135deg, #7B1FA2 0%, #4A148C 100%)'
-                ];
-                
-                const slideColor = slideColors[index % slideColors.length];
-                
-                sliderContainer.innerHTML += `
-                    <div class="slide ${index === 0 ? 'active' : ''}" style="background: ${slideColor}">
-                        <div class="slide-content">
-                            <div class="slide-icon">
-                                ${banner.icon ? `<img src="${banner.icon}" alt="Banner Icon">` : '<i class="material-icons">announcement</i>'}
-                            </div>
-                            <h1 class="slide-title">${banner.title}</h1>
-                            <p class="slide-subtitle">Stay updated with our latest announcements</p>
-                            ${banner.link ? `<a href="${banner.link}" class="slide-btn" target="_blank"><i class="material-icons">open_in_new</i>Learn More</a>` : ''}
+            resultsGrid.innerHTML = '';
+            
+            Object.entries(results).forEach(([key, result]) => {
+                const resultCard = document.createElement('div');
+                resultCard.className = 'result-card fade-in';
+                resultCard.innerHTML = `
+                    <div class="result-header">
+                        <div class="student-info">
+                            <h3>${result.studentName}</h3>
+                            <p>Class: ${result.class}</p>
                         </div>
                     </div>
+                    <a href="${result.link}" target="_blank" class="result-link">
+                        <span class="material-icons">description</span>
+                        View Result
+                    </a>
                 `;
-                
-                dotsContainer.innerHTML += `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
+                resultsGrid.appendChild(resultCard);
             });
+        }
+
+        // Update banners section
+        function updateBannersSection(banners) {
+            const bannersGrid = document.getElementById('bannersGrid');
+            
+            if (Object.keys(banners).length === 0) {
+                bannersGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                return;
+            }
+            
+            bannersGrid.innerHTML = '';
+            
+            Object.entries(banners).forEach(([key, banner]) => {
+                const bannerCard = document.createElement('div');
+                bannerCard.className = 'banner-card fade-in';
+                
+                if (banner.link) {
+                    bannerCard.onclick = () => window.open(banner.link, '_blank');
+                }
+                
+                bannerCard.innerHTML = `
+                    <div class="banner-image">
+                        ${banner.icon ? `<span class="material-icons">${banner.icon}</span>` : ''}
+                        ${banner.image ? `<img src="${banner.image}" alt="${banner.title}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
+                        ${!banner.icon && !banner.image ? '<span class="material-icons">image</span>' : ''}
+                    </div>
+                    <div class="banner-content">
+                        <h3 class="banner-title">${banner.title}</h3>
+                        ${banner.link ? `<a href="${banner.link}" target="_blank" class="banner-link">Learn More <span class="material-icons">arrow_forward</span></a>` : ''}
+                    </div>
+                `;
+                bannersGrid.appendChild(bannerCard);
+            });
+        }
+
+        // Update notices section
+        function updateNoticesSection(notices) {
+            const noticesGrid = document.getElementById('noticesGrid');
+            
+            if (Object.keys(notices).length === 0) {
+                noticesGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                return;
+            }
+            
+            noticesGrid.innerHTML = '';
+            
+            Object.entries(notices).forEach(([key, notice]) => {
+                const noticeCard = document.createElement('div');
+                noticeCard.className = 'banner-card fade-in';
+                
+                if (notice.url) {
+                    noticeCard.onclick = () => window.open(notice.url, '_blank');
+                }
+                
+                noticeCard.innerHTML = `
+                    <div class="banner-image">
+                        <span class="material-icons">announcement</span>
+                    </div>
+                    <div class="banner-content">
+                        <h3 class="banner-title">${notice.text}</h3>
+                        ${notice.url ? `<a href="${notice.url}" target="_blank" class="banner-link">Read More <span class="material-icons">arrow_forward</span></a>` : ''}
+                    </div>
+                `;
+                noticesGrid.appendChild(noticeCard);
+            });
+        }
+
+        // Update class filter
+        function updateClassFilter(classes) {
+            const classFilter = document.getElementById('classFilter');
+            const currentValue = classFilter.value;
+            
+            classFilter.innerHTML = '<option value="">All Classes</option>';
+            
+            Object.entries(classes).forEach(([key, classData]) => {
+                const option = document.createElement('option');
+                option.value = classData.name || classData;
+                option.textContent = classData.name || classData;
+                classFilter.appendChild(option);
+            });
+            
+            classFilter.value = currentValue;
+        }
+
+        // Update dashboard stats
+        function updateDashboardStats() {
+            document.getElementById('dashboardResults').textContent = Object.keys(window.appData.results).length;
+            document.getElementById('dashboardBanners').textContent = Object.keys(window.appData.banners).length;
+            document.getElementById('dashboardNotices').textContent = Object.keys(window.appData.notices).length;
+            document.getElementById('dashboardStudents').textContent = Object.keys(window.appData.students).length;
+        }
+
+        // Search results function
+        window.searchResults = function() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            resultsGrid.innerHTML = '';
+            
+            let filteredResults = Object.entries(window.appData.results);
+            
+            if (searchTerm) {
+                filteredResults = filteredResults.filter(([key, result]) => 
+                    result.studentName.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (classFilter) {
+                filteredResults = filteredResults.filter(([key, result]) => 
+                    result.class === classFilter
+                );
+            }
+            
+            if (filteredResults.length === 0) {
+                resultsGrid.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">No results found</div>';
+                return;
+            }
+            
+            filteredResults.forEach(([key, result]) => {
+                const resultCard = document.createElement('div');
+                resultCard.className = 'result-card fade-in';
+                resultCard.innerHTML = `
+                    <div class="result-header">
+                        <div class="student-info">
+                            <h3>${result.studentName}</h3>
+                            <p>Class: ${result.class}</p>
+                        </div>
+                    </div>
+                    <a href="${result.link}" target="_blank" class="result-link">
+                        <span class="material-icons">description</span>
+                        View Result
+                    </a>
+                `;
+                resultsGrid.appendChild(resultCard);
+            });
+        };
+
+        // Initialize slider
+        function initializeSlider() {
+            window.currentSlide = 0;
+            window.totalSlides = 1;
+            
+            // Auto-play slider
+            setInterval(() => {
+                if (window.totalSlides > 1) {
+                    nextSlide();
+                }
+            }, 5000);
+        }
+    </script>
+
+    <script>
+        // UI Functions
+        let mobileMenuOpen = false;
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            mobileMenuOpen = !mobileMenuOpen;
+            
+            if (mobileMenuOpen) {
+                navMenu.classList.add('active');
+            } else {
+                navMenu.classList.remove('active');
+            }
+        }
+
+        // Show section
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Close mobile menu
+            document.getElementById('navMenu').classList.remove('active');
+            mobileMenuOpen = false;
         }
 
         // Slider functions
-        function initializeSlider() {
-            startAutoSlide();
-        }
-
-        function startAutoSlide() {
-            slideInterval = setInterval(nextSlide, 5000);
-        }
-
-        function stopAutoSlide() {
-            clearInterval(slideInterval);
-        }
-
         function nextSlide() {
+            if (window.totalSlides <= 1) return;
+            
             const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.dot');
+            const dots = document.querySelectorAll('.slider-dot');
             
-            if (slides.length === 0) return;
+            slides[window.currentSlide].classList.remove('active');
+            dots[window.currentSlide].classList.remove('active');
             
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide]?.classList.remove('active');
+            window.currentSlide = (window.currentSlide + 1) % window.totalSlides;
             
-            currentSlide = (currentSlide + 1) % slides.length;
-            
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide]?.classList.add('active');
+            slides[window.currentSlide].classList.add('active');
+            dots[window.currentSlide].classList.add('active');
         }
 
-        function prevSlide() {
+        function previousSlide() {
+            if (window.totalSlides <= 1) return;
+            
             const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.dot');
+            const dots = document.querySelectorAll('.slider-dot');
             
-            if (slides.length === 0) return;
+            slides[window.currentSlide].classList.remove('active');
+            dots[window.currentSlide].classList.remove('active');
             
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide]?.classList.remove('active');
+            window.currentSlide = window.currentSlide === 0 ? window.totalSlides - 1 : window.currentSlide - 1;
             
-            currentSlide = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
-            
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide]?.classList.add('active');
+            slides[window.currentSlide].classList.add('active');
+            dots[window.currentSlide].classList.add('active');
         }
 
-        function goToSlide(index) {
+        function goToSlide(slideIndex) {
+            if (window.totalSlides <= 1) return;
+            
             const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.dot');
+            const dots = document.querySelectorAll('.slider-dot');
             
-            if (slides.length === 0) return;
+            slides[window.currentSlide].classList.remove('active');
+            dots[window.currentSlide].classList.remove('active');
             
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide]?.classList.remove('active');
+            window.currentSlide = slideIndex;
             
-            currentSlide = index;
-            
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide]?.classList.add('active');
-            
-            stopAutoSlide();
-            setTimeout(startAutoSlide, 10000); // Restart auto-slide after 10 seconds
+            slides[window.currentSlide].classList.add('active');
+            dots[window.currentSlide].classList.add('active');
         }
 
-        // Display results
-        function displayResults() {
-            const resultsContainer = document.getElementById('resultsContainer');
-            allResults = [];
-            
-            // Prepare results data
-            Object.entries(resultsData).forEach(([id, result]) => {
-                const student = studentsData[result.studentId];
-                const className = classesData[result.classId]?.name || 'Unknown Class';
-                
-                if (student) {
-                    allResults.push({
-                        id,
-                        studentName: student.name,
-                        roll: student.roll,
-                        className,
-                        link: result.link,
-                        ...result
-                    });
+        // Search on enter key
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        searchResults();
+                    }
+                });
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('a[href^="#"]')) {
+                e.preventDefault();
+                const target = document.querySelector(e.target.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // Add fade-in animation to elements when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
-            
-            if (allResults.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="no-results">
-                        <i class="material-icons">assignment</i>
-                        <h3>No Results Available</h3>
-                        <p>Results will be published here when available</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            displayFilteredResults(allResults);
-        }
+        }, observerOptions);
 
-        function displayFilteredResults(results) {
-            const resultsContainer = document.getElementById('resultsContainer');
-            
-            if (results.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="no-results">
-                        <i class="material-icons">search_off</i>
-                        <h3>No Results Found</h3>
-                        <p>Try adjusting your search criteria</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            resultsContainer.innerHTML = results.map(result => `
-                <div class="card fade-in-up">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="material-icons">person</i>
-                            ${result.studentName}
-                        </div>
-                        <div class="card-subtitle">Roll No: ${result.roll}</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-info">
-                            <div class="info-item">
-                                <i class="material-icons">school</i>
-                                ${result.className}
-                            </div>
-                            <div class="info-item">
-                                <i class="material-icons">assignment</i>
-                                Result
-                            </div>
-                        </div>
-                        <a href="${result.link}" target="_blank" class="result-btn">
-                            <i class="material-icons">open_in_new</i>
-                            View Result
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            const filteredResults = allResults.filter(result => 
-                result.studentName.toLowerCase().includes(searchTerm) ||
-                result.className.toLowerCase().includes(searchTerm) ||
-                result.roll.toString().includes(searchTerm)
-            );
-            
-            displayFilteredResults(filteredResults);
-        });
-
-        // Display notices
-        function displayNotices() {
-            const noticesContainer = document.getElementById('noticesContainer');
-            const bannerArray = Object.entries(bannersData);
-            
-            if (bannerArray.length === 0) {
-                noticesContainer.innerHTML = `
-                    <div class="no-results">
-                        <i class="material-icons">announcement</i>
-                        <h3>No Notices Available</h3>
-                        <p>New announcements will appear here</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const colors = ['', 'green', 'orange'];
-            
-            noticesContainer.innerHTML = bannerArray.map(([id, banner], index) => {
-                const colorClass = colors[index % colors.length];
-                const clickHandler = banner.link ? `onclick="window.open('${banner.link}', '_blank')"` : '';
-                
-                return `
-                    <div class="banner-card ${colorClass} fade-in-up" ${clickHandler}>
-                        <div class="banner-icon">
-                            ${banner.icon ? `<img src="${banner.icon}" alt="Notice Icon">` : '<i class="material-icons">announcement</i>'}
-                        </div>
-                        <div class="banner-title">${banner.title}</div>
-                        ${banner.link ? '<p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">Click to view details</p>' : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Update stats
-        function updateStats() {
-            document.getElementById('statsResults').textContent = Object.keys(resultsData).length;
-            document.getElementById('statsNotices').textContent = Object.keys(bannersData).length;
-        }
-
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('active');
-        }
-
-        // Smooth scrolling
-        function setupSmoothScrolling() {
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        
-                        // Close mobile menu if open
-                        const navMenu = document.getElementById('navMenu');
-                        navMenu.classList.remove('active');
-                    }
-                });
-            });
-        }
-
-        // Scroll animations
-        function setupScrollAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, observerOptions);
-            
-            document.querySelectorAll('.scroll-fade').forEach(el => {
+        // Observe all fade-in elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(el);
             });
-        }
-
-        // Pause slider on hover
-        document.querySelector('.banner-slider').addEventListener('mouseenter', stopAutoSlide);
-        document.querySelector('.banner-slider').addEventListener('mouseleave', startAutoSlide);
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const menuBtn = document.querySelector('.mobile-menu-btn');
-            
-            if (!navMenu.contains(event.target) && !menuBtn.contains(event.target)) {
-                navMenu.classList.remove('active');
-            }
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const navMenu = document.getElementById('navMenu');
-            if (window.innerWidth > 768) {
-                navMenu.classList.remove('active');
-            }
         });
     </script>
 </body>
