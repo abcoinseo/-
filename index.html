@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah Admin Panel</title>
+    <title>Madrasah Student Portal</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -16,333 +16,645 @@
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #F5F5DC 0%, #E8F5E8 100%);
-            min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
+        /* Header & Navigation */
+        .header {
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            margin-right: 0.75rem;
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .nav-menu li a i {
+            margin-right: 0.5rem;
+        }
+
+        .nav-menu li a:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Banner Slider */
+        .banner-slider {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            margin-bottom: 4rem;
+        }
+
+        .slider-container {
+            position: relative;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
             top: 0;
             left: 0;
-            height: 100vh;
-            width: 280px;
-            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
-            transform: translateX(0);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .sidebar.collapsed {
-            transform: translateX(-280px);
-        }
-
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            color: white;
             text-align: center;
         }
 
-        .sidebar-header h2 {
-            color: white;
-            font-weight: 600;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+        .slide.active {
+            opacity: 1;
         }
 
-        .sidebar-header p {
-            color: rgba(255,255,255,0.8);
-            font-size: 0.875rem;
-        }
-
-        .sidebar-menu {
-            padding: 1rem 0;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-left: 3px solid transparent;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            background: rgba(255,255,255,0.1);
-            border-left-color: #4CAF50;
-            color: white;
-        }
-
-        .menu-item i {
-            margin-right: 1rem;
-            font-size: 1.25rem;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
-            min-height: 100vh;
-        }
-
-        .main-content.expanded {
-            margin-left: 0;
-        }
-
-        .top-bar {
-            background: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #2E7D32;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-
-        .menu-toggle:hover {
-            background: rgba(46, 125, 50, 0.1);
-        }
-
-        .content-area {
+        .slide-content {
+            max-width: 600px;
             padding: 2rem;
         }
 
-        .page-title {
-            color: #2E7D32;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
+        .slide-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
+            justify-content: center;
+            font-size: 2rem;
         }
 
-        .page-title i {
+        .slide-icon img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .slide-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .slide-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .slide-btn {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .slide-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .slide-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Navigation arrows */
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .slider-nav:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .prev {
+            left: 2rem;
+        }
+
+        .next {
+            right: 2rem;
+        }
+
+        /* Dots indicator */
+        .slider-dots {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title i {
             margin-right: 1rem;
-            font-size: 2.25rem;
+            color: #4CAF50;
         }
 
-        /* Cards */
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
         .card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
             overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(46, 125, 50, 0.1);
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
         }
 
         .card-header {
             padding: 1.5rem 2rem;
-            border-bottom: 1px solid #E0E0E0;
-            display: flex;
-            align-items: center;
-            justify-content: between;
+            background: linear-gradient(135deg, #F8F9FA 0%, #E8F5E8 100%);
+            border-bottom: 1px solid rgba(46, 125, 50, 0.1);
         }
 
-        .card-header h3 {
-            color: #2E7D32;
+        .card-title {
+            font-size: 1.25rem;
             font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
         }
 
-        .card-header i {
+        .card-title i {
             margin-right: 0.75rem;
             color: #4CAF50;
+        }
+
+        .card-subtitle {
+            color: #666;
+            font-size: 0.9rem;
         }
 
         .card-body {
             padding: 2rem;
         }
 
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
 
-        .stat-card {
+        .info-item {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .info-item i {
+            margin-right: 0.5rem;
+            color: #4CAF50;
+        }
+
+        .result-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+        }
+
+        .result-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Banner Cards */
+        .banner-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .banner-card {
             background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
             color: white;
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
             box-shadow: 0 4px 20px rgba(25, 118, 210, 0.3);
-            transition: transform 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
+        .banner-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(25, 118, 210, 0.4);
         }
 
-        .stat-card.green {
+        .banner-card.green {
             background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
             box-shadow: 0 4px 20px rgba(46, 125, 50, 0.3);
         }
 
-        .stat-card.orange {
+        .banner-card.orange {
             background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
             box-shadow: 0 4px 20px rgba(245, 124, 0, 0.3);
         }
 
-        .stat-card.purple {
-            background: linear-gradient(135deg, #7B1FA2 0%, #4A148C 100%);
-            box-shadow: 0 4px 20px rgba(123, 31, 162, 0.3);
+        .banner-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .banner-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .banner-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            text-align: center;
+            background: white;
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            margin: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
         }
 
         .stat-number {
             font-size: 2.5rem;
             font-weight: 700;
+            color: #2E7D32;
+            display: block;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
+            color: #666;
+            font-weight: 500;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
 
         .stat-label i {
             margin-right: 0.5rem;
+            color: #4CAF50;
         }
 
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #2E7D32;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid #E0E0E0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2E7D32;
-            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
-        }
-
-        .btn {
-            padding: 0.875rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .btn i {
-            margin-right: 0.5rem;
-        }
-
-        .btn-primary {
+        /* Footer */
+        .footer {
             background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
             color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
-        }
-
-        /* Table */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #E0E0E0;
-        }
-
-        th {
-            background: #F5F5F5;
-            color: #2E7D32;
+        .footer-title {
+            font-size: 1.5rem;
             font-weight: 600;
+            margin-bottom: 1rem;
         }
 
-        tr:hover {
-            background: rgba(46, 125, 50, 0.05);
+        .footer-text {
+            opacity: 0.9;
+            margin-bottom: 2rem;
         }
 
-        /* Responsive */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            color: #2E7D32;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: #E0E0E0;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-280px);
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             }
 
-            .sidebar.open {
-                transform: translateX(0);
+            .nav-menu.active {
+                display: flex;
             }
 
-            .main-content {
-                margin-left: 0;
+            .nav-menu li {
+                margin: 0;
             }
 
-            .content-area {
-                padding: 1rem;
+            .nav-menu li a {
+                padding: 1rem 2rem;
+                border-radius: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .slide-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .slider-nav {
+                width: 40px;
+                height: 40px;
+            }
+
+            .prev {
+                left: 1rem;
+            }
+
+            .next {
+                right: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
             }
 
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
             }
         }
 
         /* Animations */
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -350,431 +662,156 @@
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
         }
 
-        /* Hidden sections */
-        .section {
-            display: none;
+        /* Scroll Animations */
+        .scroll-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
         }
 
-        .section.active {
-            display: block;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
-        }
-
-        .overlay.active {
-            display: block;
+        .scroll-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>Madrasah Admin</h2>
-            <p>Management Panel</p>
-        </div>
-        <nav class="sidebar-menu">
-            <a href="#" class="menu-item active" onclick="showSection('dashboard')">
-                <i class="material-icons">dashboard</i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="menu-item" onclick="showSection('years')">
-                <i class="material-icons">date_range</i>
-                <span>Years</span>
-            </a>
-            <a href="#" class="menu-item" onclick="showSection('classes')">
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
                 <i class="material-icons">school</i>
-                <span>Classes</span>
-            </a>
-            <a href="#" class="menu-item" onclick="showSection('sections')">
-                <i class="material-icons">group_work</i>
-                <span>Sections</span>
-            </a>
-            <a href="#" class="menu-item" onclick="showSection('students')">
-                <i class="material-icons">people</i>
-                <span>Students</span>
-            </a>
-            <a href="#" class="menu-item" onclick="showSection('results')">
-                <i class="material-icons">assessment</i>
-                <span>Results</span>
-            </a>
-            <a href="#" class="menu-item" onclick="showSection('banners')">
-                <i class="material-icons">banner</i>
-                <span>Banners</span>
-            </a>
-        </nav>
-    </div>
-
-    <!-- Overlay for mobile -->
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <button class="menu-toggle" onclick="toggleSidebar()">
+                <span>Madrasah Portal</span>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <li><a href="#home"><i class="material-icons">home</i>Home</a></li>
+                <li><a href="#results"><i class="material-icons">assessment</i>Results</a></li>
+                <li><a href="#notices"><i class="material-icons">announcement</i>Notices</a></li>
+                <li><a href="#about"><i class="material-icons">info</i>About</a></li>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
                 <i class="material-icons">menu</i>
             </button>
-            <h1 style="color: #2E7D32; font-weight: 600;">Madrasah Management System</h1>
         </div>
+    </header>
 
-        <div class="content-area">
-            <!-- Dashboard Section -->
-            <div class="section active fade-in" id="dashboard">
-                <div class="page-title">
+    <!-- Banner Slider -->
+    <section class="banner-slider" id="home">
+        <div class="slider-container">
+            <div class="slide active">
+                <div class="slide-content">
+                    <div class="slide-icon">
+                        <i class="material-icons">school</i>
+                    </div>
+                    <h1 class="slide-title">Welcome to Madrasah</h1>
+                    <p class="slide-subtitle">Excellence in Islamic Education and Character Building</p>
+                    <a href="#results" class="slide-btn">
+                        <i class="material-icons">assessment</i>
+                        View Results
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <button class="slider-nav prev" onclick="prevSlide()">
+            <i class="material-icons">chevron_left</i>
+        </button>
+        <button class="slider-nav next" onclick="nextSlide()">
+            <i class="material-icons">chevron_right</i>
+        </button>
+        
+        <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Dashboard Stats -->
+        <section class="stats-section scroll-fade">
+            <div class="section-header">
+                <h2 class="section-title">
                     <i class="material-icons">dashboard</i>
-                    Dashboard
+                    Quick Overview
+                </h2>
+                <p class="section-subtitle">Stay updated with the latest statistics from our Madrasah</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="statsResults">0</span>
+                    <span class="stat-label">
+                        <i class="material-icons">assessment</i>
+                        Published Results
+                    </span>
                 </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalStudents">0</div>
-                        <div class="stat-label">
-                            <i class="material-icons">people</i>
-                            Total Students
-                        </div>
-                    </div>
-                    <div class="stat-card green">
-                        <div class="stat-number" id="totalClasses">0</div>
-                        <div class="stat-label">
-                            <i class="material-icons">school</i>
-                            Classes
-                        </div>
-                    </div>
-                    <div class="stat-card orange">
-                        <div class="stat-number" id="totalResults">0</div>
-                        <div class="stat-label">
-                            <i class="material-icons">assessment</i>
-                            Results
-                        </div>
-                    </div>
-                    <div class="stat-card purple">
-                        <div class="stat-number" id="totalBanners">0</div>
-                        <div class="stat-label">
-                            <i class="material-icons">banner</i>
-                            Banners
-                        </div>
-                    </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="statsNotices">0</span>
+                    <span class="stat-label">
+                        <i class="material-icons">announcement</i>
+                        Active Notices
+                    </span>
                 </div>
             </div>
+        </section>
 
-            <!-- Years Section -->
-            <div class="section" id="years">
-                <div class="page-title">
-                    <i class="material-icons">date_range</i>
-                    Manage Years
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="material-icons">add</i>Add New Year</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Year</label>
-                            <input type="text" class="form-control" id="yearInput" placeholder="e.g., 2024">
-                        </div>
-                        <button class="btn btn-primary" onclick="addYear()">
-                            <i class="material-icons">add</i>Add Year
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <h3><i class="material-icons">list</i>Years List</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Year</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="yearsList"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Classes Section -->
-            <div class="section" id="classes">
-                <div class="page-title">
-                    <i class="material-icons">school</i>
-                    Manage Classes
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="material-icons">add</i>Add New Class</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Class Name</label>
-                            <input type="text" class="form-control" id="classInput" placeholder="e.g., Class 10">
-                        </div>
-                        <button class="btn btn-primary" onclick="addClass()">
-                            <i class="material-icons">add</i>Add Class
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <h3><i class="material-icons">list</i>Classes List</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Class Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="classesList"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sections Section -->
-            <div class="section" id="sections">
-                <div class="page-title">
-                    <i class="material-icons">group_work</i>
-                    Manage Sections
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="material-icons">add</i>Add New Section</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Section Name</label>
-                            <input type="text" class="form-control" id="sectionInput" placeholder="e.g., A, B, C">
-                        </div>
-                        <button class="btn btn-primary" onclick="addSection()">
-                            <i class="material-icons">add</i>Add Section
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <h3><i class="material-icons">list</i>Sections List</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Section Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="sectionsList"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Students Section -->
-            <div class="section" id="students">
-                <div class="page-title">
-                    <i class="material-icons">people</i>
-                    Manage Students
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="material-icons">person_add</i>Add New Student</h3>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                            <div class="form-group">
-                                <label>Student Name</label>
-                                <input type="text" class="form-control" id="studentName" placeholder="Enter student name">
-                            </div>
-                            <div class="form-group">
-                                <label>Class</label>
-                                <select class="form-control" id="studentClass"></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Year</label>
-                                <select class="form-control" id="studentYear"></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Section</label>
-                                <select class="form-control" id="studentSection"></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Roll Number</label>
-                                <input type="text" class="form-control" id="studentRoll" placeholder="Enter roll number">
-                            </div>
-                            <div class="form-group">
-                                <label>User ID (Optional)</label>
-                                <input type="text" class="form-control" id="studentUserId" placeholder="Enter user ID">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="addStudent()">
-                            <i class="material-icons">person_add</i>Add Student
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <h3><i class="material-icons">people</i>Students List</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Class</th>
-                                        <th>Year</th>
-                                        <th>Section</th>
-                                        <th>Roll</th>
-                                        <th>User ID</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="studentsList"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results Section -->
-            <div class="section" id="results">
-                <div class="page-title">
+        <!-- Results Section -->
+        <section class="section scroll-fade" id="results">
+            <div class="section-header">
+                <h2 class="section-title">
                     <i class="material-icons">assessment</i>
-                    Manage Results
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="material-icons">add</i>Add New Result</h3>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                            <div class="form-group">
-                                <label>Student</label>
-                                <select class="form-control" id="resultStudent"></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Class</label>
-                                <select class="form-control" id="resultClass"></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Result Link</label>
-                                <input type="url" class="form-control" id="resultLink" placeholder="Enter result link (PDF/Google Drive)">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="addResult()">
-                            <i class="material-icons">add</i>Add Result
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <h3><i class="material-icons">assessment</i>Results List</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Student</th>
-                                        <th>Class</th>
-                                        <th>Result Link</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resultsList"></tbody>
-                            </table>
-                        </div>
-                    </div>
+                    Student Results
+                </h2>
+                <p class="section-subtitle">Search and access your academic results quickly and easily</p>
+            </div>
+            
+            <div class="search-container">
+                <i class="material-icons search-icon">search</i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by student name or class...">
+            </div>
+            
+            <div class="cards-grid" id="resultsContainer">
+                <div class="loading">
+                    <i class="material-icons">refresh</i>
+                    <span style="margin-left: 1rem;">Loading results...</span>
                 </div>
             </div>
+        </section>
 
-            <!-- Banners Section -->
-            <div class="section" id="banners">
-                <div class="page-title">
-                    <i class="material-icons">banner</i>
-                    Manage Banners
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="material-icons">add</i>Add New Banner</h3>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                            <div class="form-group">
-                                <label>Banner Title</label>
-                                <input type="text" class="form-control" id="bannerTitle" placeholder="Enter banner title">
-                            </div>
-                            <div class="form-group">
-                                <label>Link (Optional)</label>
-                                <input type="url" class="form-control" id="bannerLink" placeholder="Enter link (optional)">
-                            </div>
-                            <div class="form-group">
-                                <label>Icon/Image URL (Optional)</label>
-                                <input type="url" class="form-control" id="bannerIcon" placeholder="Enter icon/image URL (optional)">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="addBanner()">
-                            <i class="material-icons">add</i>Add Banner
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <h3><i class="material-icons">banner</i>Banners List</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Link</th>
-                                        <th>Icon/Image</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bannersList"></tbody>
-                            </table>
-                        </div>
-                    </div>
+        <!-- Notices Section -->
+        <section class="section scroll-fade" id="notices">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="material-icons">announcement</i>
+                    Notices & Announcements
+                </h2>
+                <p class="section-subtitle">Stay informed with the latest updates and important announcements</p>
+            </div>
+            
+            <div class="banner-cards" id="noticesContainer">
+                <div class="loading">
+                    <i class="material-icons">refresh</i>
+                    <span style="margin-left: 1rem;">Loading notices...</span>
                 </div>
             </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 class="footer-title">Madrasah Student Portal</h3>
+            <p class="footer-text">Empowering students through quality education and moral development</p>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#results">Results</a>
+                <a href="#notices">Notices</a>
+                <a href="#about">About Us</a>
+            </div>
+            <p>&copy; 2024 Madrasah Portal. All rights reserved.</p>
         </div>
-    </div>
+    </footer>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -797,480 +834,354 @@
         const database = firebase.database();
 
         // Global variables
-        let yearsData = {};
-        let classesData = {};
-        let sectionsData = {};
-        let studentsData = {};
-        let resultsData = {};
         let bannersData = {};
+        let resultsData = {};
+        let studentsData = {};
+        let classesData = {};
+        let currentSlide = 0;
+        let slideInterval;
+        let allResults = [];
 
         // Initialize app
         window.onload = function() {
             loadAllData();
+            initializeSlider();
+            setupScrollAnimations();
+            setupSmoothScrolling();
         };
-
-        // Sidebar toggle
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            const overlay = document.getElementById('overlay');
-            
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('active');
-            } else {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-            }
-        }
-
-        // Show section
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Remove active class from menu items
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Add active class to clicked menu item
-            event.target.classList.add('active');
-            
-            // Close sidebar on mobile
-            if (window.innerWidth <= 768) {
-                toggleSidebar();
-            }
-            
-            // Load specific data based on section
-            switch(sectionId) {
-                case 'students':
-                    populateStudentDropdowns();
-                    break;
-                case 'results':
-                    populateResultDropdowns();
-                    break;
-            }
-        }
 
         // Load all data from Firebase
         function loadAllData() {
             database.ref('/').on('value', (snapshot) => {
                 const data = snapshot.val() || {};
                 
-                yearsData = data.years || {};
-                classesData = data.classes || {};
-                sectionsData = data.sections || {};
-                studentsData = data.students || {};
-                resultsData = data.results || {};
                 bannersData = data.banners || {};
+                resultsData = data.results || {};
+                studentsData = data.students || {};
+                classesData = data.classes || {};
                 
-                updateDashboard();
-                displayYears();
-                displayClasses();
-                displaySections();
-                displayStudents();
+                setupBannerSlider();
                 displayResults();
-                displayBanners();
+                displayNotices();
+                updateStats();
             });
         }
 
-        // Update dashboard stats
-        function updateDashboard() {
-            document.getElementById('totalStudents').textContent = Object.keys(studentsData).length;
-            document.getElementById('totalClasses').textContent = Object.keys(classesData).length;
-            document.getElementById('totalResults').textContent = Object.keys(resultsData).length;
-            document.getElementById('totalBanners').textContent = Object.keys(bannersData).length;
-        }
-
-        // Years functions
-        function addYear() {
-            const yearInput = document.getElementById('yearInput');
-            const year = yearInput.value.trim();
+        // Setup banner slider with Firebase data
+        function setupBannerSlider() {
+            const sliderContainer = document.querySelector('.slider-container');
+            const dotsContainer = document.getElementById('sliderDots');
             
-            if (year) {
-                const yearId = Date.now().toString();
-                database.ref('years/' + yearId).set({
-                    year: year
-                }).then(() => {
-                    yearInput.value = '';
-                    alert('Year added successfully!');
-                }).catch((error) => {
-                    alert('Error adding year: ' + error.message);
-                });
-            } else {
-                alert('Please enter a year');
-            }
-        }
-
-        function displayYears() {
-            const yearsList = document.getElementById('yearsList');
-            yearsList.innerHTML = '';
+            sliderContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
             
-            Object.entries(yearsData).forEach(([id, data]) => {
-                yearsList.innerHTML += `
-                    <tr>
-                        <td>${data.year}</td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteYear('${id}')">
-                                <i class="material-icons">delete</i>Delete
-                            </button>
-                        </td>
-                    </tr>
+            const bannerArray = Object.entries(bannersData);
+            
+            if (bannerArray.length === 0) {
+                // Default slide if no banners
+                sliderContainer.innerHTML = `
+                    <div class="slide active">
+                        <div class="slide-content">
+                            <div class="slide-icon">
+                                <i class="material-icons">school</i>
+                            </div>
+                            <h1 class="slide-title">Welcome to Madrasah</h1>
+                            <p class="slide-subtitle">Excellence in Islamic Education and Character Building</p>
+                            <a href="#results" class="slide-btn">
+                                <i class="material-icons">assessment</i>
+                                View Results
+                            </a>
+                        </div>
+                    </div>
                 `;
-            });
-        }
-
-        function deleteYear(id) {
-            if (confirm('Are you sure you want to delete this year?')) {
-                database.ref('years/' + id).remove().then(() => {
-                    alert('Year deleted successfully!');
-                }).catch((error) => {
-                    alert('Error deleting year: ' + error.message);
-                });
+                return;
             }
-        }
-
-        // Classes functions
-        function addClass() {
-            const classInput = document.getElementById('classInput');
-            const className = classInput.value.trim();
             
-            if (className) {
-                const classId = Date.now().toString();
-                database.ref('classes/' + classId).set({
-                    name: className
-                }).then(() => {
-                    classInput.value = '';
-                    alert('Class added successfully!');
-                }).catch((error) => {
-                    alert('Error adding class: ' + error.message);
-                });
-            } else {
-                alert('Please enter a class name');
-            }
-        }
-
-        function displayClasses() {
-            const classesList = document.getElementById('classesList');
-            classesList.innerHTML = '';
-            
-            Object.entries(classesData).forEach(([id, data]) => {
-                classesList.innerHTML += `
-                    <tr>
-                        <td>${data.name}</td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteClass('${id}')">
-                                <i class="material-icons">delete</i>Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteClass(id) {
-            if (confirm('Are you sure you want to delete this class?')) {
-                database.ref('classes/' + id).remove().then(() => {
-                    alert('Class deleted successfully!');
-                }).catch((error) => {
-                    alert('Error deleting class: ' + error.message);
-                });
-            }
-        }
-
-        // Sections functions
-        function addSection() {
-            const sectionInput = document.getElementById('sectionInput');
-            const sectionName = sectionInput.value.trim();
-            
-            if (sectionName) {
-                const sectionId = Date.now().toString();
-                database.ref('sections/' + sectionId).set({
-                    name: sectionName
-                }).then(() => {
-                    sectionInput.value = '';
-                    alert('Section added successfully!');
-                }).catch((error) => {
-                    alert('Error adding section: ' + error.message);
-                });
-            } else {
-                alert('Please enter a section name');
-            }
-        }
-
-        function displaySections() {
-            const sectionsList = document.getElementById('sectionsList');
-            sectionsList.innerHTML = '';
-            
-            Object.entries(sectionsData).forEach(([id, data]) => {
-                sectionsList.innerHTML += `
-                    <tr>
-                        <td>${data.name}</td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteSection('${id}')">
-                                <i class="material-icons">delete</i>Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteSection(id) {
-            if (confirm('Are you sure you want to delete this section?')) {
-                database.ref('sections/' + id).remove().then(() => {
-                    alert('Section deleted successfully!');
-                }).catch((error) => {
-                    alert('Error deleting section: ' + error.message);
-                });
-            }
-        }
-
-        // Students functions
-        function populateStudentDropdowns() {
-            const classSelect = document.getElementById('studentClass');
-            const yearSelect = document.getElementById('studentYear');
-            const sectionSelect = document.getElementById('studentSection');
-            
-            // Populate classes
-            classSelect.innerHTML = '<option value="">Select Class</option>';
-            Object.entries(classesData).forEach(([id, data]) => {
-                classSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
-            });
-            
-            // Populate years
-            yearSelect.innerHTML = '<option value="">Select Year</option>';
-            Object.entries(yearsData).forEach(([id, data]) => {
-                yearSelect.innerHTML += `<option value="${id}">${data.year}</option>`;
-            });
-            
-            // Populate sections
-            sectionSelect.innerHTML = '<option value="">Select Section</option>';
-            Object.entries(sectionsData).forEach(([id, data]) => {
-                sectionSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
-            });
-        }
-
-        function addStudent() {
-            const name = document.getElementById('studentName').value.trim();
-            const classId = document.getElementById('studentClass').value;
-            const yearId = document.getElementById('studentYear').value;
-            const sectionId = document.getElementById('studentSection').value;
-            const roll = document.getElementById('studentRoll').value.trim();
-            const userId = document.getElementById('studentUserId').value.trim();
-            
-            if (name && classId && yearId && sectionId && roll) {
-                const studentId = Date.now().toString();
-                database.ref('students/' + studentId).set({
-                    name: name,
-                    classId: classId,
-                    yearId: yearId,
-                    sectionId: sectionId,
-                    roll: roll,
-                    userId: userId || ''
-                }).then(() => {
-                    // Clear form
-                    document.getElementById('studentName').value = '';
-                    document.getElementById('studentClass').value = '';
-                    document.getElementById('studentYear').value = '';
-                    document.getElementById('studentSection').value = '';
-                    document.getElementById('studentRoll').value = '';
-                    document.getElementById('studentUserId').value = '';
-                    alert('Student added successfully!');
-                }).catch((error) => {
-                    alert('Error adding student: ' + error.message);
-                });
-            } else {
-                alert('Please fill in all required fields');
-            }
-        }
-
-        function displayStudents() {
-            const studentsList = document.getElementById('studentsList');
-            studentsList.innerHTML = '';
-            
-            Object.entries(studentsData).forEach(([id, student]) => {
-                const className = classesData[student.classId]?.name || 'Unknown';
-                const year = yearsData[student.yearId]?.year || 'Unknown';
-                const section = sectionsData[student.sectionId]?.name || 'Unknown';
+            bannerArray.forEach(([id, banner], index) => {
+                const slideColors = [
+                    'linear-gradient(135deg, #1976D2 0%, #1565C0 100%)',
+                    'linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%)',
+                    'linear-gradient(135deg, #F57C00 0%, #E65100 100%)',
+                    'linear-gradient(135deg, #7B1FA2 0%, #4A148C 100%)'
+                ];
                 
-                studentsList.innerHTML += `
-                    <tr>
-                        <td>${student.name}</td>
-                        <td>${className}</td>
-                        <td>${year}</td>
-                        <td>${section}</td>
-                        <td>${student.roll}</td>
-                        <td>${student.userId || '-'}</td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteStudent('${id}')">
-                                <i class="material-icons">delete</i>Delete
-                            </button>
-                        </td>
-                    </tr>
+                const slideColor = slideColors[index % slideColors.length];
+                
+                sliderContainer.innerHTML += `
+                    <div class="slide ${index === 0 ? 'active' : ''}" style="background: ${slideColor}">
+                        <div class="slide-content">
+                            <div class="slide-icon">
+                                ${banner.icon ? `<img src="${banner.icon}" alt="Banner Icon">` : '<i class="material-icons">announcement</i>'}
+                            </div>
+                            <h1 class="slide-title">${banner.title}</h1>
+                            <p class="slide-subtitle">Stay updated with our latest announcements</p>
+                            ${banner.link ? `<a href="${banner.link}" class="slide-btn" target="_blank"><i class="material-icons">open_in_new</i>Learn More</a>` : ''}
+                        </div>
+                    </div>
                 `;
+                
+                dotsContainer.innerHTML += `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
             });
         }
 
-        function deleteStudent(id) {
-            if (confirm('Are you sure you want to delete this student?')) {
-                database.ref('students/' + id).remove().then(() => {
-                    alert('Student deleted successfully!');
-                }).catch((error) => {
-                    alert('Error deleting student: ' + error.message);
-                });
-            }
+        // Slider functions
+        function initializeSlider() {
+            startAutoSlide();
         }
 
-        // Results functions
-        function populateResultDropdowns() {
-            const studentSelect = document.getElementById('resultStudent');
-            const classSelect = document.getElementById('resultClass');
-            
-            // Populate students
-            studentSelect.innerHTML = '<option value="">Select Student</option>';
-            Object.entries(studentsData).forEach(([id, student]) => {
-                studentSelect.innerHTML += `<option value="${id}">${student.name} (Roll: ${student.roll})</option>`;
-            });
-            
-            // Populate classes
-            classSelect.innerHTML = '<option value="">Select Class</option>';
-            Object.entries(classesData).forEach(([id, data]) => {
-                classSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
-            });
+        function startAutoSlide() {
+            slideInterval = setInterval(nextSlide, 5000);
         }
 
-        function addResult() {
-            const studentId = document.getElementById('resultStudent').value;
-            const classId = document.getElementById('resultClass').value;
-            const link = document.getElementById('resultLink').value.trim();
-            
-            if (studentId && classId && link) {
-                const resultId = Date.now().toString();
-                database.ref('results/' + resultId).set({
-                    studentId: studentId,
-                    classId: classId,
-                    link: link
-                }).then(() => {
-                    // Clear form
-                    document.getElementById('resultStudent').value = '';
-                    document.getElementById('resultClass').value = '';
-                    document.getElementById('resultLink').value = '';
-                    alert('Result added successfully!');
-                }).catch((error) => {
-                    alert('Error adding result: ' + error.message);
-                });
-            } else {
-                alert('Please fill in all fields');
-            }
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
         }
 
+        function nextSlide() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (slides.length === 0) return;
+            
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide]?.classList.remove('active');
+            
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide]?.classList.add('active');
+        }
+
+        function prevSlide() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (slides.length === 0) return;
+            
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide]?.classList.remove('active');
+            
+            currentSlide = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide]?.classList.add('active');
+        }
+
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (slides.length === 0) return;
+            
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide]?.classList.remove('active');
+            
+            currentSlide = index;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide]?.classList.add('active');
+            
+            stopAutoSlide();
+            setTimeout(startAutoSlide, 10000); // Restart auto-slide after 10 seconds
+        }
+
+        // Display results
         function displayResults() {
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = '';
+            const resultsContainer = document.getElementById('resultsContainer');
+            allResults = [];
             
+            // Prepare results data
             Object.entries(resultsData).forEach(([id, result]) => {
                 const student = studentsData[result.studentId];
-                const className = classesData[result.classId]?.name || 'Unknown';
-                const studentName = student ? `${student.name} (Roll: ${student.roll})` : 'Unknown';
+                const className = classesData[result.classId]?.name || 'Unknown Class';
                 
-                resultsList.innerHTML += `
-                    <tr>
-                        <td>${studentName}</td>
-                        <td>${className}</td>
-                        <td><a href="${result.link}" target="_blank">View Result</a></td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteResult('${id}')">
-                                <i class="material-icons">delete</i>Delete
-                            </button>
-                        </td>
-                    </tr>
+                if (student) {
+                    allResults.push({
+                        id,
+                        studentName: student.name,
+                        roll: student.roll,
+                        className,
+                        link: result.link,
+                        ...result
+                    });
+                }
+            });
+            
+            if (allResults.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="material-icons">assignment</i>
+                        <h3>No Results Available</h3>
+                        <p>Results will be published here when available</p>
+                    </div>
                 `;
+                return;
+            }
+            
+            displayFilteredResults(allResults);
+        }
+
+        function displayFilteredResults(results) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="material-icons">search_off</i>
+                        <h3>No Results Found</h3>
+                        <p>Try adjusting your search criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            resultsContainer.innerHTML = results.map(result => `
+                <div class="card fade-in-up">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="material-icons">person</i>
+                            ${result.studentName}
+                        </div>
+                        <div class="card-subtitle">Roll No: ${result.roll}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-info">
+                            <div class="info-item">
+                                <i class="material-icons">school</i>
+                                ${result.className}
+                            </div>
+                            <div class="info-item">
+                                <i class="material-icons">assignment</i>
+                                Result
+                            </div>
+                        </div>
+                        <a href="${result.link}" target="_blank" class="result-btn">
+                            <i class="material-icons">open_in_new</i>
+                            View Result
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            const filteredResults = allResults.filter(result => 
+                result.studentName.toLowerCase().includes(searchTerm) ||
+                result.className.toLowerCase().includes(searchTerm) ||
+                result.roll.toString().includes(searchTerm)
+            );
+            
+            displayFilteredResults(filteredResults);
+        });
+
+        // Display notices
+        function displayNotices() {
+            const noticesContainer = document.getElementById('noticesContainer');
+            const bannerArray = Object.entries(bannersData);
+            
+            if (bannerArray.length === 0) {
+                noticesContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="material-icons">announcement</i>
+                        <h3>No Notices Available</h3>
+                        <p>New announcements will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const colors = ['', 'green', 'orange'];
+            
+            noticesContainer.innerHTML = bannerArray.map(([id, banner], index) => {
+                const colorClass = colors[index % colors.length];
+                const clickHandler = banner.link ? `onclick="window.open('${banner.link}', '_blank')"` : '';
+                
+                return `
+                    <div class="banner-card ${colorClass} fade-in-up" ${clickHandler}>
+                        <div class="banner-icon">
+                            ${banner.icon ? `<img src="${banner.icon}" alt="Notice Icon">` : '<i class="material-icons">announcement</i>'}
+                        </div>
+                        <div class="banner-title">${banner.title}</div>
+                        ${banner.link ? '<p style="opacity: 0.9; margin-top: 0.5rem; font-size: 0.9rem;">Click to view details</p>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('statsResults').textContent = Object.keys(resultsData).length;
+            document.getElementById('statsNotices').textContent = Object.keys(bannersData).length;
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Smooth scrolling
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Close mobile menu if open
+                        const navMenu = document.getElementById('navMenu');
+                        navMenu.classList.remove('active');
+                    }
+                });
             });
         }
 
-        function deleteResult(id) {
-            if (confirm('Are you sure you want to delete this result?')) {
-                database.ref('results/' + id).remove().then(() => {
-                    alert('Result deleted successfully!');
-                }).catch((error) => {
-                    alert('Error deleting result: ' + error.message);
-                });
-            }
-        }
-
-        // Banners functions
-        function addBanner() {
-            const title = document.getElementById('bannerTitle').value.trim();
-            const link = document.getElementById('bannerLink').value.trim();
-            const icon = document.getElementById('bannerIcon').value.trim();
+        // Scroll animations
+        function setupScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
             
-            if (title) {
-                const bannerId = Date.now().toString();
-                database.ref('banners/' + bannerId).set({
-                    title: title,
-                    link: link || '',
-                    icon: icon || ''
-                }).then(() => {
-                    // Clear form
-                    document.getElementById('bannerTitle').value = '';
-                    document.getElementById('bannerLink').value = '';
-                    document.getElementById('bannerIcon').value = '';
-                    alert('Banner added successfully!');
-                }).catch((error) => {
-                    alert('Error adding banner: ' + error.message);
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
                 });
-            } else {
-                alert('Please enter a banner title');
-            }
-        }
-
-        function displayBanners() {
-            const bannersList = document.getElementById('bannersList');
-            bannersList.innerHTML = '';
+            }, observerOptions);
             
-            Object.entries(bannersData).forEach(([id, banner]) => {
-                bannersList.innerHTML += `
-                    <tr>
-                        <td>${banner.title}</td>
-                        <td>${banner.link ? `<a href="${banner.link}" target="_blank">View Link</a>` : '-'}</td>
-                        <td>${banner.icon ? `<img src="${banner.icon}" style="width: 50px; height: 50px; object-fit: cover;" alt="Banner Icon">` : '-'}</td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteBanner('${id}')">
-                                <i class="material-icons">delete</i>Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
+            document.querySelectorAll('.scroll-fade').forEach(el => {
+                observer.observe(el);
             });
         }
 
-        function deleteBanner(id) {
-            if (confirm('Are you sure you want to delete this banner?')) {
-                database.ref('banners/' + id).remove().then(() => {
-                    alert('Banner deleted successfully!');
-                }).catch((error) => {
-                    alert('Error deleting banner: ' + error.message);
-                });
-            }
-        }
+        // Pause slider on hover
+        document.querySelector('.banner-slider').addEventListener('mouseenter', stopAutoSlide);
+        document.querySelector('.banner-slider').addEventListener('mouseleave', startAutoSlide);
 
-        // Close sidebar when clicking outside on mobile
+        // Close mobile menu when clicking outside
         document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.getElementById('navMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
             
-            if (window.innerWidth <= 768 && 
-                !sidebar.contains(event.target) && 
-                !menuToggle.contains(event.target) && 
-                sidebar.classList.contains('open')) {
-                toggleSidebar();
+            if (!navMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const navMenu = document.getElementById('navMenu');
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('active');
             }
         });
     </script>
