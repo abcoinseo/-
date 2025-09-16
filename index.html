@@ -3,502 +3,785 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah Al-Noor</title>
-    <!-- Firebase App (Core) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <!-- Firebase Realtime Database -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <!-- Optional: Firebase Storage if you want to upload images later -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script> -->
-
+    <title>Madrasah Admin Panel</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- Global Styles --- */
-        :root {
-            --primary-color: #2E7D32; /* Muted Green */
-            --secondary-color: #FFF9C4; /* Soft Cream */
-            --accent-color: #81D4FA; /* Light Blue */
-            --text-color: #333;
-            --light-text-color: #555;
-            --card-bg: #FFFFFF;
-            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            --button-hover-bg: #388E3C; /* Darker Green */
-            --link-color: #1976D2; /* Standard Link Blue */
-            --link-hover-color: #1565C0;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F5F5DC 0%, #E8F5E8 100%);
+            min-height: 100vh;
         }
 
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-bottom: 1em;
-            text-align: center;
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--link-hover-color);
-        }
-
-        /* --- Top Navbar --- */
-        .top-navbar {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-        }
-
-        .navbar-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            font-size: 1.8em;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: var(--secondary-color);
-        }
-
-        .navbar-menu ul {
-            list-style: none;
-            display: flex;
-        }
-
-        .navbar-menu li {
-            margin-left: 25px;
-        }
-
-        .navbar-menu a {
-            color: var(--secondary-color);
-            font-size: 1.1em;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-menu a:hover {
-            color: var(--accent-color);
-        }
-
-        .hamburger-menu {
-            display: none; /* Hidden on desktop */
-            font-size: 2em;
-            color: var(--secondary-color);
-            cursor: pointer;
-        }
-
-        /* --- Hero Banner Slider --- */
-        .hero-slider-container {
-            position: relative;
-            width: 100%;
-            height: 70vh; /* Adjust height as needed */
-            overflow: hidden;
-            background-color: var(--primary-color); /* Fallback */
-        }
-
-        .hero-slide {
-            position: absolute;
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-280px);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             text-align: center;
-            background-size: cover;
-            background-position: center;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
-            background-blend-mode: overlay;
         }
 
-        .hero-slide.active {
-            opacity: 1;
-            z-index: 1;
+        .sidebar-header h2 {
+            color: white;
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .hero-slide .slide-content {
-            color: var(--secondary-color);
-            padding: 20px;
-            max-width: 800px;
+        .sidebar-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.875rem;
         }
 
-        .hero-slide h2 {
-            font-size: 3em;
-            margin-bottom: 0.5em;
-            color: var(--secondary-color);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        .sidebar-menu {
+            padding: 1rem 0;
         }
 
-        .hero-slide p {
-            font-size: 1.2em;
-            color: var(--secondary-color);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-        }
-
-        .hero-slide .icon-img {
-            max-width: 80px;
-            height: auto;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-
-        /* Slider Controls (Arrows) */
-        .slider-arrows {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
+        .menu-item {
             display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255,255,255,0.1);
+            border-left-color: #4CAF50;
+            color: white;
+        }
+
+        .menu-item i {
+            margin-right: 1rem;
+            font-size: 1.25rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
             justify-content: space-between;
-            z-index: 10;
         }
 
-        .slider-arrow {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: var(--secondary-color);
+        .menu-toggle {
+            background: none;
             border: none;
-            font-size: 2.5em;
-            padding: 10px 15px;
+            font-size: 1.5rem;
+            color: #2E7D32;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            border-radius: 4px;
-        }
-
-        .slider-arrow:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Slider Indicators (Dots) */
-        .slider-dots {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            display: flex;
-        }
-
-        .slider-dot {
-            width: 12px;
-            height: 12px;
-            background-color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem;
             border-radius: 50%;
-            margin: 0 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background 0.3s ease;
         }
 
-        .slider-dot.active {
-            background-color: var(--secondary-color);
+        .menu-toggle:hover {
+            background: rgba(46, 125, 50, 0.1);
         }
 
-        /* --- Content Sections --- */
-        .content-section {
-            padding: 60px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        .content-area {
+            padding: 2rem;
         }
 
-        .section-header h2 {
-            margin-bottom: 1.5em;
+        .page-title {
+            color: #2E7D32;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
         }
 
-        /* --- Dashboard / Home --- */
-        .dashboard-stats {
+        .page-title i {
+            margin-right: 1rem;
+            font-size: 2.25rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: between;
+        }
+
+        .card-header h3 {
+            color: #2E7D32;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header i {
+            margin-right: 0.75rem;
+            color: #4CAF50;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 30px 25px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(25, 118, 210, 0.3);
+            transition: transform 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
         }
 
-        .stat-card .icon {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            color: var(--accent-color);
+        .stat-card.green {
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            box-shadow: 0 4px 20px rgba(46, 125, 50, 0.3);
         }
 
-        .stat-card .count {
-            font-size: 3em;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 5px;
+        .stat-card.orange {
+            background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
+            box-shadow: 0 4px 20px rgba(245, 124, 0, 0.3);
         }
 
-        .stat-card .label {
-            font-size: 1.1em;
-            color: var(--light-text-color);
+        .stat-card.purple {
+            background: linear-gradient(135deg, #7B1FA2 0%, #4A148C 100%);
+            box-shadow: 0 4px 20px rgba(123, 31, 162, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-label i {
+            margin-right: 0.5rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2E7D32;
             font-weight: 500;
         }
 
-        /* --- Results List & Banners Section --- */
-        .item-list-container {
-            margin-top: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
         }
 
-        .item-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Pushes button to bottom */
+        .form-control:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
         }
 
-        .item-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
-        }
-
-        .item-card h3 {
-            text-align: left;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .item-card .item-details {
-            font-size: 0.95em;
-            color: var(--light-text-color);
-            margin-bottom: 15px;
-            flex-grow: 1; /* Allows details to take up available space */
-        }
-
-        .item-card .item-link {
-            display: block; /* Makes the whole area clickable */
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 12px 20px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: auto; /* Pushes button to the bottom */
-        }
-
-        .item-card .item-link:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
-        }
-
-        .item-card .icon-img {
-            max-width: 50px;
-            height: auto;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        /* --- Banners Section (below hero) --- */
-        #banners-section .item-list-container {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        /* --- Contact / Info Section --- */
-        #contact-section {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            text-align: center;
-        }
-
-        #contact-section h2 {
-            color: var(--secondary-color);
-        }
-
-        #contact-section p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5em;
-        }
-
-        #contact-section .contact-details {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-
-        #contact-section .contact-item {
-            display: flex;
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
-            font-size: 1.1em;
+            text-decoration: none;
         }
 
-        #contact-section .contact-item .icon {
-            font-size: 1.8em;
-            margin-right: 15px;
-            color: var(--accent-color);
+        .btn i {
+            margin-right: 0.5rem;
         }
 
-        /* --- Footer --- */
-        .footer {
-            background-color: #333;
-            color: #eee;
-            text-align: center;
-            padding: 20px 0;
-            font-size: 0.9em;
+        .btn-primary {
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
         }
 
-        /* --- Responsive Adjustments --- */
-        @media (max-width: 992px) {
-            .navbar-brand {
-                font-size: 1.5em;
-            }
-            .navbar-menu a {
-                font-size: 1em;
-            }
-            .hero-slide h2 {
-                font-size: 2.5em;
-            }
-            .hero-slide p {
-                font-size: 1em;
-            }
-            .content-section {
-                padding: 40px 15px;
-            }
-            .dashboard-stats {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 20px;
-            }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
         }
 
+        .btn-danger {
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        th {
+            background: #F5F5F5;
+            color: #2E7D32;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(46, 125, 50, 0.05);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .navbar-menu {
-                display: none; /* Hide desktop menu */
-            }
-            .hamburger-menu {
-                display: block; /* Show hamburger */
+            .sidebar {
+                transform: translateX(-280px);
             }
 
-            /* Mobile Menu Overlay */
-            .mobile-menu-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.8);
-                z-index: 1100;
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
                 opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                transform: translateY(20px);
             }
-
-            .mobile-menu-overlay.active {
+            to {
                 opacity: 1;
-                visibility: visible;
+                transform: translateY(0);
             }
+        }
 
-            .mobile-menu-overlay ul {
-                list-style: none;
-                text-align: center;
-            }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
 
-            .mobile-menu-overlay li {
-                margin-bottom: 20px;
-            }
+        /* Hidden sections */
+        .section {
+            display: none;
+        }
 
-            .mobile-menu-overlay a {
-                color: var(--secondary-color);
-                font-size: 1.8em;
-                font-weight: bold;
-            }
+        .section.active {
+            display: block;
+        }
 
-            .mobile-menu-overlay .close-menu {
-                position: absolute;
-                top: 30px;
-                right: 30px;
-                font-size: 3em;
-                color: var(--secondary-color);
-                cursor: pointer;
-            }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
 
-            .hero-slider-container {
-                height: 50vh; /* Shorter on mobile */
-            }
-
-            .hero-slide h2 {
-                font-size: 2em;
-            }
-
-            .hero-slide p {
-                font-size: 0.9em;
-            }
-
-            .hero-slide .icon-img {
-                max-width: 60px;
-            }
-
-            .content-section {
-                padding: 30px 15px;
-            }
-
-            .dashboard-stats {
-                grid-template-columns: 1fr; /* Stack stats on mobile */
-            }
-
-            .item-list-container {
-                grid-template-columns: 1fr; /* Stack cards on mobile */
-            }
-
-            #contact-section .contact-details {
-                flex-direction: column;
-                gap: 20px;
-            }
+        .overlay.active {
+            display: block;
         }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Madrasah Admin</h2>
+            <p>Management Panel</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                <i class="material-icons">dashboard</i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('years')">
+                <i class="material-icons">date_range</i>
+                <span>Years</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('classes')">
+                <i class="material-icons">school</i>
+                <span>Classes</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('sections')">
+                <i class="material-icons">group_work</i>
+                <span>Sections</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('students')">
+                <i class="material-icons">people</i>
+                <span>Students</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('results')">
+                <i class="material-icons">assessment</i>
+                <span>Results</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSection('banners')">
+                <i class="material-icons">banner</i>
+                <span>Banners</span>
+            </a>
+        </nav>
+    </div>
 
-    <!-- Firebase Configuration -->
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="material-icons">menu</i>
+            </button>
+            <h1 style="color: #2E7D32; font-weight: 600;">Madrasah Management System</h1>
+        </div>
+
+        <div class="content-area">
+            <!-- Dashboard Section -->
+            <div class="section active fade-in" id="dashboard">
+                <div class="page-title">
+                    <i class="material-icons">dashboard</i>
+                    Dashboard
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalStudents">0</div>
+                        <div class="stat-label">
+                            <i class="material-icons">people</i>
+                            Total Students
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-number" id="totalClasses">0</div>
+                        <div class="stat-label">
+                            <i class="material-icons">school</i>
+                            Classes
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-number" id="totalResults">0</div>
+                        <div class="stat-label">
+                            <i class="material-icons">assessment</i>
+                            Results
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-number" id="totalBanners">0</div>
+                        <div class="stat-label">
+                            <i class="material-icons">banner</i>
+                            Banners
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Years Section -->
+            <div class="section" id="years">
+                <div class="page-title">
+                    <i class="material-icons">date_range</i>
+                    Manage Years
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="material-icons">add</i>Add New Year</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Year</label>
+                            <input type="text" class="form-control" id="yearInput" placeholder="e.g., 2024">
+                        </div>
+                        <button class="btn btn-primary" onclick="addYear()">
+                            <i class="material-icons">add</i>Add Year
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3><i class="material-icons">list</i>Years List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yearsList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classes Section -->
+            <div class="section" id="classes">
+                <div class="page-title">
+                    <i class="material-icons">school</i>
+                    Manage Classes
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="material-icons">add</i>Add New Class</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Class Name</label>
+                            <input type="text" class="form-control" id="classInput" placeholder="e.g., Class 10">
+                        </div>
+                        <button class="btn btn-primary" onclick="addClass()">
+                            <i class="material-icons">add</i>Add Class
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3><i class="material-icons">list</i>Classes List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Class Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classesList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sections Section -->
+            <div class="section" id="sections">
+                <div class="page-title">
+                    <i class="material-icons">group_work</i>
+                    Manage Sections
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="material-icons">add</i>Add New Section</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Section Name</label>
+                            <input type="text" class="form-control" id="sectionInput" placeholder="e.g., A, B, C">
+                        </div>
+                        <button class="btn btn-primary" onclick="addSection()">
+                            <i class="material-icons">add</i>Add Section
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3><i class="material-icons">list</i>Sections List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Section Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sectionsList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <div class="section" id="students">
+                <div class="page-title">
+                    <i class="material-icons">people</i>
+                    Manage Students
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="material-icons">person_add</i>Add New Student</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label>Student Name</label>
+                                <input type="text" class="form-control" id="studentName" placeholder="Enter student name">
+                            </div>
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select class="form-control" id="studentClass"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Year</label>
+                                <select class="form-control" id="studentYear"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Section</label>
+                                <select class="form-control" id="studentSection"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Roll Number</label>
+                                <input type="text" class="form-control" id="studentRoll" placeholder="Enter roll number">
+                            </div>
+                            <div class="form-group">
+                                <label>User ID (Optional)</label>
+                                <input type="text" class="form-control" id="studentUserId" placeholder="Enter user ID">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="addStudent()">
+                            <i class="material-icons">person_add</i>Add Student
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3><i class="material-icons">people</i>Students List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Class</th>
+                                        <th>Year</th>
+                                        <th>Section</th>
+                                        <th>Roll</th>
+                                        <th>User ID</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentsList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="section" id="results">
+                <div class="page-title">
+                    <i class="material-icons">assessment</i>
+                    Manage Results
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="material-icons">add</i>Add New Result</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label>Student</label>
+                                <select class="form-control" id="resultStudent"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select class="form-control" id="resultClass"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Result Link</label>
+                                <input type="url" class="form-control" id="resultLink" placeholder="Enter result link (PDF/Google Drive)">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="addResult()">
+                            <i class="material-icons">add</i>Add Result
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3><i class="material-icons">assessment</i>Results List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Class</th>
+                                        <th>Result Link</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banners Section -->
+            <div class="section" id="banners">
+                <div class="page-title">
+                    <i class="material-icons">banner</i>
+                    Manage Banners
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="material-icons">add</i>Add New Banner</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                            <div class="form-group">
+                                <label>Banner Title</label>
+                                <input type="text" class="form-control" id="bannerTitle" placeholder="Enter banner title">
+                            </div>
+                            <div class="form-group">
+                                <label>Link (Optional)</label>
+                                <input type="url" class="form-control" id="bannerLink" placeholder="Enter link (optional)">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon/Image URL (Optional)</label>
+                                <input type="url" class="form-control" id="bannerIcon" placeholder="Enter icon/image URL (optional)">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="addBanner()">
+                            <i class="material-icons">add</i>Add Banner
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3><i class="material-icons">banner</i>Banners List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Link</th>
+                                        <th>Icon/Image</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bannersList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <script>
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDXGVWLFDY2Jrk0Pjxz4XP0bCQVg0Iextc",
             authDomain: "queenschool-803d9.firebaseapp.com",
@@ -513,469 +796,482 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const bannersRef = database.ref('banners');
-        const resultsRef = database.ref('results');
-        const contactInfoRef = database.ref('contactInfo');
-    </script>
+        // Global variables
+        let yearsData = {};
+        let classesData = {};
+        let sectionsData = {};
+        let studentsData = {};
+        let resultsData = {};
+        let bannersData = {};
 
-    <!-- Top Navbar -->
-    <nav class="top-navbar">
-        <div class="navbar-container">
-            <div class="navbar-brand">Madrasah Al-Noor</div>
-            <div class="hamburger-menu">&#9776;</div>
-            <div class="navbar-menu">
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#results">Results</a></li>
-                    <li><a href="#banners">Notices</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        // Initialize app
+        window.onload = function() {
+            loadAllData();
+        };
 
-    <!-- Mobile Menu Overlay (Hidden by default) -->
-    <div class="mobile-menu-overlay">
-        <div class="close-menu">&times;</div>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#results">Results</a></li>
-            <li><a href="#banners">Notices</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </div>
-
-    <!-- Hero Banner Slider -->
-    <header class="hero-slider-container" id="home">
-        <!-- Slides will be loaded here by JS -->
-        <div class="slider-arrows">
-            <button class="slider-arrow" id="prevBtn">&#10094;</button>
-            <button class="slider-arrow" id="nextBtn">&#10095;</button>
-        </div>
-        <div class="slider-dots" id="sliderDots">
-            <!-- Dots will be generated by JS -->
-        </div>
-    </header>
-
-    <!-- Main Content Sections -->
-    <main>
-        <!-- Dashboard / Home Section -->
-        <section class="content-section" id="home-section">
-            <div class="section-header">
-                <h2>Welcome to Madrasah Al-Noor</h2>
-                <p>Providing quality Islamic education for a brighter future.</p>
-            </div>
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="icon">📊</div>
-                    <div class="count" id="total-results-stat">0</div>
-                    <div class="label">Total Results Published</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon">📣</div>
-                    <div class="count" id="total-banners-stat">0</div>
-                    <div class="label">Latest Notices</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Results List Section -->
-        <section class="content-section" id="results-section">
-            <div class="section-header">
-                <h2>Student Results</h2>
-            </div>
-            <div class="item-list-container" id="resultsList">
-                <!-- Results will be loaded here -->
-                <p style="text-align: center; grid-column: 1 / -1;">Loading results...</p>
-            </div>
-        </section>
-
-        <!-- Banners / Notices Section -->
-        <section class="content-section" id="banners-section">
-            <div class="section-header">
-                <h2>Latest Notices & Announcements</h2>
-            </div>
-            <div class="item-list-container" id="bannersList">
-                <!-- Banners will be loaded here -->
-                <p style="text-align: center; grid-column: 1 / -1;">Loading notices...</p>
-            </div>
-        </section>
-
-        <!-- Contact / Info Section -->
-        <section class="content-section" id="contact-section">
-            <div class="section-header">
-                <h2>Get In Touch</h2>
-            </div>
-            <div class="contact-details">
-                <div class="contact-item">
-                    <span class="icon">📞</span>
-                    <span id="contact-phone">Loading...</span>
-                </div>
-                <div class="contact-item">
-                    <span class="icon">📧</span>
-                    <span id="contact-email">Loading...</span>
-                </div>
-                <div class="contact-item">
-                    <span class="icon">📍</span>
-                    <span id="contact-address">Loading...</span>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2023 Madrasah Al-Noor. All rights reserved.</p>
-    </footer>
-
-    <!-- JavaScript -->
-    <script>
-        // --- DOM Elements ---
-        const topNavbar = document.querySelector('.top-navbar');
-        const hamburgerMenu = document.querySelector('.hamburger-menu');
-        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
-        const closeMenuButton = mobileMenuOverlay.querySelector('.close-menu');
-        const navbarLinks = document.querySelectorAll('.navbar-menu a, .mobile-menu-overlay a');
-
-        const heroSliderContainer = document.querySelector('.hero-slider-container');
-        const sliderDotsContainer = document.getElementById('sliderDots');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
-        const resultsListDiv = document.getElementById('resultsList');
-        const bannersListDiv = document.getElementById('bannersList');
-        const contactPhoneSpan = document.getElementById('contact-phone');
-        const contactEmailSpan = document.getElementById('contact-email');
-        const contactAddressSpan = document.getElementById('contact-address');
-
-        const totalResultsStat = document.getElementById('total-results-stat');
-        const totalBannersStat = document.getElementById('total-banners-stat');
-
-        // --- State Variables ---
-        let bannersData = [];
-        let currentSlideIndex = 0;
-        let slideInterval;
-
-        // --- Firebase Data Fetching Functions ---
-
-        async function fetchBanners() {
-            try {
-                const snapshot = await bannersRef.once('value');
-                const data = snapshot.val();
-                if (data) {
-                    bannersData = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                    renderHeroSlider(bannersData);
-                    renderBannersList(bannersData);
-                    totalBannersStat.textContent = bannersData.length;
-                } else {
-                    bannersData = [];
-                    heroSliderContainer.innerHTML = '<p style="color: white; text-align: center;">No banners available.</p>';
-                    bannersListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No notices available.</p>';
-                    totalBannersStat.textContent = '0';
-                }
-            } catch (error) {
-                console.error("Error fetching banners:", error);
-                heroSliderContainer.innerHTML = '<p style="color: white; text-align: center;">Error loading banners.</p>';
-                bannersListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Error loading notices.</p>';
-                totalBannersStat.textContent = 'Error';
-            }
-        }
-
-        async function fetchResults() {
-            try {
-                const snapshot = await resultsRef.once('value');
-                const data = snapshot.val();
-                if (data) {
-                    const results = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                    renderResultsList(results);
-                    totalResultsStat.textContent = results.length;
-                } else {
-                    resultsListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No results available at the moment.</p>';
-                    totalResultsStat.textContent = '0';
-                }
-            } catch (error) {
-                console.error("Error fetching results:", error);
-                resultsListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Error loading results.</p>';
-                totalResultsStat.textContent = 'Error';
-            }
-        }
-
-        async function fetchContactInfo() {
-            try {
-                const snapshot = await contactInfoRef.once('value');
-                const data = snapshot.val();
-                if (data) {
-                    contactPhoneSpan.textContent = data.phone || 'Not available';
-                    contactEmailSpan.textContent = data.email || 'Not available';
-                    contactAddressSpan.textContent = data.address || 'Not available';
-                } else {
-                    contactPhoneSpan.textContent = 'Not available';
-                    contactEmailSpan.textContent = 'Not available';
-                    contactAddressSpan.textContent = 'Not available';
-                }
-            } catch (error) {
-                console.error("Error fetching contact info:", error);
-                contactPhoneSpan.textContent = 'Error';
-                contactEmailSpan.textContent = 'Error';
-                contactAddressSpan.textContent = 'Error';
-            }
-        }
-
-        // --- Rendering Functions ---
-
-        function renderHeroSlider(banners) {
-            heroSliderContainer.innerHTML = ''; // Clear existing slides
-
-            if (banners.length === 0) {
-                heroSliderContainer.innerHTML = '<p style="color: white; text-align: center; margin-top: 50px;">No banners to display.</p>';
-                return;
-            }
-
-            banners.forEach((banner, index) => {
-                const slide = document.createElement('div');
-                slide.classList.add('hero-slide');
-                if (index === 0) {
-                    slide.classList.add('active');
-                }
-                if (banner.iconUrl) {
-                    slide.style.backgroundImage = `url('${banner.iconUrl}')`;
-                } else {
-                    // Fallback background if no image is provided
-                    slide.style.backgroundColor = `var(--accent-color)`; // Example fallback
-                }
-
-                const slideContent = document.createElement('div');
-                slideContent.classList.add('slide-content');
-
-                if (banner.iconUrl && banner.iconUrl.toLowerCase().endsWith('.svg')) { // Basic check for SVG icon
-                    const iconImg = document.createElement('img');
-                    iconImg.src = banner.iconUrl;
-                    iconImg.alt = 'Banner Icon';
-                    iconImg.classList.add('icon-img');
-                    slideContent.appendChild(iconImg);
-                }
-
-                const title = document.createElement('h2');
-                title.textContent = banner.title || 'Welcome!';
-                slideContent.appendChild(title);
-
-                if (banner.subtitle) {
-                    const subtitle = document.createElement('p');
-                    subtitle.textContent = banner.subtitle;
-                    slideContent.appendChild(subtitle);
-                }
-
-                if (banner.link) {
-                    const linkButton = document.createElement('a');
-                    linkButton.href = banner.link;
-                    linkButton.textContent = 'Learn More';
-                    linkButton.classList.add('btn', 'btn-primary'); // Reusing admin panel button styles for consistency
-                    linkButton.style.marginTop = '20px';
-                    linkButton.style.backgroundColor = 'var(--secondary-color)';
-                    linkButton.style.color = 'var(--primary-color)';
-                    linkButton.style.padding = '12px 25px';
-                    linkButton.style.fontSize = '1.1em';
-                    linkButton.style.textDecoration = 'none';
-                    linkButton.target = '_blank'; // Open in new tab
-                    slideContent.appendChild(linkButton);
-                }
-                slide.appendChild(slideContent);
-                heroSliderContainer.appendChild(slide);
-            });
-
-            // Render dots
-            sliderDotsContainer.innerHTML = '';
-            banners.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.classList.add('slider-dot');
-                if (index === 0) {
-                    dot.classList.add('active');
-                }
-                dot.dataset.index = index;
-                dot.addEventListener('click', () => goToSlide(index));
-                sliderDotsContainer.appendChild(dot);
-            });
-
-            // Start automatic sliding
-            startAutoSlide();
-        }
-
-        function renderBannersList(banners) {
-            bannersListDiv.innerHTML = ''; // Clear existing
-            if (banners.length === 0) {
-                bannersListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No notices available.</p>';
-                return;
-            }
-            banners.forEach(banner => {
-                const card = document.createElement('div');
-                card.classList.add('item-card');
-
-                let cardContent = '';
-                if (banner.iconUrl) {
-                    cardContent += `<img src="${banner.iconUrl}" alt="Icon" class="icon-img">`;
-                }
-                cardContent += `<h3>${banner.title}</h3>`;
-                if (banner.subtitle) {
-                    cardContent += `<div class="item-details">${banner.subtitle}</div>`;
-                }
-                card.innerHTML = cardContent;
-
-                if (banner.link) {
-                    const linkElement = document.createElement('a');
-                    linkElement.href = banner.link;
-                    linkElement.textContent = 'Read More';
-                    linkElement.classList.add('item-link');
-                    linkElement.target = '_blank';
-                    card.appendChild(linkElement);
-                } else {
-                    // Add a placeholder if no link, so card still looks structured
-                    const placeholder = document.createElement('div');
-                    placeholder.style.height = '48px'; // Approximate height of the link button
-                    card.appendChild(placeholder);
-                }
-                bannersListDiv.appendChild(card);
-            });
-        }
-
-        function renderResultsList(results) {
-            resultsListDiv.innerHTML = ''; // Clear existing
-            if (results.length === 0) {
-                resultsListDiv.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No results available at the moment.</p>';
-                return;
-            }
-            results.forEach(result => {
-                const card = document.createElement('div');
-                card.classList.add('item-card');
-
-                const details = document.createElement('div');
-                details.classList.add('item-details');
-                details.innerHTML = `
-                    <h3>${result.studentName || 'Unnamed Student'}</h3>
-                    <p>Class: ${result.class || 'N/A'}</p>
-                `;
-                card.appendChild(details);
-
-                const linkElement = document.createElement('a');
-                linkElement.href = result.link;
-                linkElement.textContent = 'View Result';
-                linkElement.classList.add('item-link');
-                linkElement.target = '_blank';
-                card.appendChild(linkElement);
-
-                resultsListDiv.appendChild(card);
-            });
-        }
-
-        // --- Slider Logic ---
-
-        function goToSlide(index) {
-            if (index < 0 || index >= bannersData.length) return;
-
-            const slides = heroSliderContainer.querySelectorAll('.hero-slide');
-            const dots = sliderDotsContainer.querySelectorAll('.slider-dot');
-
-            // Deactivate current
-            slides[currentSlideIndex].classList.remove('active');
-            dots[currentSlideIndex].classList.remove('active');
-
-            // Activate new
-            currentSlideIndex = index;
-            slides[currentSlideIndex].classList.add('active');
-            dots[currentSlideIndex].classList.add('active');
-        }
-
-        function nextSlide() {
-            goToSlide((currentSlideIndex + 1) % bannersData.length);
-        }
-
-        function prevSlide() {
-            goToSlide((currentSlideIndex - 1 + bannersData.length) % bannersData.length);
-        }
-
-        function startAutoSlide() {
-            if (bannersData.length > 1) {
-                slideInterval = setInterval(nextSlide, 7000); // Auto slide every 7 seconds
-            }
-        }
-
-        function stopAutoSlide() {
-            clearInterval(slideInterval);
-        }
-
-        // --- Navigation and Mobile Menu ---
-
-        function toggleMobileMenu() {
-            mobileMenuOverlay.classList.toggle('active');
-            if (mobileMenuOverlay.classList.contains('active')) {
-                hamburgerMenu.innerHTML = '&times;'; // Change to close icon
+        // Sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
             } else {
-                hamburgerMenu.innerHTML = '&#9776;'; // Change back to hamburger
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
             }
         }
 
-        function closeMobileMenu() {
-            mobileMenuOverlay.classList.remove('active');
-            hamburgerMenu.innerHTML = '&#9776;'; // Reset icon
+        // Show section
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked menu item
+            event.target.classList.add('active');
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+            
+            // Load specific data based on section
+            switch(sectionId) {
+                case 'students':
+                    populateStudentDropdowns();
+                    break;
+                case 'results':
+                    populateResultDropdowns();
+                    break;
+            }
         }
 
-        // Smooth scroll to section when nav link is clicked
-        navbarLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-
-                    // Close mobile menu if it's open
-                    if (mobileMenuOverlay.classList.contains('active')) {
-                        closeMobileMenu();
-                    }
-
-                    // Stop/start slider when navigating to home
-                    if (targetId === '#home') {
-                        startAutoSlide();
-                    } else {
-                        stopAutoSlide();
-                    }
-                }
+        // Load all data from Firebase
+        function loadAllData() {
+            database.ref('/').on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                
+                yearsData = data.years || {};
+                classesData = data.classes || {};
+                sectionsData = data.sections || {};
+                studentsData = data.students || {};
+                resultsData = data.results || {};
+                bannersData = data.banners || {};
+                
+                updateDashboard();
+                displayYears();
+                displayClasses();
+                displaySections();
+                displayStudents();
+                displayResults();
+                displayBanners();
             });
-        });
+        }
 
-        // --- Event Listeners ---
-        hamburgerMenu.addEventListener('click', toggleMobileMenu);
-        closeMenuButton.addEventListener('click', closeMobileMenu);
+        // Update dashboard stats
+        function updateDashboard() {
+            document.getElementById('totalStudents').textContent = Object.keys(studentsData).length;
+            document.getElementById('totalClasses').textContent = Object.keys(classesData).length;
+            document.getElementById('totalResults').textContent = Object.keys(resultsData).length;
+            document.getElementById('totalBanners').textContent = Object.keys(bannersData).length;
+        }
 
-        prevBtn.addEventListener('click', () => {
-            stopAutoSlide(); // Stop auto slide on manual navigation
-            prevSlide();
-            startAutoSlide(); // Restart auto slide
-        });
+        // Years functions
+        function addYear() {
+            const yearInput = document.getElementById('yearInput');
+            const year = yearInput.value.trim();
+            
+            if (year) {
+                const yearId = Date.now().toString();
+                database.ref('years/' + yearId).set({
+                    year: year
+                }).then(() => {
+                    yearInput.value = '';
+                    alert('Year added successfully!');
+                }).catch((error) => {
+                    alert('Error adding year: ' + error.message);
+                });
+            } else {
+                alert('Please enter a year');
+            }
+        }
 
-        nextBtn.addEventListener('click', () => {
-            stopAutoSlide(); // Stop auto slide on manual navigation
-            nextSlide();
-            startAutoSlide(); // Restart auto slide
-        });
-
-        // Intersection Observer for pausing/resuming slider
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    startAutoSlide();
-                } else {
-                    stopAutoSlide();
-                }
+        function displayYears() {
+            const yearsList = document.getElementById('yearsList');
+            yearsList.innerHTML = '';
+            
+            Object.entries(yearsData).forEach(([id, data]) => {
+                yearsList.innerHTML += `
+                    <tr>
+                        <td>${data.year}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteYear('${id}')">
+                                <i class="material-icons">delete</i>Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
             });
-        }, { threshold: 0.5 }); // Trigger when 50% of the element is visible
+        }
 
-        observer.observe(heroSliderContainer);
+        function deleteYear(id) {
+            if (confirm('Are you sure you want to delete this year?')) {
+                database.ref('years/' + id).remove().then(() => {
+                    alert('Year deleted successfully!');
+                }).catch((error) => {
+                    alert('Error deleting year: ' + error.message);
+                });
+            }
+        }
 
-        // --- Initial Load ---
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchBanners();
-            fetchResults();
-            fetchContactInfo();
+        // Classes functions
+        function addClass() {
+            const classInput = document.getElementById('classInput');
+            const className = classInput.value.trim();
+            
+            if (className) {
+                const classId = Date.now().toString();
+                database.ref('classes/' + classId).set({
+                    name: className
+                }).then(() => {
+                    classInput.value = '';
+                    alert('Class added successfully!');
+                }).catch((error) => {
+                    alert('Error adding class: ' + error.message);
+                });
+            } else {
+                alert('Please enter a class name');
+            }
+        }
+
+        function displayClasses() {
+            const classesList = document.getElementById('classesList');
+            classesList.innerHTML = '';
+            
+            Object.entries(classesData).forEach(([id, data]) => {
+                classesList.innerHTML += `
+                    <tr>
+                        <td>${data.name}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteClass('${id}')">
+                                <i class="material-icons">delete</i>Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteClass(id) {
+            if (confirm('Are you sure you want to delete this class?')) {
+                database.ref('classes/' + id).remove().then(() => {
+                    alert('Class deleted successfully!');
+                }).catch((error) => {
+                    alert('Error deleting class: ' + error.message);
+                });
+            }
+        }
+
+        // Sections functions
+        function addSection() {
+            const sectionInput = document.getElementById('sectionInput');
+            const sectionName = sectionInput.value.trim();
+            
+            if (sectionName) {
+                const sectionId = Date.now().toString();
+                database.ref('sections/' + sectionId).set({
+                    name: sectionName
+                }).then(() => {
+                    sectionInput.value = '';
+                    alert('Section added successfully!');
+                }).catch((error) => {
+                    alert('Error adding section: ' + error.message);
+                });
+            } else {
+                alert('Please enter a section name');
+            }
+        }
+
+        function displaySections() {
+            const sectionsList = document.getElementById('sectionsList');
+            sectionsList.innerHTML = '';
+            
+            Object.entries(sectionsData).forEach(([id, data]) => {
+                sectionsList.innerHTML += `
+                    <tr>
+                        <td>${data.name}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteSection('${id}')">
+                                <i class="material-icons">delete</i>Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteSection(id) {
+            if (confirm('Are you sure you want to delete this section?')) {
+                database.ref('sections/' + id).remove().then(() => {
+                    alert('Section deleted successfully!');
+                }).catch((error) => {
+                    alert('Error deleting section: ' + error.message);
+                });
+            }
+        }
+
+        // Students functions
+        function populateStudentDropdowns() {
+            const classSelect = document.getElementById('studentClass');
+            const yearSelect = document.getElementById('studentYear');
+            const sectionSelect = document.getElementById('studentSection');
+            
+            // Populate classes
+            classSelect.innerHTML = '<option value="">Select Class</option>';
+            Object.entries(classesData).forEach(([id, data]) => {
+                classSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+            });
+            
+            // Populate years
+            yearSelect.innerHTML = '<option value="">Select Year</option>';
+            Object.entries(yearsData).forEach(([id, data]) => {
+                yearSelect.innerHTML += `<option value="${id}">${data.year}</option>`;
+            });
+            
+            // Populate sections
+            sectionSelect.innerHTML = '<option value="">Select Section</option>';
+            Object.entries(sectionsData).forEach(([id, data]) => {
+                sectionSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+            });
+        }
+
+        function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            const classId = document.getElementById('studentClass').value;
+            const yearId = document.getElementById('studentYear').value;
+            const sectionId = document.getElementById('studentSection').value;
+            const roll = document.getElementById('studentRoll').value.trim();
+            const userId = document.getElementById('studentUserId').value.trim();
+            
+            if (name && classId && yearId && sectionId && roll) {
+                const studentId = Date.now().toString();
+                database.ref('students/' + studentId).set({
+                    name: name,
+                    classId: classId,
+                    yearId: yearId,
+                    sectionId: sectionId,
+                    roll: roll,
+                    userId: userId || ''
+                }).then(() => {
+                    // Clear form
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('studentClass').value = '';
+                    document.getElementById('studentYear').value = '';
+                    document.getElementById('studentSection').value = '';
+                    document.getElementById('studentRoll').value = '';
+                    document.getElementById('studentUserId').value = '';
+                    alert('Student added successfully!');
+                }).catch((error) => {
+                    alert('Error adding student: ' + error.message);
+                });
+            } else {
+                alert('Please fill in all required fields');
+            }
+        }
+
+        function displayStudents() {
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '';
+            
+            Object.entries(studentsData).forEach(([id, student]) => {
+                const className = classesData[student.classId]?.name || 'Unknown';
+                const year = yearsData[student.yearId]?.year || 'Unknown';
+                const section = sectionsData[student.sectionId]?.name || 'Unknown';
+                
+                studentsList.innerHTML += `
+                    <tr>
+                        <td>${student.name}</td>
+                        <td>${className}</td>
+                        <td>${year}</td>
+                        <td>${section}</td>
+                        <td>${student.roll}</td>
+                        <td>${student.userId || '-'}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteStudent('${id}')">
+                                <i class="material-icons">delete</i>Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                database.ref('students/' + id).remove().then(() => {
+                    alert('Student deleted successfully!');
+                }).catch((error) => {
+                    alert('Error deleting student: ' + error.message);
+                });
+            }
+        }
+
+        // Results functions
+        function populateResultDropdowns() {
+            const studentSelect = document.getElementById('resultStudent');
+            const classSelect = document.getElementById('resultClass');
+            
+            // Populate students
+            studentSelect.innerHTML = '<option value="">Select Student</option>';
+            Object.entries(studentsData).forEach(([id, student]) => {
+                studentSelect.innerHTML += `<option value="${id}">${student.name} (Roll: ${student.roll})</option>`;
+            });
+            
+            // Populate classes
+            classSelect.innerHTML = '<option value="">Select Class</option>';
+            Object.entries(classesData).forEach(([id, data]) => {
+                classSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+            });
+        }
+
+        function addResult() {
+            const studentId = document.getElementById('resultStudent').value;
+            const classId = document.getElementById('resultClass').value;
+            const link = document.getElementById('resultLink').value.trim();
+            
+            if (studentId && classId && link) {
+                const resultId = Date.now().toString();
+                database.ref('results/' + resultId).set({
+                    studentId: studentId,
+                    classId: classId,
+                    link: link
+                }).then(() => {
+                    // Clear form
+                    document.getElementById('resultStudent').value = '';
+                    document.getElementById('resultClass').value = '';
+                    document.getElementById('resultLink').value = '';
+                    alert('Result added successfully!');
+                }).catch((error) => {
+                    alert('Error adding result: ' + error.message);
+                });
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        function displayResults() {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';
+            
+            Object.entries(resultsData).forEach(([id, result]) => {
+                const student = studentsData[result.studentId];
+                const className = classesData[result.classId]?.name || 'Unknown';
+                const studentName = student ? `${student.name} (Roll: ${student.roll})` : 'Unknown';
+                
+                resultsList.innerHTML += `
+                    <tr>
+                        <td>${studentName}</td>
+                        <td>${className}</td>
+                        <td><a href="${result.link}" target="_blank">View Result</a></td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteResult('${id}')">
+                                <i class="material-icons">delete</i>Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteResult(id) {
+            if (confirm('Are you sure you want to delete this result?')) {
+                database.ref('results/' + id).remove().then(() => {
+                    alert('Result deleted successfully!');
+                }).catch((error) => {
+                    alert('Error deleting result: ' + error.message);
+                });
+            }
+        }
+
+        // Banners functions
+        function addBanner() {
+            const title = document.getElementById('bannerTitle').value.trim();
+            const link = document.getElementById('bannerLink').value.trim();
+            const icon = document.getElementById('bannerIcon').value.trim();
+            
+            if (title) {
+                const bannerId = Date.now().toString();
+                database.ref('banners/' + bannerId).set({
+                    title: title,
+                    link: link || '',
+                    icon: icon || ''
+                }).then(() => {
+                    // Clear form
+                    document.getElementById('bannerTitle').value = '';
+                    document.getElementById('bannerLink').value = '';
+                    document.getElementById('bannerIcon').value = '';
+                    alert('Banner added successfully!');
+                }).catch((error) => {
+                    alert('Error adding banner: ' + error.message);
+                });
+            } else {
+                alert('Please enter a banner title');
+            }
+        }
+
+        function displayBanners() {
+            const bannersList = document.getElementById('bannersList');
+            bannersList.innerHTML = '';
+            
+            Object.entries(bannersData).forEach(([id, banner]) => {
+                bannersList.innerHTML += `
+                    <tr>
+                        <td>${banner.title}</td>
+                        <td>${banner.link ? `<a href="${banner.link}" target="_blank">View Link</a>` : '-'}</td>
+                        <td>${banner.icon ? `<img src="${banner.icon}" style="width: 50px; height: 50px; object-fit: cover;" alt="Banner Icon">` : '-'}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteBanner('${id}')">
+                                <i class="material-icons">delete</i>Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteBanner(id) {
+            if (confirm('Are you sure you want to delete this banner?')) {
+                database.ref('banners/' + id).remove().then(() => {
+                    alert('Banner deleted successfully!');
+                }).catch((error) => {
+                    alert('Error deleting banner: ' + error.message);
+                });
+            }
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) && 
+                sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
         });
     </script>
 </body>
